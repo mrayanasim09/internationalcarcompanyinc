@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://internationalcarcompanyinc.com'),
+  metadataBase: new URL('https://www.internationalcarcompanyinc.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://internationalcarcompanyinc.com',
+    url: 'https://www.internationalcarcompanyinc.com',
     title: 'International Car Company Inc - Premium Vehicles',
     description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
     siteName: 'International Car Company Inc',
