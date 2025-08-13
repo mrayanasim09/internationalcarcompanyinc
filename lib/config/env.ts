@@ -1,10 +1,5 @@
 // Environment configuration with validation for production
 export const env = {
-  // Vercel Configuration
-  vercel: {
-    analytics: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID,
-    speedInsights: process.env.NEXT_PUBLIC_VERCEL_SPEED_INSIGHTS_ID,
-  },
   // Authentication & Security
   auth: {
     nextAuthSecret: process.env.NEXTAUTH_SECRET!,
@@ -19,9 +14,9 @@ export const env = {
     superAdminEmail: process.env.SUPER_ADMIN_EMAIL!,
     defaultPassword: process.env.DEFAULT_ADMIN_PASSWORD!,
   },
-  // Vercel Blob Configuration
-  blob: {
-    token: process.env.BLOB_READ_WRITE_TOKEN!,
+  // Storage (Supabase)
+  storage: {
+    bucket: process.env.SUPABASE_STORAGE_BUCKET || 'car-images',
   },
   // Push Notifications (disabled)
   push: {
@@ -57,7 +52,7 @@ export const env = {
   security: {
     rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || '100'),
     rateLimitWindow: parseInt(process.env.RATE_LIMIT_WINDOW || '900000'), // 15 minutes
-    corsOrigin: process.env.CORS_ORIGIN || 'https://your-domain.vercel.app',
+    corsOrigin: process.env.CORS_ORIGIN || 'https://your-site.netlify.app',
     allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
   },
   // Monitoring & Analytics
@@ -82,7 +77,9 @@ export function validateEnvironment() {
     'JWT_SECRET',
     'SESSION_SECRET',
     'ENCRYPTION_KEY',
-    'BLOB_READ_WRITE_TOKEN',
+    'NEXT_PUBLIC_SUPABASE_URL',
+    'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+    'SUPABASE_SERVICE_ROLE_KEY',
   ]
 
   const missingVars = requiredVars.filter(varName => !process.env[varName])

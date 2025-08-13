@@ -41,9 +41,9 @@ export async function GET(request: NextRequest) {
     const config = {
       supabaseUrlSet: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
       supabaseAnonKeySet: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
-      vercelAnalyticsSet: Boolean(process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID),
+      netlifySiteIdSet: Boolean(process.env.NETLIFY_SITE_ID),
       cspReportUriSet: Boolean(process.env.CSP_REPORT_URI),
-      blobTokenOnServer: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      storageBucket: process.env.SUPABASE_STORAGE_BUCKET || 'car-images',
       useRedis,
     }
 

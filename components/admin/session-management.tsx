@@ -380,7 +380,7 @@ export function UserManagement() {
           <h3 className="text-lg font-semibold text-foreground mb-3">Notes</h3>
           <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
             <li>All admins use email-code MFA on first login per device.</li>
-            <li>Images use Vercel Blob; DB/Auth uses Supabase; emails via Resend.</li>
+            <li>Images use Supabase Storage; DB/Auth uses Supabase; emails via Resend.</li>
             <li>Roles map to permissions server-side; super_admin can manage users.</li>
           </ul>
         </div>

@@ -90,14 +90,14 @@ export function middleware(request: NextRequest) {
     response.headers.set('Content-Security-Policy', [
       "default-src 'self'",
       // Allow nonce'd inline scripts and specific hosts
-      `script-src 'self' 'nonce-${nonce}' https://vercel.live https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.google.com https://www.gstatic.com`,
+      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.google.com https://www.gstatic.com`,
       // Keep 'unsafe-inline' for styles for now to avoid breaking inline style attributes
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       // Images
-      "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://www.google-analytics.com https://region1.google-analytics.com https://maps.gstatic.com https://*.googleusercontent.com",
+      "img-src 'self' data: blob: https://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://maps.gstatic.com https://*.googleusercontent.com",
       // XHR/WebSocket endpoints
-      "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://vercel.live https://*.supabase.co wss://*.supabase.co https://www.google.com https://maps.googleapis.com",
+      "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://*.supabase.co wss://*.supabase.co https://www.google.com https://maps.googleapis.com",
       "frame-src 'self' https://www.google.com https://*.google.com https://*.google.com/maps https://*.google.com/maps/embed",
       "object-src 'none'",
       "base-uri 'self'",

@@ -21,10 +21,10 @@ export default function TestBlobPage() {
           
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">🧪 Vercel Blob Integration Test</CardTitle>
+              <CardTitle className="text-2xl">🧪 Storage Integration Test</CardTitle>
               <CardDescription>
-                Test the image upload, display, and delete functionality with Vercel Blob storage.
-                This page helps you verify that your Blob store is properly configured.
+                Test the image upload, display, and delete functionality with Supabase Storage.
+                This page helps you verify that your storage bucket is properly configured and public URLs work.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -34,9 +34,9 @@ export default function TestBlobPage() {
                     📋 Prerequisites:
                   </h3>
                   <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-                    <li>• Vercel Blob store created in your Vercel dashboard</li>
-                    <li>• <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">BLOB_READ_WRITE_TOKEN</code> environment variable set</li>
-                    <li>• Project deployed to Vercel (for production testing)</li>
+                    <li>• Supabase project with a Storage bucket (default: <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">car-images</code>)</li>
+                    <li>• <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">NEXT_PUBLIC_SUPABASE_URL</code> and <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> set</li>
+                    <li>• <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">SUPABASE_SERVICE_ROLE_KEY</code> set for server-side routes</li>
                   </ul>
                 </div>
                 

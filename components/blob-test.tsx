@@ -108,7 +108,7 @@ export function BlobTest() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <ImageIcon className="w-5 h-5" />
-          Vercel Blob Integration Test
+          Storage Integration Test
         </CardTitle>
         <CardDescription>
           Test the image upload, display, and delete functionality

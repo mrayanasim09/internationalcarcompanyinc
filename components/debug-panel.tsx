@@ -84,7 +84,7 @@ export function DebugPanel() {
     const envVars = {
       supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ? "Set" : "Missing",
       supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "Set" : "Missing",
-      blobToken: process.env.BLOB_READ_WRITE_TOKEN ? "Configured (server)" : "Missing (server)",
+      storageBucket: process.env.SUPABASE_STORAGE_BUCKET || 'car-images',
       resendConfigured: process.env.RESEND_API_KEY ? "Set" : "Missing",
     }
     setFirebaseStatus(envVars)
@@ -262,19 +262,16 @@ export function DebugPanel() {
               <h3 className="text-lg font-semibold mb-3 text-foreground">Storage</h3>
               <div className="mb-4 p-3 bg-accent border border-border rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  🔒 <strong>Security Note:</strong> The Blob token is intentionally hidden from the client for security. 
-                  This is normal and correct behavior.
+                  Using Supabase Storage. Ensure bucket is public for read access or use signed URLs.
                 </p>
               </div>
               <div className="grid grid-cols-1 gap-2 text-sm">
                 {firebaseStatus && Object.entries(firebaseStatus)
-                  .filter(([key]) => key.includes('blobToken'))
+                  .filter(([key]) => key.includes('storageBucket'))
                   .map(([key, value]) => (
                     <div key={key} className="flex justify-between items-center p-2 bg-card rounded border border-border">
                       <span className="font-medium text-muted-foreground">{key}:</span>
-                      <Badge variant={value.includes("Configured") ? "default" : value.includes("Not set") ? "secondary" : "destructive"}>
-                        {value}
-                      </Badge>
+                      <Badge variant="outline">{value}</Badge>
                     </div>
                   ))}
               </div>

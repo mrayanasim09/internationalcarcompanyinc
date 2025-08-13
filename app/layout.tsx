@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import { headers } from 'next/headers'
 import { GeistSans } from 'geist/font/sans'
-import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import { CookieConsent } from '@/components/cookie-consent'
 import { ErrorMonitor } from '@/components/error-monitor'
 
@@ -146,8 +144,6 @@ export default function RootLayout({
         <Providers>
           <main id="main">{children}</main>
         </Providers>
-        {process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID && <Analytics />}
-        {process.env.NEXT_PUBLIC_VERCEL_SPEED_INSIGHTS === '1' && <SpeedInsights />}
         <CookieConsent />
         <ErrorMonitor />
         {/* AI Chatbot is now gated and mounted from Providers after idle */}

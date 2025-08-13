@@ -20,9 +20,9 @@ export async function GET() {
         appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
         measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
       },
-      vercel: {
-        analytics: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID,
-        speedInsights: process.env.NEXT_PUBLIC_VERCEL_SPEED_INSIGHTS_ID,
+      netlify: {
+        siteId: process.env.NETLIFY_SITE_ID,
+        deployUrl: process.env.DEPLOY_URL,
       },
       auth: {
         nextAuthSecret: !!process.env.NEXTAUTH_SECRET,
@@ -31,8 +31,9 @@ export async function GET() {
       admin: {
         emails: process.env.NEXT_PUBLIC_ADMIN_EMAILS || process.env.ADMIN_EMAILS,
       },
-      blob: {
-        token: !!process.env.BLOB_READ_WRITE_TOKEN,
+      storage: {
+        supabaseUrlSet: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        bucket: process.env.SUPABASE_STORAGE_BUCKET || 'car-images',
       },
     }
     

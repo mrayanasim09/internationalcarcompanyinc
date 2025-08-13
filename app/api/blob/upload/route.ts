@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { uploadImageToBlob } from '@/lib/vercel-blob'
+import { uploadImageToStorage } from '@/lib/supabase-storage'
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,25 +33,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Upload to Vercel Blob
-    const imageUrl = await uploadImageToBlob(file)
+    // Upload to Supabase Storage
+    const imageUrl = await uploadImageToStorage(file)
     
     return NextResponse.json({ 
       success: true,
       url: imageUrl,
-      message: 'Image uploaded successfully to Vercel Blob'
+      message: 'Image uploaded successfully to Supabase Storage'
     })
   } catch (error: unknown) {
     console.error('Upload image error:', error)
     
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    
-    if (errorMessage.includes('Blob')) {
-      return NextResponse.json(
-        { error: 'Failed to upload image to Vercel Blob. Please check your configuration.' },
-        { status: 500 }
-      )
-    }
     
     return NextResponse.json(
       { error: 'Failed to upload image' },
