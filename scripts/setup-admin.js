@@ -17,14 +17,14 @@ bcrypt.hash(defaultPassword, 12).then(hash => {
   console.log('');
   
   console.log('🚀 Next Steps:');
-  console.log('1. Deploy to Vercel with the updated configuration');
-  console.log('2. Add all environment variables to Vercel dashboard');
-  console.log('3. Access admin setup at: https://your-domain.vercel.app/admin/setup');
+  console.log('1. Deploy to Netlify with the updated configuration');
+  console.log('2. Add all environment variables to Netlify dashboard');
+  console.log('3. Access admin setup at: https://your-site.netlify.app/admin/setup');
   console.log('4. Create admin account with the credentials above');
-  console.log('5. Login at: https://your-domain.vercel.app/admin/login');
+  console.log('5. Login at: https://your-site.netlify.app/admin/login');
   console.log('');
   
-  console.log('📋 Environment Variables to add to Vercel:');
+  console.log('📋 Environment Variables to add to Netlify:');
   console.log('Firebase Configuration:');
   console.log('NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key_here');
   console.log('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com');
@@ -42,7 +42,7 @@ bcrypt.hash(defaultPassword, 12).then(hash => {
   console.log('');
   console.log('NextAuth Configuration:');
   console.log('NEXTAUTH_SECRET=your_nextauth_secret_here');
-  console.log('NEXTAUTH_URL=https://your-domain.vercel.app');
+  console.log('NEXTAUTH_URL=https://your-site.netlify.app');
   console.log('');
   console.log('Admin Configuration:');
   console.log('NEXT_PUBLIC_ADMIN_EMAILS=admin@amtycoons.com,your_email@gmail.com');

@@ -44,6 +44,6 @@ console.log('6. Deploy with secure environment variables\n');
 console.log('🔗 USEFUL LINKS:');
 console.log('• Firebase Console: https://console.firebase.google.com');
 console.log('• Cloudinary Dashboard: https://cloudinary.com/console');
-console.log('• Vercel Environment Variables: https://vercel.com/docs/projects/environment-variables\n');
+console.log('• Netlify Environment Variables: https://docs.netlify.com/environment-variables/overview/\n');
 
 console.log('✅ Remember to revoke old credentials immediately!');

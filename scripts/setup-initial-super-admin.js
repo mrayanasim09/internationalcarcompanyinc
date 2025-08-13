@@ -76,10 +76,10 @@ async function setupSuperAdmin() {
     console.log('4. Store these credentials securely');
     console.log('');
     console.log('🚀 Your super admin account is ready!');
-    console.log('   Login at: https://your-domain.vercel.app/admin/login');
+    console.log('   Login at: https://your-site.netlify.app/admin/login');
     console.log('');
     console.log('📋 Next Steps:');
-    console.log('1. Deploy the application to Vercel');
+    console.log('1. Deploy the application to Netlify');
     console.log('2. Access admin portal with the credentials above');
     console.log('3. Complete email verification process');
     console.log('4. Change the default password');
