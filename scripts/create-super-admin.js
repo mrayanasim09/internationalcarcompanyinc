@@ -22,7 +22,7 @@ bcrypt.hash(defaultPassword, 12).then(hash => {
   console.log('🔒 Password Hash:', hash);
   console.log('');
   
-  console.log('🔐 Environment Variables to add to Vercel:\n');
+  console.log('🔐 Environment Variables to add to Netlify:\n');
   console.log('Firebase Configuration:');
   console.log('NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key');
   console.log('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com');
@@ -52,7 +52,7 @@ bcrypt.hash(defaultPassword, 12).then(hash => {
   
   console.log('⚠️  IMPORTANT SECURITY NOTES:');
   console.log('1. Change the default password immediately after first login');
-  console.log('2. Store these secrets securely in Vercel environment variables');
+  console.log('2. Store these secrets securely in Netlify environment variables');
   console.log('3. Enable 2FA for additional security');
   console.log('4. Use HTTPS in production');
   console.log('5. Regularly rotate JWT secrets');
@@ -60,10 +60,10 @@ bcrypt.hash(defaultPassword, 12).then(hash => {
   console.log('');
   
   console.log('🚀 Your secure admin portal is ready!');
-  console.log('   Login at: https://your-domain.vercel.app/admin/login');
+  console.log('   Login at: https://your-site.netlify.app/admin/login');
   console.log('');
   console.log('📋 Next Steps:');
-  console.log('1. Add all environment variables to Vercel dashboard');
+  console.log('1. Add all environment variables to Netlify dashboard');
   console.log('2. Deploy the application');
   console.log('3. Access admin portal and change default password');
   console.log('4. Set up Firebase Admin SDK in Firebase console');
