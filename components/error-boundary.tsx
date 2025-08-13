@@ -59,7 +59,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
           <div className="max-w-md w-full text-center">
             <div className="mb-6">
-              <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+              <AlertTriangle className="h-16 w-16 text-blue-600 mx-auto mb-4" />
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 Something went wrong
               </h1>

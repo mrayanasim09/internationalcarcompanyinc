@@ -33,26 +33,26 @@ export async function generateMetadata({ params }: CarPageProps): Promise<Metada
   
   if (!car) {
     return {
-      title: 'Car Not Found - AM Tycoons Inc',
+      title: 'Car Not Found - International Car Company Inc',
       description: 'The requested vehicle could not be found.',
     }
   }
 
   return {
-    title: `${car.title} - AM Tycoons Inc`,
-    description: `${car.year} ${car.make} ${car.model} for sale at AM Tycoons Inc. ${Number(car.mileage ?? 0).toLocaleString()} miles, located in ${car.location}. Contact us for more information.`,
-    keywords: `${car.make}, ${car.model}, ${car.year}, used car, pre-owned vehicle, ${car.location}, AM Tycoons Inc`,
+    title: `${car.title} - International Car Company Inc`,
+    description: `${car.year} ${car.make} ${car.model} for sale at International Car Company Inc. ${Number(car.mileage ?? 0).toLocaleString()} miles, located in ${car.location}. Contact us for more information.`,
+    keywords: `${car.make}, ${car.model}, ${car.year}, used car, pre-owned vehicle, ${car.location}, International Car Company Inc`,
     openGraph: {
-      title: `${car.title} - AM Tycoons Inc`,
-      description: `${car.year} ${car.make} ${car.model} for sale at AM Tycoons Inc. ${car.mileage.toLocaleString()} miles, located in ${car.location}.`,
-      images: car.images && car.images.length > 0 ? car.images : ['https://amtycoonsinc.com/optimized/am-tycoons-logo.png?v=4'],
+      title: `${car.title} - International Car Company Inc`,
+      description: `${car.year} ${car.make} ${car.model} for sale at International Car Company Inc. ${car.mileage.toLocaleString()} miles, located in ${car.location}.`,
+      images: car.images && car.images.length > 0 ? car.images : ['/International Car Company Inc. Logo.png'],
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${car.title} - AM Tycoons Inc`,
-      description: `${car.year} ${car.make} ${car.model} for sale at AM Tycoons Inc.`,
-      images: car.images && car.images.length > 0 ? [car.images[0]] : ['https://amtycoonsinc.com/optimized/am-tycoons-logo.png?v=4'],
+      title: `${car.title} - International Car Company Inc`,
+      description: `${car.year} ${car.make} ${car.model} for sale at International Car Company Inc.`,
+      images: car.images && car.images.length > 0 ? [car.images[0]] : ['/International Car Company Inc. Logo.png'],
     },
   }
 }
@@ -67,7 +67,7 @@ export default async function CarPage({ params }: CarPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="icc-theme min-h-screen bg-background">
       <Navbar />
       
       <main className="container mx-auto px-4 py-8">
@@ -84,11 +84,18 @@ export default async function CarPage({ params }: CarPageProps) {
               brand: car.make,
               model: car.model,
               releaseDate: String(car.year),
+              url: `${typeof window !== 'undefined' ? window.location.origin : ''}/car/${car.id}`,
               offers: {
                 '@type': 'Offer',
                 priceCurrency: 'USD',
                 price: car.price,
                 availability: 'https://schema.org/InStock',
+              },
+              itemCondition: 'https://schema.org/UsedCondition',
+              mileageFromOdometer: {
+                '@type': 'QuantitativeValue',
+                value: car.mileage,
+                unitCode: 'SMI'
               },
               image: Array.isArray(car.images) ? car.images : [],
               description: car.description,

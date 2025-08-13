@@ -46,7 +46,7 @@ const nextConfig = {
             value: JSON.stringify({
               group: 'csp-endpoint',
               max_age: 10886400,
-              endpoints: [{ url: process.env.CSP_REPORT_URI || 'https://amtycoonsinc.com/api/csp-report' }]
+              endpoints: [{ url: process.env.CSP_REPORT_URI || 'https://internationalcarcompanyinc.com/api/csp-report' }]
             })
           },
           // HTTP Strict Transport Security
@@ -114,6 +114,15 @@ const nextConfig = {
   async rewrites() {
     // Use static public/robots.txt
     return []
+  },
+  async redirects() {
+    return [
+      {
+        source: '/listings',
+        destination: '/inventory',
+        permanent: true,
+      },
+    ]
   },
   // Optimize bundle size
   webpack: (config, { dev, isServer }) => {

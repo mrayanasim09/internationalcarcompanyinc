@@ -88,7 +88,7 @@ export function MultiContactOptions({
             {CONTACT_NUMBERS.map((contact, index) => (
               <div key={index} className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Phone className="h-3 w-3 text-red-600" />
+                  <Phone className="h-3 w-3 text-blue-600" />
                   {contact.label}
                 </span>
                 <div className="flex gap-2">

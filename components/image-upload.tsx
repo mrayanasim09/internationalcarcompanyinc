@@ -153,7 +153,7 @@ export function ImageUpload({
               <button
                 type="button"
                 onClick={() => handleImageRemove(imageUrl)}
-                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                 title="Remove image"
               >
                 <X className="w-3 h-3" />

@@ -3,8 +3,8 @@ import { AdminLayout } from '@/components/admin/admin-layout'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Admin - AM Tycoons Inc.',
-    template: '%s | Admin - AM Tycoons Inc.'
+    default: 'Admin - International Car Company Inc',
+    template: '%s | Admin - International Car Company Inc'
   },
 }
 

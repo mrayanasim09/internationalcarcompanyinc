@@ -83,7 +83,7 @@ export function FeaturedCars() {
       <div className="text-center mt-6 md:mt-10">
         <a
           href="/inventory"
-          className="inline-block bg-red-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold text-base md:text-lg hover:bg-red-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
+          className="inline-block bg-primary text-primary-foreground px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold text-base md:text-lg hover:bg-primary/90 transition-colors duration-200 shadow-lg hover:shadow-xl"
           aria-label="View all vehicles in our inventory"
         >
           View All Vehicles

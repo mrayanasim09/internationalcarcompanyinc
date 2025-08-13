@@ -220,7 +220,7 @@ export function SuperAdminDashboard({ currentUser }: AdminManagementProps) {
       case "super_admin":
         return "bg-purple-600"
       case "admin":
-        return "bg-red-600"
+        return "bg-blue-600"
       case "editor":
         return "bg-blue-600"
       case "viewer":

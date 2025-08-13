@@ -46,7 +46,7 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 1000px"
               onError={handleImageError}
-              priority={false}
+              priority={currentIndex === 0}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
@@ -91,6 +91,7 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
                      fill
                      className="object-contain"
                     sizes="100vw"
+                    priority={true}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">

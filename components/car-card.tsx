@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import type { Car } from "@/lib/types"
 import { useComparison } from "@/lib/comparison-context"
+import { motion } from "framer-motion"
 // StarRating import removed as it's not used
 
 interface CarCardProps {
@@ -71,6 +72,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
   }
 
   return (
+    <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
     <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden bg-card border border-border touch-card">
       <Link href={`/car/${car.id}`} className="block" aria-label={`View details for ${car.title}`}>
         <div className="relative aspect-video">
@@ -84,6 +86,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               placeholder="blur"
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+              priority={false}
             />
           ) : (
             <Image
@@ -93,6 +96,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              priority={false}
             />
           )}
 
@@ -178,5 +182,6 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
         </div>
       </CardContent>
     </Card>
+    </motion.div>
   )
 })

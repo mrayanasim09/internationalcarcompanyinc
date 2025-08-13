@@ -45,11 +45,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <div className="fixed inset-y-0 left-0 w-64 bg-background shadow-lg border-r border-border">
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center space-x-2">
-              {/* Logo Image - Same as navbar for consistency */}
+              {/* Logo Image */}
               <div className="relative w-12 h-8">
                 <Image
-                  src="/optimized/am-tycoons-logo.webp"
-                  alt="AM Tycoons Inc. Logo"
+                  src="/International Car Company Inc. Logo.png"
+                  alt="International Car Company Inc Logo"
                   fill
                   className="object-contain"
                   priority
@@ -57,8 +57,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 />
               </div>
               <div className="hidden sm:block">
-                 <div className="text-sm font-bold text-foreground"><BrandName /></div>
-                 <div className="text-xs text-muted-foreground">FIND YOUR PERFECT DRIVE</div>
+                  <div className="text-sm font-bold text-foreground"><BrandName /></div>
+                  <div className="text-xs text-muted-foreground">Professional vehicles. Modern experience.</div>
               </div>
             </div>
             <Button onClick={() => setSidebarOpen(false)} variant="ghost" size="sm">
@@ -95,11 +95,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           <div className="flex flex-col h-full bg-background text-foreground shadow-lg border-r border-border">
           <div className="flex items-center px-6 py-4 border-b border-border">
             <div className="flex items-center space-x-3">
-              {/* Logo Image - Same as navbar for consistency */}
+              {/* Logo Image */}
               <div className="relative w-16 h-10">
                 <Image
-                  src="/optimized/am-tycoons-logo.webp"
-                  alt="AM Tycoons Inc. Logo"
+                  src="/International Car Company Inc. Logo.png"
+                  alt="International Car Company Inc Logo"
                   fill
                   className="object-contain"
                   priority
@@ -108,7 +108,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               </div>
               <div>
                  <div className="text-sm font-bold text-foreground"><BrandName /></div>
-                 <div className="text-xs text-muted-foreground">FIND YOUR PERFECT DRIVE</div>
+                 <div className="text-xs text-muted-foreground">Professional vehicles. Modern experience.</div>
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
            <div className="p-4 border-t border-border">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                  <span className="text-primary-foreground text-sm font-medium">{user?.email?.[0]?.toUpperCase() || "A"}</span>
               </div>
               <div className="flex-1 min-w-0">

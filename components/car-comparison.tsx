@@ -67,7 +67,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
         <Scale className="h-4 w-4 mr-2" aria-hidden="true" />
         Compare Cars
         {selectedCars.length > 0 && (
-          <Badge className="ml-2 bg-red-600" aria-label={`${selectedCars.length} cars selected`}>
+          <Badge className="ml-2 bg-primary text-primary-foreground" aria-label={`${selectedCars.length} cars selected`}>
             {selectedCars.length}
           </Badge>
         )}
@@ -115,7 +115,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                 {availableCars.slice(0, 8).map((car) => (
                   <div
                     key={car.id}
-                    className="border rounded-lg p-4 cursor-pointer hover:border-red-500 hover:shadow-lg transition-all"
+                    className="border rounded-lg p-4 cursor-pointer hover:border-blue-500 hover:shadow-lg transition-all"
                     onClick={() => handleAddCar(car)}
                     role="listitem"
                     tabIndex={0}
@@ -130,7 +130,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                       className="w-full h-24 object-cover rounded mb-3"
                     />
                     <h4 className="font-semibold text-sm mb-1">{car.title}</h4>
-                    <p className="text-red-600 font-bold text-sm">{formatPrice(car.price)}</p>
+                    <p className="text-blue-600 font-bold text-sm">{formatPrice(car.price)}</p>
                     <p className="text-muted-foreground text-xs">{car.year} • {formatMileage(car.mileage)} mi</p>
                   </div>
                 ))}
@@ -154,7 +154,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                   <div key={car.id} className="relative border rounded-lg p-4" role="listitem">
                     <button
                       onClick={() => removeFromComparison(car.id)}
-                      className="absolute top-2 right-2 z-10 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors"
+                      className="absolute top-2 right-2 z-10 bg-primary text-primary-foreground rounded-full p-1 hover:bg-primary/90 transition-colors"
                       aria-label={`Remove ${car.title} from comparison`}
                     >
                       <X className="h-3 w-3" aria-hidden="true" />
@@ -168,7 +168,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                       unoptimized
                     />
                     <h3 className="font-bold text-sm mb-1">{car.title}</h3>
-                    <p className="text-red-600 font-bold text-lg">{formatPrice(car.price)}</p>
+                    <p className="text-blue-600 font-bold text-lg">{formatPrice(car.price)}</p>
                     <p className="text-muted-foreground text-xs">{car.year} • {formatMileage(car.mileage)} mi</p>
                   </div>
                 ))}
@@ -215,7 +215,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                     <tr className="border-b">
                       <td className="p-4 font-medium bg-accent">Price</td>
                       {selectedCars.map((car) => (
-                        <td key={car.id} className="p-4 text-center font-bold text-red-600">
+                        <td key={car.id} className="p-4 text-center font-bold text-blue-600">
                           {formatPrice(car.price)}
                         </td>
                       ))}
@@ -260,7 +260,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                       <td className="p-4 font-medium bg-gray-50 dark:bg-gray-800">Actions</td>
                       {selectedCars.map((car) => (
                         <td key={car.id} className="p-4 text-center">
-                          <Button size="sm" className="bg-gradient-to-r from-red-600 to-red-400 hover:from-red-700 hover:to-red-500 text-white rounded-lg shadow font-semibold px-4 py-2 transition-all" aria-label={`View details for ${car.title}`}>
+                          <Button size="sm" className="bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white rounded-lg shadow font-semibold px-4 py-2 transition-all" aria-label={`View details for ${car.title}`}>
                             View Details
                           </Button>
                         </td>
@@ -327,7 +327,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                   .map((car) => (
                   <div
                     key={car.id}
-                    className="border rounded-lg p-4 cursor-pointer hover:border-red-500 hover:shadow-lg transition-all"
+                    className="border rounded-lg p-4 cursor-pointer hover:border-blue-500 hover:shadow-lg transition-all"
                     onClick={() => handleAddCar(car)}
                     role="listitem"
                     tabIndex={0}
@@ -343,7 +343,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                       priority={false}
                     />
                     <h4 className="font-semibold text-sm mb-1">{car.title}</h4>
-                    <p className="text-red-600 font-bold text-sm">{formatPrice(car.price)}</p>
+                    <p className="text-blue-600 font-bold text-sm">{formatPrice(car.price)}</p>
                     <p className="text-gray-500 text-xs">{car.year} • {formatMileage(car.mileage)} mi</p>
                     <p className="text-gray-500 text-xs">{car.location}</p>
                   </div>

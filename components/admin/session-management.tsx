@@ -169,7 +169,7 @@ export function SessionManagement() {
       <Card>
         <CardContent className="p-6">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-600"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
             <span className="ml-2">Loading sessions...</span>
           </div>
         </CardContent>
@@ -232,7 +232,7 @@ export function SessionManagement() {
               onClick={terminateAllOthers}
               variant="outline"
               size="sm"
-              className="text-red-600 hover:text-red-700"
+              className="text-blue-600 hover:text-blue-700"
             >
               <X className="h-4 w-4 mr-2" />
               Terminate Others
@@ -302,7 +302,7 @@ export function SessionManagement() {
                       onClick={() => terminateSession(session.sessionId)}
                       variant="ghost"
                       size="sm"
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -479,7 +479,7 @@ function AdminList() {
               </td>
               <td className="py-2 pr-3 text-muted-foreground">{u.lastLogin ? new Date(u.lastLogin).toLocaleString() : '-'}</td>
               <td className="py-2 pr-3">
-                <button className="text-red-600 hover:underline" onClick={() => deleteUser(u.id)}>Delete</button>
+                <button className="text-blue-600 hover:underline" onClick={() => deleteUser(u.id)}>Delete</button>
               </td>
             </tr>
           ))}

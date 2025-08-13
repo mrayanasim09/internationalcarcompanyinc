@@ -40,7 +40,7 @@ export function FloatingCompareButton() {
     return (
       <Button
         onClick={() => setShowComparison(true)}
-        className="fixed bottom-4 left-4 z-40 bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full w-14 h-14 flex items-center justify-center"
+        className="fixed bottom-4 left-4 z-40 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 rounded-full w-14 h-14 flex items-center justify-center"
         aria-label="Open car comparison"
       >
         <Scale className="h-6 w-6" />
@@ -52,7 +52,7 @@ export function FloatingCompareButton() {
     <>
       <Button
         onClick={() => setShowComparison(true)}
-        className="fixed bottom-4 left-4 z-40 bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full w-14 h-14 flex items-center justify-center relative"
+        className="fixed bottom-4 left-4 z-40 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 rounded-full w-14 h-14 flex items-center justify-center relative"
         aria-label={`Compare ${selectedCars.length} cars`}
       >
         <Scale className="h-6 w-6" />

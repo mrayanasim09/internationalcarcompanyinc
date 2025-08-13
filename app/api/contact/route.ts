@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     // Verify reCAPTCHA (v3)
     const remoteIp = request.headers.get('x-forwarded-for') || request.ip || undefined
-    const recaptcha = await verifyRecaptcha(contactData.recaptchaToken, remoteIp, 'contact_form')
+    const recaptcha = await verifyRecaptcha(contactData.recaptchaToken, remoteIp, 'contact_form', 0.3)
     if (!recaptcha.success) {
       return NextResponse.json(
         { error: 'reCAPTCHA verification failed', details: recaptcha.errors, score: recaptcha.score },

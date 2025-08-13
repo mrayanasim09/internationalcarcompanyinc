@@ -8,8 +8,8 @@ export function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    const consent = localStorage.getItem('amtycoons-cookie-consent')
-    const consentDate = localStorage.getItem('amtycoons-cookie-date')
+    const consent = localStorage.getItem('icc-cookie-consent')
+    const consentDate = localStorage.getItem('icc-cookie-date')
     
     if (!consent) {
       setIsVisible(true)
@@ -26,14 +26,14 @@ export function CookieConsent() {
   }, [])
 
   const acceptCookies = () => {
-    localStorage.setItem('amtycoons-cookie-consent', 'accepted')
-    localStorage.setItem('amtycoons-cookie-date', new Date().toISOString())
+    localStorage.setItem('icc-cookie-consent', 'accepted')
+    localStorage.setItem('icc-cookie-date', new Date().toISOString())
     setIsVisible(false)
   }
 
   const declineCookies = () => {
-    localStorage.setItem('amtycoons-cookie-consent', 'declined')
-    localStorage.setItem('amtycoons-cookie-date', new Date().toISOString())
+    localStorage.setItem('icc-cookie-consent', 'declined')
+    localStorage.setItem('icc-cookie-date', new Date().toISOString())
     setIsVisible(false)
   }
 
@@ -44,10 +44,10 @@ export function CookieConsent() {
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-6">
           <div className="flex items-start gap-3 flex-1 min-w-0 pr-2">
-            <Cookie className="h-6 w-6 text-red-600 mt-0.5" />
+            <Cookie className="h-6 w-6 text-primary mt-0.5" />
             <div className="flex-1 min-w-0">
               <h3 className="text-sm sm:text-base font-semibold text-foreground mb-1">
-                AM Tycoons Inc. Cookie Policy
+                International Car Company Inc Cookie Policy
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed whitespace-normal break-words max-w-full">
                 We use essential cookies for site functionality, analytics to improve your car browsing experience, 

@@ -57,7 +57,7 @@ export function FloatingActionButton({ className }: FloatingActionButtonProps) {
       <Button
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
-          "rounded-full h-14 w-14 bg-red-600 hover:bg-red-700 shadow-lg transition-transform duration-200",
+          "rounded-full h-14 w-14 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-transform duration-200",
           isExpanded && "rotate-45"
         )}
       >

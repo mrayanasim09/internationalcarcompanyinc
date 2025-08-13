@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://amtycoonsinc.com/sitemap.xml
+Sitemap: https://internationalcarcompanyinc.com/sitemap.xml
 
 # Disallow admin areas
 Disallow: /admin/

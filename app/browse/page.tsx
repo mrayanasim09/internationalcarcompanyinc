@@ -125,7 +125,7 @@ export default function BrowsePage() {
             {isLoading ? (
               <LoadingSpinner />
             ) : error ? (
-              <div className="text-center py-12 text-red-500">{error}</div>
+              <div className="text-center py-12 text-blue-600 dark:text-blue-400">{error}</div>
             ) : sortedCars.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {sortedCars.map((car) => (

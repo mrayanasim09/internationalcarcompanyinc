@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-geist-sans)", "system-ui", "Arial", "sans-serif"],
+      },
       screens: {
         'xs': '475px',
       },
@@ -54,11 +57,11 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // AM Tycoons brand colors
+        // Brand accents for International Car Company Inc
         brand: {
-          red: "#dc2626",
-          "red-dark": "#991b1b",
-          "red-light": "#ef4444",
+          blue: "#1e90ff",
+          teal: "#00b3b3",
+          slate: "#0f172a",
         },
       },
       borderRadius: {
@@ -87,8 +90,8 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.3s ease-out",
-        "slide-up": "slide-up 0.3s ease-out",
+        "fade-in": "fade-in 0.35s ease-out",
+        "slide-up": "slide-up 0.35s ease-out",
       },
       // Production-ready spacing
       spacing: {

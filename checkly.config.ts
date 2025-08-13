@@ -5,11 +5,11 @@ import { defineConfig } from 'checkly'
  */
 const config = defineConfig({
   /* A human friendly name for your project */
-  projectName: 'am-tycoons-car-dealership',
+  projectName: 'international-car-company-inc',
   /** A logical ID that needs to be unique across your Checkly account,
   * See https://www.checklyhq.com/docs/cli/constructs/ to learn more about logical IDs.
   */
-  logicalId: 'am-tycoons-car-dealership',
+  logicalId: 'international-car-company-inc',
   /* An optional URL to your Git repo */
   repoUrl: 'https://github.com/checkly/checkly-cli',
   /* Sets default values for Checks */

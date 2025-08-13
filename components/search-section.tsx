@@ -50,7 +50,7 @@ export function SearchSection() {
                 placeholder="Search for make, model, or keywords..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 pr-4 py-4 bg-background border-border text-foreground placeholder-muted-foreground focus:border-red-500 focus:ring-red-500"
+                className="pl-12 pr-4 py-4 bg-background border-border text-foreground placeholder-muted-foreground focus:border-blue-500 focus:ring-blue-500"
                 aria-label="Search vehicles"
               />
             </div>
@@ -153,7 +153,7 @@ export function SearchSection() {
               <div className="mt-6 flex flex-col sm:flex-row gap-4">
                 <Button
                   type="submit"
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50"
+                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-3 px-6 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-primary/50"
                   aria-label="Search vehicles"
                 >
                   <Search className="w-5 h-5 mr-2" aria-hidden="true" />

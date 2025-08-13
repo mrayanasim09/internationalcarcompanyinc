@@ -7,7 +7,7 @@ export default function NotFound() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="text-center">
         <div className="mb-8">
-          <h1 className="text-9xl font-bold text-red-600">404</h1>
+          <h1 className="text-9xl font-bold text-primary">404</h1>
           <h2 className="text-2xl font-semibold text-foreground mb-4">
             Page Not Found
           </h2>
@@ -17,7 +17,7 @@ export default function NotFound() {
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild className="bg-red-600 hover:bg-red-700">
+          <Button asChild className="bg-primary hover:bg-primary/90">
             <Link href="/">
               <Home className="w-4 h-4 mr-2" />
               Go Home

@@ -29,10 +29,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="light"
-      enableSystem={false}
+      defaultTheme="system"
+      enableSystem={true}
       disableTransitionOnChange
-      storageKey="am-tycoons-theme"
+      storageKey="icc-theme"
     >
       <AuthProvider>
         <ComparisonProvider>

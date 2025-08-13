@@ -16,14 +16,14 @@ interface Message {
 
 // Predefined responses for common car dealership questions
 const AUTO_RESPONSES: { [key: string]: string } = {
-  'hours': 'Our hours are Monday-Friday 9AM-7PM, Saturday 9AM-6PM, Sunday 11AM-5PM. You can also browse our inventory online anytime!',
-  'financing': 'We offer competitive financing options with approved credit. Our finance team works with multiple lenders to get you the best rates. Contact us at (424) 303-0386 to discuss your options.',
+  'hours': 'Hours coming soon. You can browse our inventory online anytime.',
+  'financing': 'We offer competitive financing options with approved credit. Our finance team works with multiple lenders. Call us at +1 310-350-7709 to discuss your options.',
   'warranty': 'All our vehicles come with a comprehensive inspection report. Extended warranties are available for most vehicles. Contact our sales team for specific warranty details.',
   'trade': 'Yes, we accept trade-ins! We can provide a trade-in estimate based on your vehicle\'s condition, mileage, and market value. Bring your car in for a free appraisal.',
-  'appointment': 'You can schedule a viewing by calling us at (424) 303-0386 or texting any of our contact numbers. We\'re also available via SMS for quick questions.',
+  'appointment': 'You can schedule a viewing by calling us at +1 310-350-7709. We\'re also available via SMS for quick questions.',
   'inventory': 'Our inventory is updated daily. You can browse all available vehicles on our listings page. If you\'re looking for something specific, let us know and we\'ll help you find it!',
-  'location': 'We\'re located in Los Angeles, CA. Contact us at (424) 303-0386 for our exact address and directions.',
-  'contact': 'You can reach us at:\n• Primary: (424) 303-0386\n• Secondary: (310) 350-7709\n• Sales Team: (310) 972-0341\n• Customer Service: (310) 904-8377\nAll numbers support both calls and SMS!',
+  'location': 'Location coming soon. Call us at +1 310-350-7709 for more information.',
+  'contact': 'You can reach us at +1 310-350-7709. Call or SMS supported.',
   'price': 'Our prices are competitive and we\'re open to negotiation. All vehicles are priced based on market value, condition, and mileage. Contact us to discuss pricing for any specific vehicle.',
   'inspection': 'All our vehicles undergo a thorough multi-point inspection. We provide detailed inspection reports and vehicle history when available. Your satisfaction and safety are our priorities.'
 }
@@ -65,7 +65,7 @@ function findResponse(message: string): string {
   }
   
   // Default response
-  return "Thanks for your question! I'm here to help with information about our vehicles, financing, hours, and more. For specific vehicle details or to schedule a viewing, please call us at (424) 303-0386. Our team can provide personalized assistance with your car buying needs!"
+  return "Thanks for your question! I'm here to help with information about our vehicles, financing, hours, and more. For specific vehicle details or to schedule a viewing, please call us at +1 310-350-7709."
 }
 
 export function AIChatbot() {
@@ -136,7 +136,7 @@ export function AIChatbot() {
       <div className="fixed bottom-20 right-4 z-50 md:bottom-4">
         <Button
           onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-full bg-red-600 hover:bg-red-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          className="h-14 w-14 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           size="lg"
         >
           <MessageCircle className="h-6 w-6 text-white" />
@@ -145,8 +145,8 @@ export function AIChatbot() {
         
         {/* Pulse animation for attention */}
         <div className="absolute -top-1 -right-1">
-          <Badge variant="destructive" className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs animate-pulse">
-            AI
+          <Badge variant="destructive" className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-[10px] animate-pulse bg-primary text-primary-foreground border-0">
+            Chat
           </Badge>
         </div>
       </div>
@@ -156,12 +156,12 @@ export function AIChatbot() {
   return (
     <div className="fixed bottom-20 right-4 z-50 md:bottom-4">
       <Card className={`w-80 h-96 ${isMinimized ? 'h-12' : 'h-96'} transition-all duration-300 shadow-xl border-2`}>
-        <CardHeader className="p-3 bg-red-600 text-white rounded-t-lg">
+        <CardHeader className="p-3 bg-primary text-primary-foreground rounded-t-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
               <div>
-                <CardTitle className="text-sm font-medium">AM Tycoons Assistant</CardTitle>
+                <CardTitle className="text-sm font-medium">Assistant</CardTitle>
                 <p className="text-xs opacity-90">Usually replies instantly</p>
               </div>
             </div>
@@ -170,7 +170,7 @@ export function AIChatbot() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMinimized(!isMinimized)}
-                className="h-6 w-6 p-0 text-white hover:bg-red-700"
+                className="h-6 w-6 p-0 text-primary-foreground hover:bg-primary/20"
               >
                 {isMinimized ? <Maximize2 className="h-3 w-3" /> : <Minimize2 className="h-3 w-3" />}
               </Button>
@@ -178,7 +178,7 @@ export function AIChatbot() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsOpen(false)}
-                className="h-6 w-6 p-0 text-white hover:bg-red-700"
+                className="h-6 w-6 p-0 text-primary-foreground hover:bg-primary/20"
               >
                 <X className="h-3 w-3" />
               </Button>
@@ -202,11 +202,11 @@ export function AIChatbot() {
                     className={`max-w-[80%] p-2 rounded-lg text-sm ${
                       message.isBot
                         ? 'bg-card text-foreground border border-border'
-                        : 'bg-red-600 text-white'
+                        : 'bg-primary text-primary-foreground'
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{message.content}</p>
-                    <p className={`text-xs mt-1 opacity-70 ${message.isBot ? 'text-muted-foreground' : 'text-red-100'}`}>
+                    <p className={`text-xs mt-1 opacity-70 ${message.isBot ? 'text-muted-foreground' : 'text-primary-foreground/80'}`}>
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -241,13 +241,13 @@ export function AIChatbot() {
                   onClick={sendMessage}
                   disabled={!newMessage.trim() || isTyping}
                   size="sm"
-                  className="bg-red-600 hover:bg-red-700"
+                  className="bg-primary hover:bg-primary/90"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
-              <p className="text-xs text-gray-500 mt-2">
-                For immediate assistance, call <a href="tel:+14243030386" className="text-red-600 hover:underline">(424) 303-0386</a>
+              <p className="text-xs text-muted-foreground mt-2">
+                For immediate assistance, call <a href="tel:+13103507709" className="text-primary hover:underline">+1 310-350-7709</a>
               </p>
             </div>
           </CardContent>

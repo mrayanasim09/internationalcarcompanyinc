@@ -25,7 +25,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">AM Tycoons Inc</h3>
+            <h3 className="text-xl font-bold mb-4">International Car Company Inc</h3>
             <p className="text-muted-foreground">
               Your trusted partner for finding the perfect vehicle.
             </p>
@@ -39,8 +39,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/listings" className="text-muted-foreground hover:text-primary">
-                  Listings
+                <Link href="/inventory" className="text-muted-foreground hover:text-primary">
+                  Inventory
                 </Link>
               </li>
               <li>
@@ -60,7 +60,7 @@ const Footer = () => {
             <div className="text-muted-foreground">
               <p>123 Car Dealer Street</p>
               <p>Cityville, CA 90210</p>
-              <p>Email: info@amtycoonsinc.com</p>
+              <p>Email: info@internationalcarcompanyinc.com</p>
               {phoneNumber.map((number, index) => (
                  <div key={index}>
                  <a
@@ -103,7 +103,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-8 border-t border-border pt-6 text-center text-muted-foreground">
-          <p>&copy; 2023 AM Tycoons Inc. All rights reserved.</p>
+          <p>&copy; 2025 International Car Company Inc. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -16,7 +16,7 @@ export function ErrorMonitor() {
   const [notifications, setNotifications] = useState<ErrorNotification[]>([])
   const [isAdminUser, setIsAdminUser] = useState(false)
   const [alertsEnabled, setAlertsEnabled] = useState(false)
-  const [showBanner, setShowBanner] = useState(false)
+  const [showBanner, setShowBanner] = useState(true)
   // clientId removed; local notifications do not require it
 
   const removeNotification = useCallback((id: string) => {
@@ -40,9 +40,9 @@ export function ErrorMonitor() {
 
   useEffect(() => {
     // Enable monitor only after admin login and only when notifications exist
-    const adminAccess = localStorage.getItem('amtycoons-admin-access')
-    const adminLoginTime = localStorage.getItem('amtycoons-admin-login-time')
-    const alerts = localStorage.getItem('amtycoons-admin-alerts')
+    const adminAccess = localStorage.getItem('icc-admin-access')
+    const adminLoginTime = localStorage.getItem('icc-admin-login-time')
+    const alerts = localStorage.getItem('icc-admin-alerts')
     
     if (adminAccess && adminLoginTime) {
       const loginTime = new Date(adminLoginTime)
@@ -137,13 +137,13 @@ export function ErrorMonitor() {
   const toggleAlerts = () => {
     const next = !alertsEnabled
     setAlertsEnabled(next)
-    localStorage.setItem('amtycoons-admin-alerts', next ? 'enabled' : 'disabled')
+    localStorage.setItem('icc-admin-alerts', next ? 'enabled' : 'disabled')
   }
 
   const getNotificationStyles = (type: string) => {
     switch (type) {
       case 'error':
-        return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200'
+        return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200'
       case 'warning':
         return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-200'
       case 'info':

@@ -18,9 +18,9 @@ export function HoverCardEnhanced({
 
   const effectClasses = {
     lift: "hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
-    glow: "hover:shadow-xl hover:shadow-red-100 dark:hover:shadow-red-900/20 transition-all duration-300",
+    glow: "hover:shadow-xl hover:shadow-blue-100 dark:hover:shadow-blue-900/20 transition-all duration-300",
     scale: "hover:scale-105 transition-transform duration-300",
-    border: "hover:border-red-300 dark:hover:border-red-600 transition-colors duration-300"
+    border: "hover:border-blue-300 dark:hover:border-blue-600 transition-colors duration-300"
   }
 
   return (

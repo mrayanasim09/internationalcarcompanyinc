@@ -102,7 +102,7 @@ export function ReviewForm({ carId }: ReviewFormProps) {
         />
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="bg-red-600 hover:bg-red-700">
+      <Button type="submit" disabled={isSubmitting} className="bg-primary hover:bg-primary/90 text-primary-foreground">
         {isSubmitting ? "Submitting..." : "Submit Review"}
       </Button>
     </form>

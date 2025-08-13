@@ -9,7 +9,7 @@ const testimonials = [
     name: "Sarah Johnson",
     rating: 5,
     score: 95,
-    text: "Amazing experience! The team at AM Tycoons Inc. helped me find the perfect car within my budget. The process was smooth and transparent.",
+    text: "Amazing experience! The team helped me find the perfect car within my budget. The process was smooth and transparent.",
     location: "Los Angeles, CA"
   },
   {
@@ -25,7 +25,7 @@ const testimonials = [
     name: "Emily Rodriguez",
     rating: 5,
     score: 95,
-    text: "Honest pricing and no hidden fees. They really care about customer satisfaction. Highly recommend AM Tycoons Inc.!",
+    text: "Honest pricing and no hidden fees. They really care about customer satisfaction. Highly recommend!",
     location: "Orange County, CA"
   },
   {

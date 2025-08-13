@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import dynamic from 'next/dynamic'
-const CarManagement = dynamic(() => import("@/components/admin/car-management").then(m => m.CarManagement), { ssr: false })
-const ReviewManagement = dynamic(() => import("@/components/admin/review-management").then(m => m.ReviewManagement), { ssr: false })
-const DebugPanel = dynamic(() => import("@/components/debug-panel").then(m => m.DebugPanel), { ssr: false })
+const CarManagement = dynamic(() => import("@/components/admin/car-management").then(m => m.CarManagement), { ssr: false, loading: () => <div /> })
+const ReviewManagement = dynamic(() => import("@/components/admin/review-management").then(m => m.ReviewManagement), { ssr: false, loading: () => <div /> })
+const DebugPanel = dynamic(() => import("@/components/debug-panel").then(m => m.DebugPanel), { ssr: false, loading: () => <div /> })
 import { useAuth } from "@/lib/auth-context"
 import { useRouter } from "next/navigation"
 import type { Car, Review } from "@/lib/types"

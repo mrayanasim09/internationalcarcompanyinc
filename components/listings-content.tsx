@@ -6,6 +6,7 @@ import { FilterPanel } from "@/components/filter-panel"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
+import { useEffect as useEffectReact } from 'react'
 // CSS animation utilities are used to avoid client boundary issues
 
 import { CarLoader } from "@/components/ui/car-loader"
@@ -92,6 +93,21 @@ export function ListingsContent({ initialCars, filters: controlledFilters, onFil
     setCurrentPage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  // Keyboard shortcuts (A11y/UX): '/' to focus search, 'f' to toggle filters when internal
+  useEffectReact(() => {
+    const handler = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.getAttribute('contenteditable') === 'true')) return
+      if (e.key === '/') {
+        e.preventDefault()
+        const input = document.querySelector<HTMLInputElement>('input[type="text"][placeholder^="Search"]')
+        input?.focus()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
   return (
     <div className="space-y-6 md:space-y-8">

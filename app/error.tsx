@@ -22,7 +22,7 @@ export default function Error({
       <div className="text-center">
         <div className="mb-8">
           <div className="flex justify-center mb-4">
-            <AlertTriangle className="w-16 h-16 text-red-600" />
+            <AlertTriangle className="w-16 h-16 text-blue-600" />
           </div>
           <h1 className="text-4xl font-bold text-foreground mb-4">
             Something went wrong!
@@ -43,7 +43,7 @@ export default function Error({
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={() => reset()} className="bg-red-600 hover:bg-red-700">
+          <Button onClick={() => reset()} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             <RefreshCw className="w-4 h-4 mr-2" />
             Try Again
           </Button>

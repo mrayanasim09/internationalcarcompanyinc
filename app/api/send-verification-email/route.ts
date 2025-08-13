@@ -112,9 +112,9 @@ async function sendWithResend(email: string, code: string, type: string): Promis
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: process.env.FROM_EMAIL || 'noreply@amtycoonsinc.com',
+        from: process.env.FROM_EMAIL || 'info@internationalcarcompanyinc.com',
         to: email,
-        subject: `AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
+        subject: `International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
         html: generateEmailHTML(code, type),
         text: generateEmailText(code, type)
       })
@@ -153,8 +153,8 @@ async function sendWithSendGrid(email: string, code: string, type: string): Prom
       },
       body: JSON.stringify({
         personalizations: [{ to: [{ email }] }],
-        from: { email: process.env.FROM_EMAIL || 'noreply@amtycoonsinc.com' },
-        subject: `AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
+        from: { email: process.env.FROM_EMAIL || 'info@internationalcarcompanyinc.com' },
+        subject: `International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
         content: [
           { type: 'text/plain', value: generateEmailText(code, type) },
           { type: 'text/html', value: generateEmailHTML(code, type) }
@@ -194,7 +194,7 @@ async function sendWithNodemailer(email: string, code: string, type: string): Pr
 // Console logging for development/testing
 async function sendToConsole(email: string, code: string, type: string): Promise<boolean> {
   const emailContent = `
-📧 AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}
+📧 International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}
 
 🔐 Your verification code is: ${code}
 
@@ -203,7 +203,7 @@ async function sendToConsole(email: string, code: string, type: string): Promise
 ⚠️  If you didn't request this code, please ignore this email.
 
 Best regards,
-AM Tycoons Inc. Team
+International Car Company Inc Team
   `
 
   if (process.env.NODE_ENV !== 'production') {
@@ -223,7 +223,7 @@ function generateEmailHTML(code: string, type: string): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}</title>
+  <title>International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}</title>
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -236,7 +236,7 @@ function generateEmailHTML(code: string, type: string): string {
 <body>
   <div class="container">
     <div class="header">
-      <h1>AM Tycoons Inc.</h1>
+      <h1>International Car Company Inc</h1>
       <h2>${type === 'verification' ? 'Email Verification' : 'Password Reset'}</h2>
     </div>
     <div class="content">
@@ -245,7 +245,7 @@ function generateEmailHTML(code: string, type: string): string {
       <div class="code">${code}</div>
       <p>This code will expire in 10 minutes.</p>
       <p>If you didn't request this code, please ignore this email.</p>
-      <p>Best regards,<br>AM Tycoons Inc. Team</p>
+      <p>Best regards,<br>International Car Company Inc Team</p>
     </div>
     <div class="footer">
       <p>This is an automated message. Please do not reply.</p>
@@ -259,7 +259,7 @@ function generateEmailHTML(code: string, type: string): string {
 // Generate plain text email content
 function generateEmailText(code: string, type: string): string {
   return `
-AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}
+International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}
 
 Your verification code is: ${code}
 
@@ -268,7 +268,7 @@ This code will expire in 10 minutes.
 If you didn't request this code, please ignore this email.
 
 Best regards,
-AM Tycoons Inc. Team
+International Car Company Inc Team
   `
 }
 

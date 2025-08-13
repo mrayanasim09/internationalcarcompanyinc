@@ -1,7 +1,7 @@
 "use client"
 
 import { Shield, Award } from "lucide-react"
-import { BrandName } from "@/components/brand-name"
+import { BrandNameUser } from "@/components/brand-name-user"
 
 export function TrustBadges() {
   const badges = [
@@ -26,7 +26,7 @@ export function TrustBadges() {
           {/* Section Header */}
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Why Trust <BrandName className="inline" />?
+              Why Trust <BrandNameUser className="inline" />?
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               We&apos;re committed to providing the best car buying experience with transparency and quality
@@ -67,8 +67,8 @@ export function TrustBadges() {
                   <span className="text-primary-foreground font-bold text-lg">J</span>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-sm md:text-base mb-3">
-                    &quot;AM Tycoons made buying my car so easy! Great prices and excellent service. Highly recommend!&quot;
+                   <p className="text-muted-foreground text-sm md:text-base mb-3">
+                     &quot;Great experience! Clear pricing and helpful staff.&quot;
                   </p>
                   <div className="flex items-center">
                     <div className="flex text-yellow-400">
@@ -110,25 +110,25 @@ export function TrustBadges() {
 
           {/* Call to Action - Mobile Optimized */}
           <div className="mt-8 md:mt-12 text-center">
-            <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-lg p-6 md:p-8">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 md:p-8">
               <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4">
                 Ready to Find Your Perfect Vehicle?
               </h3>
-              <p className="text-red-100 mb-6 max-w-2xl mx-auto">
+            <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
                 Join thousands of satisfied customers who found their dream car with us
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href="/inventory"
-                  className="bg-white text-red-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
+                className="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
                   aria-label="Browse our vehicle inventory"
                 >
                   Browse Inventory
                 </a>
                 <a
-                  href="tel:+14243030386"
-                  className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-6 py-3 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
-                  aria-label="Call us at 424-303-0386"
+                  href="tel:+13103507709"
+                className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-6 py-3 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
+                  aria-label="Call us at 310-350-7709"
                 >
                   Call Now
                 </a>

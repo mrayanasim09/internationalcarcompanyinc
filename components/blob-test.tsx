@@ -100,7 +100,7 @@ export function BlobTest() {
   const getStatusIcon = (status: boolean | null) => {
     if (status === null) return <div className="w-4 h-4 bg-gray-300 rounded-full" />
     if (status) return <CheckCircle className="w-4 h-4 text-green-500" />
-    return <XCircle className="w-4 h-4 text-red-500" />
+    return <XCircle className="w-4 h-4 text-blue-500" />
   }
 
   return (
@@ -177,19 +177,19 @@ export function BlobTest() {
                 <span>Upload:</span>
                 {getStatusIcon(testResults.upload)}
                 {testResults.upload === true && <span className="text-green-600">Success</span>}
-                {testResults.upload === false && <span className="text-red-600">Failed</span>}
+                {testResults.upload === false && <span className="text-blue-600">Failed</span>}
               </div>
               <div className="flex items-center gap-2">
                 <span>Display:</span>
                 {getStatusIcon(testResults.display)}
                 {testResults.display === true && <span className="text-green-600">Success</span>}
-                {testResults.display === false && <span className="text-red-600">Failed</span>}
+                {testResults.display === false && <span className="text-blue-600">Failed</span>}
               </div>
               <div className="flex items-center gap-2">
                 <span>Delete:</span>
                 {getStatusIcon(testResults.delete)}
                 {testResults.delete === true && <span className="text-green-600">Success</span>}
-                {testResults.delete === false && <span className="text-red-600">Failed</span>}
+                {testResults.delete === false && <span className="text-blue-600">Failed</span>}
               </div>
             </div>
           </div>

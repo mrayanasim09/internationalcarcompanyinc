@@ -131,7 +131,7 @@ export function AdminMessages() {
                 onClick={() => handleDelete(selectedMessage.id)}
                 variant="outline"
                 size="sm"
-                className="text-red-600 hover:text-red-700"
+                className="text-blue-600 hover:text-blue-700"
               >
                 <Trash2 className="h-4 w-4 mr-1" />
                 Delete
@@ -171,7 +171,7 @@ export function AdminMessages() {
               onClick={() => {
                 window.location.href = `mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject}`
               }}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Mail className="h-4 w-4 mr-2" />
               Reply via Email
@@ -191,7 +191,7 @@ export function AdminMessages() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     )
   }

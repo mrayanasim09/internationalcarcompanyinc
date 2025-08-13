@@ -46,8 +46,8 @@ export function AdminLogin() {
       if (!res.ok) throw new Error(data?.error || 'Login failed')
       
       // Set admin access for error monitoring
-      localStorage.setItem('amtycoons-admin-access', 'true')
-      localStorage.setItem('amtycoons-admin-login-time', new Date().toISOString())
+      localStorage.setItem('icc-admin-access', 'true')
+      localStorage.setItem('icc-admin-login-time', new Date().toISOString())
       
       toast({
         title: "Success",
@@ -83,8 +83,8 @@ export function AdminLogin() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <Image
-            src="/optimized/am-tycoons-logo.webp"
-            alt="AM Tycoons INC Logo"
+            src="/International Car Company Inc. Logo.png"
+            alt="International Car Company Inc Logo"
             width={150}
             height={60}
             className="h-12 w-auto mx-auto mb-4"

@@ -2,37 +2,32 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { BrandName } from "@/components/brand-name"
+import { BrandNameUser } from "@/components/brand-name-user"
 import { Phone, MessageCircle } from "lucide-react"
 import { Mail, MapPin } from "lucide-react"
  
 const phoneNumbers = [
-  { e164: "+14243030386", label: "+1 424-303-0386" },
   { e164: "+13103507709", label: "+1 310-350-7709" },
-  { e164: "+13109720341", label: "+1 310-972-0341" },
-  { e164: "+13109048377", label: "+1 310-904-8377" },
 ]
 
 export function Footer() {
   return (
-    <footer className="bg-background text-foreground border-t border-border" aria-labelledby="site-footer">
+    <footer className="icc-theme bg-background text-foreground border-t border-border" aria-labelledby="site-footer">
       <div className="container mx-auto px-4 py-10">
         <h2 id="site-footer" className="sr-only">Footer</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-3 group" aria-label="AM Tycoons Inc. Home">
-              <div className="relative h-10 w-16">
-                <Image src="/optimized/am-tycoons-logo.webp" alt="AM Tycoons Inc. Logo" fill className="object-contain" sizes="64px" />
-              </div>
+            <Link href="/" className="flex items-center gap-3 group" aria-label="International Car Company Inc Home">
+               <div className="relative h-10 w-16">
+                 <Image src="/International Car Company Inc. Logo.png" alt="International Car Company Inc Logo" fill className="object-contain" sizes="64px" />
+               </div>
               <div>
-                <div className="text-lg font-bold group-hover:text-primary transition-colors"><BrandName /></div>
-                <div className="text-xs text-muted-foreground">FIND YOUR PERFECT DRIVE</div>
+                <div className="text-lg font-bold group-hover:text-primary transition-colors"><BrandNameUser /></div>
+                 <div className="text-xs text-muted-foreground">Professional vehicles. Modern experience.</div>
               </div>
             </Link>
-            <p className="text-sm text-muted-foreground">
-              Your trusted partner in finding the perfect pre-owned vehicle. Quality cars, transparent pricing, exceptional service.
-            </p>
+            <p className="text-sm text-muted-foreground">Professional car sales with transparent pricing and a modern experience.</p>
           </div>
 
           {/* Contact & Address */}
@@ -43,14 +38,14 @@ export function Footer() {
                 <MapPin className="h-4 w-4 text-primary mt-1" aria-hidden="true" />
                 <div className="text-sm text-muted-foreground">
                   <div className="font-medium text-foreground">Our Location</div>
-                  <div><BrandName className="inline" /></div>
-                  <div>12440 Firestone Blvd, Suite 3025D</div>
-                  <div>Norwalk, CA 90650</div>
+                  <div><BrandNameUser className="inline" /></div>
+                  <div></div>
+                  <div></div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-primary" aria-hidden="true" />
-                <a className="text-sm text-muted-foreground hover:text-primary" href="mailto:info@amtycoonsinc.com">info@amtycoonsinc.com</a>
+                <a className="text-sm text-muted-foreground hover:text-primary" href="mailto:info@internationalcarcompanyinc.com">info@internationalcarcompanyinc.com</a>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 pt-2">
                 {phoneNumbers.map(({ e164, label }) => (
@@ -67,14 +62,6 @@ export function Footer() {
                         <Phone className="h-4 w-4" />
                         <span className="text-xs font-medium">Call</span>
                       </a>
-                      <a
-                        href={`sms:${e164}`}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-accent text-foreground hover:bg-accent/80 transition-colors min-h-[36px]"
-                        aria-label={`SMS ${label}`}
-                      >
-                        <MessageCircle className="h-4 w-4" />
-                        <span className="text-xs font-medium">SMS</span>
-                      </a>
                     </div>
                   </div>
                 ))}
@@ -88,7 +75,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/" className="text-foreground/80 hover:text-primary">Home</Link></li>
               <li><Link href="/about" className="text-foreground/80 hover:text-primary">About Us</Link></li>
-              <li><Link href="/listings" className="text-foreground/80 hover:text-primary">Inventory</Link></li>
+              <li><Link href="/inventory" className="text-foreground/80 hover:text-primary">Inventory</Link></li>
               <li><Link href="/contact" className="text-foreground/80 hover:text-primary">Contact</Link></li>
             </ul>
           </div>
@@ -99,15 +86,15 @@ export function Footer() {
             <div className="text-sm text-muted-foreground space-y-2">
               <div>
                 <div className="font-medium text-foreground">Monday - Friday</div>
-                <div>9:00 AM - 7:00 PM</div>
+                <div>Coming soon</div>
               </div>
               <div>
                 <div className="font-medium text-foreground">Saturday</div>
-                <div>9:00 AM - 6:00 PM</div>
+                <div>Coming soon</div>
               </div>
               <div>
                 <div className="font-medium text-foreground">Sunday</div>
-                <div>10:00 AM - 5:00 PM</div>
+                <div>Coming soon</div>
               </div>
             </div>
           </div>
@@ -116,7 +103,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="border-t border-border mt-6 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">© 2025 <BrandName className="inline" /> All rights reserved.</p>
+            <p className="text-sm text-muted-foreground">© 2025 <BrandNameUser className="inline" /> All rights reserved.</p>
             <div className="flex gap-6 text-sm">
               <Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy Policy</Link>
               <Link href="/terms" className="text-muted-foreground hover:text-primary">Terms & Conditions</Link>

@@ -9,12 +9,12 @@ export const revalidate = 3600 // 1 hour
 export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
-  title: 'About Us - AM Tycoons Inc',
-  description: 'Learn about AM Tycoons Inc, your trusted partner for quality pre-owned vehicles since 2009. 15+ years of excellence serving Southern California.',
-  keywords: 'about AM Tycoons, used car dealership, pre-owned vehicles, Southern California, 15 years experience',
+  title: 'About Us - International Car Company Inc',
+  description: 'Learn about International Car Company Inc. Professional service, modern experience, and transparent pricing.',
+  keywords: 'International Car Company Inc, used car dealership, pre-owned vehicles',
   openGraph: {
-    title: 'About AM Tycoons Inc - 15+ Years of Excellence',
-    description: 'Your trusted partner for quality pre-owned vehicles since 2009',
+    title: 'About International Car Company Inc',
+    description: 'Professional service and modern experience',
     type: 'website',
   },
   robots: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="icc-theme min-h-screen bg-background text-foreground">
       <Navbar />
       <AboutContent />
       <Footer />

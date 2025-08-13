@@ -112,7 +112,7 @@ export default function ListingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="icc-theme min-h-screen bg-background">
       <Navbar />
 
       <div className="container mx-auto px-4 py-6 md:py-8">
@@ -136,7 +136,7 @@ export default function ListingsPage() {
         />
         <div className="mb-8 animate-fade-in">
           <h1 className="text-3xl font-bold text-foreground mb-4">Our Complete Inventory</h1>
-          <p className="text-lg text-muted-foreground">Browse our complete selection of quality pre-owned vehicles at <span className="font-bold">AM Tycoons Inc.</span></p>
+          <p className="text-lg text-muted-foreground">Browse our complete selection of vehicles at <span className="font-bold">International Car Company Inc</span>.</p>
           {cars.length > 0 && (
             <p className="text-sm text-muted-foreground mt-2">
               Showing {cars.length} vehicles
@@ -146,12 +146,12 @@ export default function ListingsPage() {
 
         {error ? (
           <div className="text-center py-12">
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md mx-auto">
-              <h3 className="text-red-800 dark:text-red-200 font-semibold mb-2">Unable to load inventory</h3>
-              <p className="text-red-600 dark:text-red-300 text-sm">{error}</p>
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 max-w-md mx-auto">
+              <h3 className="text-blue-800 dark:text-blue-200 font-semibold mb-2">Unable to load inventory</h3>
+              <p className="text-blue-600 dark:text-blue-300 text-sm">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="inline-block mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm"
+                className="inline-block mt-4 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm"
               >
                 Try Again
               </button>

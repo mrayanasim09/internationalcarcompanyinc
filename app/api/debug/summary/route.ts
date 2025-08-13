@@ -47,6 +47,27 @@ export async function GET(request: NextRequest) {
       useRedis,
     }
 
+    // Quick supabase health ping
+    let supabaseHealth: { ok: boolean; ms: number } = { ok: true, ms: 0 }
+    try {
+      const pingStart = Date.now()
+      await supabasePublic.from('cars').select('id').limit(1)
+      supabaseHealth = { ok: true, ms: Date.now() - pingStart }
+    } catch {
+      supabaseHealth = { ok: false, ms: 0 }
+    }
+
+    // Error log snapshot (from client-reported recent errors stored in session store if any)
+    let recentErrors: Array<{ id: string; message: string; at: string }> = []
+    try {
+      const keys = await store.keys('error:')
+      const limited = keys.slice(0, 10)
+      const values = await Promise.all(limited.map((k) => store.get(k)))
+      recentErrors = values
+        .filter(Boolean)
+        .map((v, i) => ({ id: limited[i], message: String(v), at: new Date().toISOString() }))
+    } catch {}
+
     const ms = Date.now() - startedAt
     return NextResponse.json(
       {
@@ -60,6 +81,8 @@ export async function GET(request: NextRequest) {
           sessionKeys,
         },
         config,
+        supabaseHealth,
+        recentErrors,
         timestamp: new Date().toISOString(),
       },
       { headers: { 'Cache-Control': 'no-store' } }

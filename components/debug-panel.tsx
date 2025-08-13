@@ -17,6 +17,7 @@ import {
   Clock,
   Zap
 } from "lucide-react"
+import { Input } from "@/components/ui/input"
 
 interface PerformanceMetrics {
   fcp: number
@@ -50,6 +51,7 @@ export function DebugPanel() {
   const [debugInfo, setDebugInfo] = useState<Record<string, unknown> | null>(null)
   const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetrics | null>(null)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+  const [testMessage, setTestMessage] = useState("Test notification from admin")
 
   const loadCars = async () => {
     setLoading(true)
@@ -86,6 +88,14 @@ export function DebugPanel() {
       resendConfigured: process.env.RESEND_API_KEY ? "Set" : "Missing",
     }
     setFirebaseStatus(envVars)
+  }
+
+  const sendTestNotification = () => {
+    try {
+      new Notification(testMessage || 'Test notification')
+    } catch (e) {
+      console.warn('Notification not allowed', e)
+    }
   }
 
   useEffect(() => {
@@ -237,6 +247,15 @@ export function DebugPanel() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold mb-1 text-foreground">Admin Notifications</h3>
+              <div className="flex items-center gap-2">
+                <Input value={testMessage} onChange={(e) => setTestMessage(e.target.value)} placeholder="Notification text" />
+                <Button size="sm" onClick={sendTestNotification} className="bg-primary hover:bg-primary/90">Send Test</Button>
+              </div>
+              <p className="text-xs text-muted-foreground">Requires Notification permission in browser.</p>
             </div>
 
             <div>

@@ -145,17 +145,17 @@ export function ContactContent() {
     {
       icon: MapPin,
       title: "Visit Our Office",
-      details: ["AM Tycoons Inc", "12440 Firestone Blvd, Suite 3025D", "Norwalk, 90650 CA"],
+      details: ["International Car Company Inc", "", ""],
       action: "Get Directions",
-      actionUrl: "https://maps.app.goo.gl/f4gvfxgLNSoqSJAaA",
+      actionUrl: "#",
     },
     // Phone cards replaced by dedicated numbers section below
     {
       icon: Mail,
       title: "Email Us",
-      details: ["info@amtycoonsinc.com", "24/7 Email Support"],
+      details: ["info@internationalcarcompanyinc.com", "24/7 Email Support"],
       action: "Send Email",
-      actionUrl: "mailto:info@amtycoonsinc.com",
+      actionUrl: "mailto:info@internationalcarcompanyinc.com",
     },
     // SMS card replaced by dedicated numbers section below
   ]
@@ -210,7 +210,7 @@ export function ContactContent() {
               return (
                 <Card key={index} className="text-center h-full bg-card border-border">
                   <CardContent className="p-6">
-                    <IconComponent className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                    <IconComponent className="h-12 w-12 text-blue-600 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold text-foreground mb-3">{info.title}</h3>
                     <div className="space-y-1 mb-4">
                       {info.details.map((detail, idx) => (
@@ -235,45 +235,29 @@ export function ContactContent() {
         </div>
       </section>
 
-      {/* Phone Numbers Section - compact on mobile, unchanged on tablet/desktop */}
+      {/* Phone Numbers Section - single number per spec */}
       <section className="py-6 md:py-8 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 md:mb-10">
             <h2 className="text-3xl font-bold text-foreground mb-2">Contact Numbers</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">Call or text us anytime. We&apos;re here to help you find your perfect vehicle.</p>
           </div>
-          {/* Mobile horizontal scroll, grid on md+ */}
-          <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 md:overflow-visible">
-            {[
-              { e164: "+14243030386", label: "+1 424-303-0386" },
-              { e164: "+13103507709", label: "+1 310-350-7709" },
-              { e164: "+13109720341", label: "+1 310-972-0341" },
-              { e164: "+13109048377", label: "+1 310-904-8377" }
-            ].map((phone, index) => (
-              <Card key={index} className="bg-card border-border min-w-[220px] snap-center md:min-w-0">
-                <CardContent className="p-4 md:p-6 text-center">
-                  <p className="text-lg md:text-xl font-bold text-primary mb-3 md:mb-4">{phone.label}</p>
-                  <div className="flex flex-col gap-2 md:flex-row md:gap-2 justify-center items-stretch">
-                    <a
-                      href={`tel:${phone.e164}`}
-                      aria-label={`Call ${phone.label}`}
-                      className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-2 md:px-4 md:py-3 rounded-full font-medium transition-colors touch-button md:flex-1 text-sm md:text-base"
-                    >
-                      <Phone className="h-4 w-4" />
-                      <span>Call</span>
-                    </a>
-                    <a
-                      href={`sms:${phone.e164}`}
-                      aria-label={`Text ${phone.label}`}
-                      className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-2 md:px-4 md:py-3 rounded-full font-medium transition-colors touch-button md:flex-1 text-sm md:text-base"
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                      <span>SMS</span>
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <Card className="bg-card border-border">
+              <CardContent className="p-6 text-center">
+                <p className="text-xl font-bold text-primary mb-4">+1 310-350-7709</p>
+                <div className="flex justify-center">
+                  <a
+                    href={`tel:+13103507709`}
+                    aria-label={`Call +1 310-350-7709`}
+                    className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-3 rounded-full font-medium transition-colors touch-button text-base"
+                  >
+                    <Phone className="h-4 w-4" />
+                    <span>Call</span>
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -299,7 +283,7 @@ export function ContactContent() {
                           required
                         />
                         {errors.name && (
-                          <p className="text-red-400 text-sm mt-1">{errors.name}</p>
+                          <p className="text-blue-400 text-sm mt-1">{errors.name}</p>
                         )}
                       </div>
                       <div>
@@ -313,7 +297,7 @@ export function ContactContent() {
                           required
                         />
                         {errors.email && (
-                          <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+                          <p className="text-blue-400 text-sm mt-1">{errors.email}</p>
                         )}
                       </div>
                     </div>
@@ -329,7 +313,7 @@ export function ContactContent() {
                            className={`bg-background border-border text-foreground placeholder:text-muted-foreground touch-input ${errors.phone ? "border-primary" : ""}`}
                         />
                         {errors.phone && (
-                          <p className="text-red-400 text-sm mt-1">{errors.phone}</p>
+                          <p className="text-blue-400 text-sm mt-1">{errors.phone}</p>
                         )}
                       </div>
                       <div>
@@ -342,7 +326,7 @@ export function ContactContent() {
                           required
                         />
                         {errors.subject && (
-                          <p className="text-red-400 text-sm mt-1">{errors.subject}</p>
+                          <p className="text-blue-400 text-sm mt-1">{errors.subject}</p>
                         )}
                       </div>
                     </div>
@@ -359,7 +343,7 @@ export function ContactContent() {
                         required
                       />
                       {errors.message && (
-                        <p className="text-red-400 text-sm mt-1">{errors.message}</p>
+                        <p className="text-blue-400 text-sm mt-1">{errors.message}</p>
                       )}
                     </div>
 
@@ -387,24 +371,12 @@ export function ContactContent() {
 
             {/* Map & Hours */}
             <div className="space-y-8">
-              {/* Map */}
+              {/* Location Placeholder */}
               <div>
                  <h3 className="text-2xl font-bold text-foreground mb-4">Find Us</h3>
                  <Card className="bg-card border-border">
-                  <CardContent className="p-0">
-                    <div className="relative h-64 md:h-72 bg-card rounded-lg overflow-hidden">
-                      <iframe
-                        title="Location Map"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3309.733727670564!2d-118.088844!3d33.908600!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2cfdbf7d3a0a3%3A0x0000000000000000!2s12440%20Firestone%20Blvd%20Suite%203025D%2C%20Norwalk%2C%20CA%2090650!5e0!3m2!1sen!2sus!4v1700000000000"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        className="rounded-lg"
-                      ></iframe>
-                    </div>
+                  <CardContent className="p-6 text-center">
+                    <p className="text-muted-foreground">Location coming soon.</p>
                   </CardContent>
                 </Card>
               </div>
@@ -415,7 +387,7 @@ export function ContactContent() {
                  <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="flex items-center text-white">
-                      <Clock className="h-5 w-5 mr-2 text-red-500" />
+                      <Clock className="h-5 w-5 mr-2 text-blue-600" />
                       Hours of Operation
                     </CardTitle>
                   </CardHeader>
@@ -451,7 +423,7 @@ export function ContactContent() {
               return (
                 <Card key={index} className="text-center bg-card border-border">
                   <CardContent className="p-6">
-                    <IconComponent className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                    <IconComponent className="h-12 w-12 text-blue-600 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold text-foreground mb-3">{service.title}</h3>
                     <p className="text-muted-foreground">{service.description}</p>
                   </CardContent>

@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { EmailAdminLogin } from "@/components/admin/email-admin-login"
 
 export const metadata = {
-  title: "Admin Login - AM Tycoons",
+  title: "Admin Login - International Car Company Inc",
   description: "Admin access to manage car listings",
 }
 

@@ -1,6 +1,6 @@
 "use client"
 import { Card, CardContent } from "@/components/ui/card"
-import { BrandName } from "@/components/brand-name"
+import { BrandNameUser } from "@/components/brand-name-user"
 import { Badge } from "@/components/ui/badge"
 import { Users, Award, Shield, Heart, Star, CheckCircle, MapPin, Phone, Mail } from "lucide-react"
 // Subtle CSS animations are used for performance and to avoid client boundary issues
@@ -42,7 +42,7 @@ export function AboutContent() {
       <section className="relative bg-background py-10 md:py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 text-foreground animate-fade-in">
-            About <BrandName className="inline" />
+            About <BrandNameUser className="inline" />
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-muted-foreground max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '80ms' }}>
             Your trusted partner in finding quality pre-owned vehicles since 2009
@@ -81,19 +81,7 @@ export function AboutContent() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-6">Our Story</h2>
             <div className="space-y-4 md:space-y-6 text-muted-foreground text-base md:text-lg leading-relaxed">
-              <p>
-                Founded in 2009 by automotive enthusiast <BrandName className="inline" /> began as a small family business
-                with a simple mission: to provide quality pre-owned vehicles with honest, transparent service.
-              </p>
-              <p>
-                What started in a modest lot with just 20 vehicles has grown into one of Los Angeles&apos; most trusted
-                used car dealerships, serving thousands of satisfied customers throughout Southern California.
-              </p>
-              <p>
-                Today, we continue to uphold the same values that built our reputation: integrity, quality, and
-                putting our customers first. Every vehicle on our lot is carefully selected and thoroughly inspected
-                to ensure you&apos;re getting the best value for your investment.
-              </p>
+              <p>Coming soon.</p>
             </div>
           </div>
         </div>
@@ -131,7 +119,7 @@ export function AboutContent() {
           <div className="text-center mb-8 md:mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 md:mb-4">Visit Our Office</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto font-medium">
-              Come see us in person and experience the <BrandName className="inline" /> difference.
+              Come see us in person and experience the <BrandNameUser className="inline" /> difference.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
@@ -140,8 +128,7 @@ export function AboutContent() {
                 <MapPin className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3">Our Location</h3>
                 <p className="text-sm md:text-base text-muted-foreground">
-                  12440 Firestone Blvd, Suite 3025D<br />
-                  Norwalk, CA 90650
+                  
                 </p>
               </CardContent>
             </Card>
@@ -151,10 +138,7 @@ export function AboutContent() {
                 <Phone className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3">Call Us</h3>
                 <div className="space-y-1 text-sm md:text-base text-muted-foreground">
-                  <p>+1 424-303-0386</p>
                   <p>+1 310-350-7709</p>
-                  <p>+1 310-972-0341</p>
-                  <p>+1 310-904-8377</p>
                 </div>
               </CardContent>
             </Card>
@@ -164,7 +148,7 @@ export function AboutContent() {
                 <Mail className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3">Email Us</h3>
                 <p className="text-sm md:text-base text-muted-foreground">
-                  info@amtycoonsinc.com<br />               
+                  info@internationalcarcompanyinc.com<br />               
                 </p>
               </CardContent>
             </Card>
@@ -177,18 +161,18 @@ export function AboutContent() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to Find Your Perfect Car?</h2>
           <p className="text-lg md:text-xl mb-6 md:mb-8">
-            Browse our inventory or visit our showroom to experience the <BrandName className="inline" /> difference.
+            Browse our inventory or visit our showroom to experience the <BrandNameUser className="inline" /> difference.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-            <a
-              href="/listings"
-              className="bg-white text-red-600 px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm md:text-base"
+              <a
+              href="/inventory"
+              className="bg-white text-primary px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm md:text-base"
             >
               Browse Inventory
             </a>
-            <a
+              <a
               href="/contact"
-              className="border-2 border-white text-white px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-white hover:text-red-600 transition-colors text-sm md:text-base"
+              className="border-2 border-white text-white px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors text-sm md:text-base"
             >
               Contact Us
             </a>

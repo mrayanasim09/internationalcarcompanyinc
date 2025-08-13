@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { BrandName } from "@/components/brand-name"
+import { BrandNameUser } from "@/components/brand-name-user"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, X } from "lucide-react"
@@ -26,7 +26,7 @@ export function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`icc-theme fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border" : "bg-background/80 backdrop-blur"
         }`}
         aria-label="Primary"
@@ -35,14 +35,14 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Brand */}
           <div className="flex items-center gap-3 shrink-0">
-            <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="AM Tycoons Inc. Home" onClick={closeMenu}>
+            <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
               <div className="relative h-12 w-20 md:h-16 md:w-28 transition-transform duration-200 group-hover:scale-[1.02]">
-                <Image src="/optimized/am-tycoons-logo.webp" alt="AM Tycoons Inc. Logo" fill className="object-contain" sizes="(max-width: 768px) 120px, 160px" priority={false} />
+                <Image src="/International Car Company Inc. Logo.png" alt="International Car Company Inc Logo" fill className="object-contain" sizes="(max-width: 768px) 120px, 160px" priority={true} />
               </div>
               {/* Brand text - both mobile and desktop clickable */}
               <div className="leading-tight">
-                <div className="text-base md:text-lg font-bold text-foreground tracking-tight"><BrandName /></div>
-                <div className="hidden sm:block text-[10px] md:text-xs text-muted-foreground">FIND YOUR PERFECT DRIVE</div>
+                <div className="text-base md:text-lg font-bold text-foreground tracking-tight"><BrandNameUser /></div>
+                <div className="hidden sm:block text-[10px] md:text-xs text-muted-foreground">Professional vehicles. Modern experience.</div>
               </div>
             </Link>
           </div>
@@ -52,7 +52,7 @@ export function Navbar() {
             <Link href="/" className="text-foreground/80 hover:text-primary transition-colors font-medium">
               Home
             </Link>
-            <Link href="/listings" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+            <Link href="/inventory" className="text-foreground/80 hover:text-primary transition-colors font-medium">
               Inventory
             </Link>
             <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors font-medium">
@@ -96,7 +96,7 @@ export function Navbar() {
               </div>
               <div className="px-4 py-4 space-y-4" tabIndex={-1}>
                 <Link href="/" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Home</Link>
-                <Link href="/listings" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Inventory</Link>
+                <Link href="/inventory" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Inventory</Link>
                 <Link href="/about" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>About</Link>
                 <Link href="/contact" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Contact</Link>
               </div>

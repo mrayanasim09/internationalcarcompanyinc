@@ -39,7 +39,7 @@ export function SmoothScrollLink({
       href={href}
       onClick={handleClick}
       className={cn(
-        "transition-colors duration-200 hover:text-red-600 cursor-pointer",
+        "transition-colors duration-200 hover:text-blue-600 cursor-pointer",
         className
       )}
     >

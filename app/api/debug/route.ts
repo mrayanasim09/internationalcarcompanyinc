@@ -59,30 +59,14 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
-    await authManager.requireAdmin()
-    
-    const body = await request.json()
-    
-    // Add your debug logic here
-    // Log only in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Debug POST request:', body)
-    }
-    
+    const body = await request.json().catch(() => ({}))
+    // Accept anonymous RUM events (no auth).
+    console.log('RUM', body)
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
     console.error('Debug POST error:', error)
     
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    
-    if (errorMessage.includes('Authentication required')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    
-    if (errorMessage.includes('Insufficient permissions')) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
     
     return NextResponse.json(
       { error: 'Debug operation failed' },

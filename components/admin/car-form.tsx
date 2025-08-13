@@ -227,7 +227,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="e.g., 2023 Honda Civic Sport"
               />
               {form.formState.errors.title && (
-                <p className="text-red-400 text-sm mt-1">{form.formState.errors.title.message}</p>
+                <p className="text-blue-400 text-sm mt-1">{form.formState.errors.title.message}</p>
               )}
             </div>
             <div>
@@ -239,7 +239,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="e.g., Los Angeles, CA"
               />
               {form.formState.errors.location && (
-                <p className="text-red-400 text-sm mt-1">{form.formState.errors.location.message}</p>
+                <p className="text-blue-400 text-sm mt-1">{form.formState.errors.location.message}</p>
               )}
             </div>
           </div>
@@ -254,7 +254,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="e.g., Honda"
               />
               {form.formState.errors.make && (
-                <p className="text-red-400 text-sm mt-1">{form.formState.errors.make.message}</p>
+                <p className="text-blue-400 text-sm mt-1">{form.formState.errors.make.message}</p>
               )}
             </div>
             <div>
@@ -266,7 +266,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="e.g., Civic"
               />
               {form.formState.errors.model && (
-                <p className="text-red-400 text-sm mt-1">{form.formState.errors.model.message}</p>
+                <p className="text-blue-400 text-sm mt-1">{form.formState.errors.model.message}</p>
               )}
             </div>
             <div>
@@ -279,7 +279,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="2023"
               />
               {form.formState.errors.year && (
-                <p className="text-red-400 text-sm mt-1">{form.formState.errors.year.message}</p>
+                <p className="text-blue-400 text-sm mt-1">{form.formState.errors.year.message}</p>
               )}
             </div>
             <div>
@@ -292,7 +292,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="50000"
               />
               {form.formState.errors.mileage && (
-                <p className="text-red-400 text-sm mt-1">{form.formState.errors.mileage.message}</p>
+                <p className="text-blue-400 text-sm mt-1">{form.formState.errors.mileage.message}</p>
               )}
             </div>
           </div>
@@ -308,7 +308,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="25000"
               />
               {form.formState.errors.price && (
-                <p className="text-red-400 text-sm mt-1">{form.formState.errors.price.message}</p>
+                <p className="text-blue-400 text-sm mt-1">{form.formState.errors.price.message}</p>
               )}
             </div>
             <div>
@@ -340,7 +340,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="+1 (555) 123-4567"
               />
               {form.formState.errors.phone && (
-                <p className="text-red-400 text-sm mt-1">{form.formState.errors.phone.message}</p>
+                <p className="text-blue-400 text-sm mt-1">{form.formState.errors.phone.message}</p>
               )}
             </div>
             <div>
@@ -457,7 +457,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
               rows={3}
             />
             {form.formState.errors.description && (
-              <p className="text-red-400 text-sm mt-1">{form.formState.errors.description.message}</p>
+              <p className="text-blue-400 text-sm mt-1">{form.formState.errors.description.message}</p>
             )}
           </div>
           
@@ -602,7 +602,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="bg-red-600 hover:bg-red-700 text-white"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground"
         >
           {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
           {car ? "Update Car" : "Add Car"}

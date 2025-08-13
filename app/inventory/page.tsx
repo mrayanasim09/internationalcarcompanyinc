@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation'
+import ListingsPage from '@/app/listings/page'
 
 export default function InventoryPage() {
-  redirect('/listings')
+  return <ListingsPage />
 }

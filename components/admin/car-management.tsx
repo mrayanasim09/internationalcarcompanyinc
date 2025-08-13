@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CarForm } from "@/components/admin/car-form"
+import { CarTable } from "@/components/admin/car-table"
 import Image from "next/image"
 import type { Car } from "@/lib/types"
 import { useToast } from "@/hooks/use-toast"
@@ -143,58 +144,8 @@ export function CarManagement({ cars, setCars }: CarManagementProps) {
         />
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cars.map((car) => (
-          <Card key={car.id} className="overflow-hidden">
-            <div className="relative aspect-video">
-              <Image
-                src={car.images[0] || "/optimized/placeholder.webp"}
-                alt={car.title}
-                fill
-                className="object-cover"
-              />
-              <Badge className={`absolute top-2 right-2 ${car.approved ? "bg-primary" : ""}`} variant={car.approved ? undefined : "warning"}>
-                {car.approved ? "Approved" : "Pending"}
-              </Badge>
-            </div>
-
-            <CardContent className="p-4">
-              <h3 className="font-bold text-lg mb-2">{car.title}</h3>
-              <p className="text-2xl font-bold text-primary mb-4">{formatPrice(car.price)}</p>
-
-              <div className="flex flex-wrap gap-2 mb-4">
-                <Button onClick={() => handleEditCar(car)} variant="outline" size="sm" className="border-border">
-                  <Edit className="h-4 w-4 mr-1" />
-                  Edit
-                </Button>
-
-                <Button
-                  onClick={() => handleApprovalToggle(car.id, !car.approved)}
-                  variant="outline"
-                  size="sm"
-                  className={car.approved ? "text-yellow-600" : "text-primary"}
-                >
-                  {car.approved ? (
-                    <>
-                      <X className="h-4 w-4 mr-1" />
-                      Unapprove
-                    </>
-                  ) : (
-                    <>
-                      <Check className="h-4 w-4 mr-1" />
-                      Approve
-                    </>
-                  )}
-                </Button>
-
-                <Button onClick={() => handleDelete(car.id)} variant="outline" size="sm" className="text-destructive" disabled={!(role === 'admin' || role === 'super_admin')}>
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  Delete
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="mb-8">
+        <CarTable cars={cars} setCars={setCars} />
       </div>
     </div>
   )

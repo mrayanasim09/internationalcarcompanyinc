@@ -75,7 +75,7 @@ export function WhatsAppButton() {
       {/* Main toggle button */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`bg-red-600 hover:bg-red-700 text-white p-3 md:p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
+        className={`bg-primary hover:bg-primary/90 text-primary-foreground p-3 md:p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
           isExpanded ? 'rotate-45 bg-gray-600 hover:bg-gray-700' : ''
         }`}
         aria-label={isExpanded ? "Close contact options" : "Open contact options"}

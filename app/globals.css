@@ -4,61 +4,60 @@
 
 @layer base {
   :root {
-    /* Light Theme: White + Red */
+    /* Light Theme: professional neutral with electric blue accents */
     --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --foreground: 220 20% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 220 20% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    /* Brand red sampled from logo: #dc2626 */
-    --primary: 0 72.2% 51%;
+    --popover-foreground: 220 20% 12%;
+    --primary: 210 100% 50%; /* electric blue */
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 84.2% 60.2%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 20% 20%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 195 100% 40%; /* teal */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 72.2% 50.6%;
+    --border: 220 12% 90%;
+    --input: 220 12% 90%;
+    --ring: 210 100% 50%;
     --radius: 0.5rem;
-    --chart-1: 0 72.2% 50.6%;
-    --chart-2: 0 72.2% 45%;
-    --chart-3: 0 72.2% 40%;
-    --chart-4: 0 72.2% 35%;
-    --chart-5: 0 72.2% 30%;
+    --chart-1: 210 100% 50%;
+    --chart-2: 195 100% 40%;
+    --chart-3: 230 60% 60%;
+    --chart-4: 260 50% 60%;
+    --chart-5: 280 50% 60%;
   }
 
   .dark {
-    /* Dark Theme: Black + Red */
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 0 72.2% 51%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 72.2% 50.6%;
-    --chart-1: 0 72.2% 50.6%;
-    --chart-2: 0 72.2% 45%;
-    --chart-3: 0 72.2% 40%;
-    --chart-4: 0 72.2% 35%;
-    --chart-5: 0 72.2% 30%;
+    /* Premium Dark: Charcoal/dark slate + Electric Blue */
+    --background: 220 16% 10%;
+    --foreground: 210 40% 98%;
+    --card: 220 14% 13%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 14% 13%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 100% 56%; /* Electric blue */
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 14% 18%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 220 14% 18%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 195 100% 40%; /* Teal accent for highlights */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 14% 20%;
+    --input: 220 14% 20%;
+    --ring: 210 100% 56%;
+    --chart-1: 210 100% 56%;
+    --chart-2: 195 100% 40%;
+    --chart-3: 230 60% 72%;
+    --chart-4: 260 60% 72%;
+    --chart-5: 280 60% 72%;
   }
 }
 
@@ -91,23 +90,16 @@
 
 /* Production-ready CSS for above-the-fold content */
 @layer components {
-  .hero-gradient {
-    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-  }
+  .hero-gradient { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); }
   
-  .text-gradient {
-    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  .text-gradient { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   
   .card-hover {
     @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
   }
   
   .button-primary {
-    @apply bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200;
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-3 rounded-lg transition-colors duration-200;
   }
   
   .button-secondary {

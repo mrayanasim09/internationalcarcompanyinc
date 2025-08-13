@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { headers } from 'next/headers'
-import { Inter } from 'next/font/google'
+import { GeistSans } from 'geist/font/sans'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { CookieConsent } from '@/components/cookie-consent'
@@ -10,49 +10,43 @@ import { ErrorMonitor } from '@/components/error-monitor'
 import { Providers } from '@/components/providers'
 import './globals.css'
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true,
-  fallback: ['system-ui', 'arial']
-})
+// GeistSans provides a preconfigured font with className
 
 export const metadata: Metadata = {
   title: {
-    default: 'AM Tycoons Inc. - Premium Pre-Owned Vehicles',
-    template: '%s | AM Tycoons Inc.'
+    default: 'International Car Company Inc - Premium Vehicles',
+    template: '%s | International Car Company Inc'
   },
-  description: 'Discover premium pre-owned vehicles at AM Tycoons Inc. Quality cars, competitive pricing, exceptional service, and easy financing—all in one place.',
-  keywords: ['pre-owned vehicles', 'used cars', 'car dealership', 'AM Tycoons', 'quality cars', 'competitive pricing', 'financing'],
-  authors: [{ name: 'AM Tycoons Inc.' }],
-  creator: 'AM Tycoons Inc.',
-  publisher: 'AM Tycoons Inc.',
+  description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
+  keywords: ['pre-owned vehicles', 'used cars', 'car dealership', 'International Car Company Inc', 'quality cars', 'transparent pricing', 'financing'],
+  authors: [{ name: 'International Car Company Inc' }],
+  creator: 'International Car Company Inc',
+  publisher: 'International Car Company Inc',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://amtycoonsinc.com'),
+  metadataBase: new URL('https://internationalcarcompanyinc.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://amtycoonsinc.com',
-    title: 'AM Tycoons Inc. - Premium Pre-Owned Vehicles',
-    description: 'Discover premium pre-owned vehicles at AM Tycoons Inc. Quality cars, competitive pricing, exceptional service, and easy financing.',
-    siteName: 'AM Tycoons Inc.',
+    url: 'https://internationalcarcompanyinc.com',
+    title: 'International Car Company Inc - Premium Vehicles',
+    description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
+    siteName: 'International Car Company Inc',
     images: [
-      { url: 'https://amtycoonsinc.com/optimized/am-tycoons-logo.png?v=4', width: 1200, height: 630, alt: 'AM Tycoons Inc. Logo' },
-      { url: 'https://amtycoonsinc.com/optimized/am-tycoons-logo.webp?v=1', width: 1200, height: 630, alt: 'AM Tycoons Inc. Logo (WebP)' },
+      { url: '/International Car Company Inc. Logo.png', width: 1200, height: 630, alt: 'International Car Company Inc Logo' },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AM Tycoons Inc. - Premium Pre-Owned Vehicles',
-    description: 'Discover premium pre-owned vehicles at AM Tycoons Inc. Quality cars, competitive pricing, exceptional service, and easy financing.',
-    images: ['https://amtycoonsinc.com/optimized/am-tycoons-logo.png?v=4'],
+    title: 'International Car Company Inc - Premium Vehicles',
+    description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
+    images: ['/International Car Company Inc. Logo.png'],
   },
   robots: {
     index: true,
@@ -77,18 +71,15 @@ export default function RootLayout({
 }) {
   const nonce = headers().get('x-nonce') || undefined
   return (
-    <html lang="en" className="light" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
     <Script id="theme-script" strategy="beforeInteractive" nonce={nonce}>{`
       (function() {
         try {
-          var storageKey = 'am-tycoons-theme';
+          var storageKey = 'icc-theme';
           var stored = localStorage.getItem(storageKey);
-          var resolved = (stored === 'dark' || stored === 'light') ? stored : 'light';
-          if (!stored) {
-            localStorage.setItem(storageKey, resolved);
-          }
+          var resolved = (stored === 'dark' || stored === 'light') ? stored : 'dark';
           var d = document.documentElement;
-          d.classList.remove('light', 'dark', 'system');
+          d.classList.remove('light', 'dark');
           d.classList.add(resolved);
         } catch (e) {}
       })();
@@ -99,7 +90,7 @@ export default function RootLayout({
         <Script
           id="gtag-src"
           async
-          src="https://www.googletagmanager.com/gtag/js?id=G-Y6M86V6MKQ"
+          src="https://www.googletagmanager.com/gtag/js?id=G-SV90G9ZG56"
           strategy="lazyOnload"
           nonce={nonce}
         />
@@ -108,7 +99,7 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-Y6M86V6MKQ');
+            gtag('config', 'G-SV90G9ZG56');
           `}
         </Script>
         {/* DNS prefetch (trimmed) */}
@@ -116,25 +107,41 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         
-        {/* Preload critical resources (logo preload removed to avoid large PNG on critical path) */}
+        {/* Preload critical resources */}
         <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
+        <link rel="preload" as="image" href="/optimized/placeholder.webp" imageSrcSet="/optimized/placeholder.webp 1200w" imageSizes="100vw" />
         
         {/* Sitemap */}
         <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
         
         {/* Manifest for PWA */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#dc2626" />
+        <meta name="theme-color" content="#1e90ff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="AM Tycoons" />
+        <meta name="apple-mobile-web-app-title" content="International Car Company Inc" />
         
         {/* Viewport optimization */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         
         {/* Cache control handled via next.config headers */}
       </head>
-      <body className={inter.className}>
+      <body className={GeistSans.className}>
+        <Script id="web-vitals" strategy="afterInteractive" nonce={nonce}>{`
+          (function(){
+            try{
+              const send = (data) => {
+                const body = JSON.stringify({ ...data, ts: Date.now(), path: location.pathname })
+                navigator.sendBeacon && navigator.sendBeacon('/api/debug', body)
+              }
+              import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js').then(() => {
+                webVitals.onLCP(send)
+                webVitals.onCLS(send)
+                webVitals.onINP && webVitals.onINP(send)
+              }).catch(()=>{})
+            }catch(e){}
+          })();
+        `}</Script>
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-primary text-primary-foreground px-3 py-2 rounded">Skip to content</a>
         <Providers>
           <main id="main">{children}</main>

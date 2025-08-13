@@ -39,7 +39,7 @@ export function GoogleReviews({ placeId = "ChIJN1t_tDeuEmsRUsoyG83frY4", maxRevi
             author_name: "Sarah Johnson",
             rating: 5,
             relative_time_description: "2 weeks ago",
-            text: "Amazing experience! The team at AM Tycoons Inc. helped me find the perfect car within my budget. The process was smooth and transparent.",
+            text: "Amazing experience! The team helped me find the perfect car within my budget. The process was smooth and transparent.",
             profile_photo_url: "https://via.placeholder.com/40"
           },
           {
@@ -53,7 +53,7 @@ export function GoogleReviews({ placeId = "ChIJN1t_tDeuEmsRUsoyG83frY4", maxRevi
             author_name: "Emily Rodriguez",
             rating: 5,
             relative_time_description: "3 weeks ago",
-            text: "Honest pricing and no hidden fees. They really care about customer satisfaction. Highly recommend AM Tycoons Inc.!",
+            text: "Honest pricing and no hidden fees. They really care about customer satisfaction. Highly recommend!",
             profile_photo_url: "https://via.placeholder.com/40"
           },
           {
@@ -198,10 +198,10 @@ export function GoogleReviews({ placeId = "ChIJN1t_tDeuEmsRUsoyG83frY4", maxRevi
 
       <div className="text-center mt-8">
         <a
-          href="https://www.google.com/maps/place/AM+Tycoons+Inc/@33.9022,-118.0817,15z/"
+          href="https://www.google.com/maps/search/International+Car+Company+Inc"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+         className="inline-flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-medium transition-colors duration-200"
         >
           <MapPin className="h-4 w-4" />
           <span>View All Reviews on Google</span>

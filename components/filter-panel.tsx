@@ -190,7 +190,7 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
                 onClick={clearFilters} 
                 variant="ghost" 
                 size="sm"
-                className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
               >
                 <X className="h-4 w-4 mr-1" />
                 Clear All
@@ -259,7 +259,7 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
                     setFilters(prev => ({ ...prev, make: '' }));
                     setMakeSearchTerm('');
                   }}
-                  className="text-red-600 hover:text-red-700"
+                  className="text-blue-600 hover:text-blue-700"
                 >
                   <X className="h-3 w-3 mr-1" />
                   Clear Make
@@ -435,7 +435,7 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
           <div className="lg:hidden pt-4">
             <Button 
               onClick={() => setIsOpen(false)}
-              className="w-full bg-red-600 hover:bg-red-700"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               Apply Filters
             </Button>

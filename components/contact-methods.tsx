@@ -38,9 +38,9 @@ export function ContactMethods() {
       title: "Email",
       description: "Send us an email",
       action: "Send Email",
-      href: "mailto:info@amtycoons.com",
-      color: "bg-red-600 hover:bg-red-700",
-      iconColor: "text-red-600"
+      href: "mailto:info@internationalcarcompanyinc.com",
+      color: "bg-primary hover:bg-primary/90 text-primary-foreground",
+      iconColor: "text-blue-600"
     }
   ]
 
@@ -91,7 +91,7 @@ export function ContactMethods() {
 
         {/* Additional Contact Info */}
         <div className="mt-12 text-center">
-          <div className="bg-red-600 text-white rounded-lg p-6 md:p-8 max-w-2xl mx-auto">
+          <div className="bg-primary text-primary-foreground rounded-lg p-6 md:p-8 max-w-2xl mx-auto">
             <h3 className="text-xl md:text-2xl font-bold mb-4">
               Business Hours
             </h3>
@@ -105,7 +105,7 @@ export function ContactMethods() {
                 <p>10:00 AM - 4:00 PM</p>
               </div>
             </div>
-            <p className="mt-4 text-red-100">
+            <p className="mt-4 text-blue-100">
               Sunday: Closed
             </p>
           </div>

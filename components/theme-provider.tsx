@@ -10,11 +10,11 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="light"
-      enableSystem={false}
+      defaultTheme="system"
+      enableSystem={true}
       disableTransitionOnChange
-      enableColorScheme={false}
-      storageKey="am-tycoons-theme"
+      enableColorScheme={true}
+      storageKey="icc-theme"
       {...props}
     >
       {children}

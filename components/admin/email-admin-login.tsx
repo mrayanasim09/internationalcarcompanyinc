@@ -181,8 +181,8 @@ export function EmailAdminLogin() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <Image
-              src="/optimized/am-tycoons-logo.webp"
-              alt="AM Tycoons INC Logo"
+              src="/International Car Company Inc. Logo.png"
+              alt="International Car Company Inc Logo"
               width={150}
               height={60}
               className="h-12 w-auto mx-auto mb-4"
@@ -254,7 +254,7 @@ export function EmailAdminLogin() {
                   type="button"
                   onClick={handleResendCode}
                   disabled={isLoading}
-                  className="text-red-600 hover:underline"
+                  className="text-primary hover:underline"
                 >
                   request a new one
                 </button>
@@ -271,8 +271,8 @@ export function EmailAdminLogin() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <Image
-            src="/optimized/am-tycoons-logo.webp"
-            alt="AM Tycoons INC Logo"
+            src="/International Car Company Inc. Logo.png"
+            alt="International Car Company Inc Logo"
             width={150}
             height={60}
             className="h-12 w-auto mx-auto mb-4"
@@ -294,7 +294,7 @@ export function EmailAdminLogin() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@amtycoonsinc.com"
+            placeholder="admin@internationalcarcompanyinc.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -322,7 +322,7 @@ export function EmailAdminLogin() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-red-600 hover:bg-red-700"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>
