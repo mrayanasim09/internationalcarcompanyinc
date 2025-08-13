@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { MessageCircle, X, Send, Minimize2, Maximize2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
+
 interface Message {
   id: string
   content: string
