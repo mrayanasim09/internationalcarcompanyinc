@@ -204,7 +204,7 @@ export async function POST(request: NextRequest) {
 
     // payload info is captured in token creation below
 
-    const { accessToken, refreshToken } = jwtManager.createTokenPair({
+    const tokenResult = jwtManager.createTokenPair({
       userId: userData.id,
       email: email,
       role: role,
@@ -212,7 +212,9 @@ export async function POST(request: NextRequest) {
       twoFactorVerified: true,
     })
     
-    console.log('DEBUG: JWT tokens created successfully')
+    const { accessToken, refreshToken, sessionId } = tokenResult
+    
+    console.log('DEBUG: JWT tokens created successfully, sessionId:', sessionId)
 
     const response = NextResponse.json({ success: true })
     const isHttps = (request.headers.get('x-forwarded-proto') || new URL(request.url).protocol).toString().includes('https')

@@ -4,6 +4,8 @@ import { jwtManager } from '@/lib/jwt-utils'
 export async function GET(request: NextRequest) {
   try {
     console.log('DEBUG: /me endpoint called')
+    console.log('DEBUG: JWT_SECRET configured:', !!process.env.JWT_SECRET)
+    console.log('DEBUG: SESSION_SECRET configured:', !!process.env.SESSION_SECRET)
     
     // Check what cookies we're receiving
     const allCookies = request.cookies.getAll()
@@ -14,8 +16,12 @@ export async function GET(request: NextRequest) {
     console.log('DEBUG: Access token present:', !!accessToken)
     
     if (accessToken) {
+      // Decode token first to see what's in it
+      const decoded = jwtManager.decodeToken(accessToken)
+      console.log('DEBUG: Decoded token payload:', decoded)
+      
       const result = jwtManager.verifyAccessToken(accessToken)
-      console.log('DEBUG: Token verification result:', { isValid: result.isValid, hasPayload: !!result.payload })
+      console.log('DEBUG: Token verification result:', { isValid: result.isValid, hasPayload: !!result.payload, error: result.error })
       
       if (result.isValid && result.payload) {
         const { email, role, permissions } = result.payload
