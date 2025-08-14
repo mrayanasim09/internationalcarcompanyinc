@@ -16,16 +16,21 @@ export default function AdminPage() {
   useEffect(() => setMounted(true), [])
 
   useEffect(() => {
+    console.log('DEBUG: AdminPage auth state changed:', { user, loading, isAuthenticated })
     if (!loading) {
       setIsAuthenticated(Boolean(user))
     }
   }, [user, loading])
 
+  console.log('DEBUG: AdminPage render:', { mounted, loading, isAuthenticated, user })
+
   if (!mounted) {
+    console.log('DEBUG: AdminPage not mounted yet')
     return <div className="min-h-screen" />
   }
 
   if (loading) {
+    console.log('DEBUG: AdminPage loading...')
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
@@ -33,5 +38,6 @@ export default function AdminPage() {
     )
   }
 
+  console.log('DEBUG: AdminPage rendering:', isAuthenticated ? 'AdminDashboard' : 'EmailAdminLogin')
   return isAuthenticated ? <AdminDashboard /> : <EmailAdminLogin />
 } 
