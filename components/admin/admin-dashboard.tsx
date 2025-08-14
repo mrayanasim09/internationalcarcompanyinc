@@ -24,6 +24,11 @@ export function AdminDashboard() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  console.log('DEBUG: AdminDashboard rendering, user:', user)
+  console.log('DEBUG: AdminDashboard loading:', loading)
+  console.log('DEBUG: AdminDashboard error:', error)
+  
   // Firebase removed
 
   useEffect(() => {
@@ -110,6 +115,23 @@ export function AdminDashboard() {
             <Button onClick={() => window.location.reload()} className="w-full">
               Retry
             </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // Simple fallback to show dashboard is working
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Dashboard Loading</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>User data not available yet...</p>
+            <p className="text-sm text-muted-foreground mt-2">Check console for debug info</p>
           </CardContent>
         </Card>
       </div>
