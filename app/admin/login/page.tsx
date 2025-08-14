@@ -1,3 +1,4 @@
+"use client"
 import { EmailAdminLogin } from "@/components/admin/email-admin-login"
 import { ErrorBoundary } from '@/components/error-boundary'
 
