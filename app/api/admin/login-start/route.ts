@@ -67,7 +67,12 @@ export async function POST(request: NextRequest) {
       .limit(5)
     if (findErr) {
       console.error('Supabase find user error:', findErr)
-      return NextResponse.json({ error: 'Login failed' }, { status: 500 })
+      const payload: Record<string, unknown> = { error: 'Login failed' }
+      if (process.env.DEBUG_ADMIN === '1') {
+        payload.code = 'SUPABASE_FIND'
+        payload.details = String(findErr.message || findErr)
+      }
+      return NextResponse.json(payload, { status: 500 })
     }
     if (!users || users.length === 0) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
@@ -131,7 +136,12 @@ export async function POST(request: NextRequest) {
       .limit(1)
     if (upCodeErr || !updatedRows || updatedRows.length === 0) {
       console.error('Supabase set code error:', upCodeErr)
-      return NextResponse.json({ error: 'Login failed' }, { status: 500 })
+      const payload: Record<string, unknown> = { error: 'Login failed' }
+      if (process.env.DEBUG_ADMIN === '1') {
+        payload.code = 'SUPABASE_UPDATE'
+        payload.details = upCodeErr ? String(upCodeErr.message || upCodeErr) : 'No rows updated'
+      }
+      return NextResponse.json(payload, { status: 500 })
     }
 
     // Send email via existing route
