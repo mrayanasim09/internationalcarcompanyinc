@@ -29,11 +29,13 @@ export function EmailAdminLogin() {
 
     try {
       let recaptchaToken: string | undefined
+      // Gracefully skip reCAPTCHA in case it is not loaded to avoid RSC/script race conditions
       try {
+        const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
         // @ts-expect-error recaptcha global provided by script at runtime
-        if (window.grecaptcha && process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) {
+        if (typeof window !== 'undefined' && window.grecaptcha && siteKey) {
           // @ts-expect-error recaptcha global provided by script at runtime
-          recaptchaToken = await window.grecaptcha.execute(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY, { action: 'admin_login' })
+          recaptchaToken = await window.grecaptcha.execute(siteKey, { action: 'admin_login' })
         }
       } catch {}
 
