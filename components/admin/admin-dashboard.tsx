@@ -23,23 +23,48 @@ export function AdminDashboard() {
   const [cars, setCars] = useState<Car[]>([])
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   // Firebase removed
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('DEBUG: Dashboard fetching data...')
+        setError(null)
+        
         const [carsRes, reviewsRes] = await Promise.all([
           fetch('/api/admin/cars', { cache: 'no-store' }),
           fetch('/api/reviews', { cache: 'no-store' })
         ])
-        const carsJson = await carsRes.json()
-        const reviewsJson = await reviewsRes.json()
+        
+        console.log('DEBUG: Cars response status:', carsRes.status)
+        console.log('DEBUG: Reviews response status:', reviewsRes.status)
+        
+        if (!carsRes.ok) {
+          const carsError = await carsRes.text()
+          console.error('DEBUG: Cars API error:', carsError)
+          setError(`Failed to fetch cars: ${carsRes.status}`)
+        }
+        
+        if (!reviewsRes.ok) {
+          const reviewsError = await reviewsRes.text()
+          console.error('DEBUG: Reviews API error:', reviewsError)
+          setError(`Failed to fetch reviews: ${reviewsRes.status}`)
+        }
+        
+        const carsJson = await carsRes.json().catch(() => ({ cars: [] }))
+        const reviewsJson = await reviewsRes.json().catch(() => ({ reviews: [] }))
+        
+        console.log('DEBUG: Cars data received:', carsJson)
+        console.log('DEBUG: Reviews data received:', reviewsJson)
+        
         // Types kept minimal; mapping happens at usage
         setCars(((carsJson?.cars || []) as unknown as Car[]))
         // Types kept minimal; mapping happens at usage
         setReviews(((reviewsJson?.reviews || []) as unknown as Review[]))
       } catch (error) {
-        console.error("Error fetching data:", error)
+        console.error("DEBUG: Dashboard fetch error:", error)
+        setError(`Fetch error: ${error instanceof Error ? error.message : 'Unknown error'}`)
       } finally {
         setLoading(false)
       }
@@ -69,6 +94,24 @@ export function AdminDashboard() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <CarLoader size={128} />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-red-600">Dashboard Error</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-red-600 mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()} className="w-full">
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
