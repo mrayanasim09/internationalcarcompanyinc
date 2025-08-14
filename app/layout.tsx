@@ -3,6 +3,7 @@ import Script from 'next/script'
 import { headers } from 'next/headers'
 import { GeistSans } from 'geist/font/sans'
 import { Montserrat } from 'next/font/google'
+const montserrat = Montserrat({ subsets: ['latin'], weight: ['400','500','600','700'], variable: '--font-montserrat', display: 'swap' })
 import { CookieConsent } from '@/components/cookie-consent'
 import { ErrorMonitor } from '@/components/error-monitor'
 
@@ -69,7 +70,6 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const nonce = headers().get('x-nonce') || undefined
-  const montserrat = Montserrat({ subsets: ['latin'], weight: ['400','500','600','700'], variable: '--font-montserrat', display: 'swap' })
   return (
     <html lang="en" suppressHydrationWarning>
     <Script id="theme-script" strategy="beforeInteractive" nonce={nonce}>{`
