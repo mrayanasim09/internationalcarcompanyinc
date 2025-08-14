@@ -48,7 +48,7 @@ export function EmailAdminLogin() {
         signal: controller.signal,
       })
       clearTimeout(timeout)
-      const result = await start.json().catch(() => ({} as unknown)) as { success?: boolean; requiresEmailVerification?: boolean; trusted?: boolean; message?: string; error?: string }
+      const result = await start.json().catch(() => ({} as unknown)) as { success?: boolean; requiresEmailVerification?: boolean; trusted?: boolean; message?: string; error?: string; debugCode?: string | number }
 
       if (start.ok && result?.success) {
         if (result.trusted || result.requiresEmailVerification) {
