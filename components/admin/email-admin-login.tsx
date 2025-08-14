@@ -56,8 +56,8 @@ export function EmailAdminLogin() {
         if (result.trusted || result.requiresEmailVerification) {
           setCurrentEmail(email)
           setStep('verification')
-          if (result.debugCode) {
-            // Autofill debug only when explicitly enabled on server
+          if (result.debugCode && process.env.NODE_ENV !== 'production') {
+            // Autofill debug only when explicitly enabled on server AND not in production
             setVerificationCode(String(result.debugCode))
           }
           if (!result.trusted) {
