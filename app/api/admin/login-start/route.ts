@@ -30,6 +30,15 @@ function generateCode(): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Basic configuration check for Supabase
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      const payload: Record<string, unknown> = { error: 'Login failed' }
+      if (process.env.DEBUG_ADMIN === '1') {
+        payload.code = 'SUPABASE_ENV'
+        payload.details = 'Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY'
+      }
+      return NextResponse.json(payload, { status: 500 })
+    }
     if (!csrf.verify(request)) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
@@ -162,7 +171,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(responseBody)
   } catch (error) {
     console.error('login-start error:', error)
-    return NextResponse.json({ error: 'Login failed', details: (error as Error).message }, { status: 500 })
+    const payload: Record<string, unknown> = { error: 'Login failed' }
+    if (process.env.DEBUG_ADMIN === '1') {
+      payload.code = 'UNHANDLED'
+      payload.details = (error as Error)?.message || String(error)
+    }
+    return NextResponse.json(payload, { status: 500 })
   }
 }
 
