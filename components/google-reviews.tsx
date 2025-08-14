@@ -149,22 +149,22 @@ export function GoogleReviews({ placeId = "ChIJN1t_tDeuEmsRUsoyG83frY4", maxRevi
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
           Google Reviews
         </h2>
         <div className="flex items-center justify-center space-x-2 mb-2">
           <Star className="h-6 w-6 text-yellow-400" />
-          <span className="text-2xl font-bold text-gray-900 dark:text-white">{averageRating}</span>
-          <span className="text-gray-600 dark:text-gray-300">({totalReviews} reviews)</span>
+          <span className="text-2xl font-bold text-foreground">{averageRating}</span>
+          <span className="text-muted-foreground">({totalReviews} reviews)</span>
         </div>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-muted-foreground">
           See what our customers say about us on Google
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {reviews.map((review, index) => (
-          <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+          <Card key={index} className="bg-card/70 backdrop-blur border border-border rounded-2xl hover:shadow-lg transition-shadow duration-300">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
                 <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
@@ -188,7 +188,7 @@ export function GoogleReviews({ placeId = "ChIJN1t_tDeuEmsRUsoyG83frY4", maxRevi
                   </div>
                 </div>
               </div>
-              <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 &ldquo;{review.text}&rdquo;
               </p>
             </CardContent>

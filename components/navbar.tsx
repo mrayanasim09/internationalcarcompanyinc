@@ -27,7 +27,7 @@ export function Navbar() {
     <>
       <nav
         className={`icc-theme fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border" : "bg-background/80 backdrop-blur"
+          isScrolled ? "bg-background/80 backdrop-blur-md shadow-lg border-b border-border" : "bg-background/60 backdrop-blur"
         }`}
         aria-label="Primary"
       >

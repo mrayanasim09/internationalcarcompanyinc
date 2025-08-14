@@ -11,22 +11,23 @@
     --card-foreground: 220 20% 12%;
     --popover: 0 0% 100%;
     --popover-foreground: 220 20% 12%;
-    --primary: 210 100% 50%; /* electric blue */
+    /* Alt accent palette: showroom blue + teal */
+    --primary: 212 100% 47%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 14% 96%;
+    --secondary: 214 32% 95%;
     --secondary-foreground: 220 20% 20%;
     --muted: 220 14% 96%;
     --muted-foreground: 220 10% 45%;
-    --accent: 195 100% 40%; /* teal */
+    --accent: 188 85% 42%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
     --border: 220 12% 90%;
     --input: 220 12% 90%;
-    --ring: 210 100% 50%;
+    --ring: 212 100% 47%;
     --radius: 0.5rem;
-    --chart-1: 210 100% 50%;
-    --chart-2: 195 100% 40%;
+    --chart-1: 212 100% 47%;
+    --chart-2: 188 85% 42%;
     --chart-3: 230 60% 60%;
     --chart-4: 260 50% 60%;
     --chart-5: 280 50% 60%;
@@ -40,21 +41,21 @@
     --card-foreground: 210 40% 98%;
     --popover: 220 14% 13%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 100% 56%; /* Electric blue */
+    --primary: 212 100% 60%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 220 14% 18%;
     --secondary-foreground: 210 40% 98%;
     --muted: 220 14% 18%;
     --muted-foreground: 215 20% 65%;
-    --accent: 195 100% 40%; /* Teal accent for highlights */
+    --accent: 188 85% 48%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 40%;
     --destructive-foreground: 210 40% 98%;
     --border: 220 14% 20%;
     --input: 220 14% 20%;
-    --ring: 210 100% 56%;
-    --chart-1: 210 100% 56%;
-    --chart-2: 195 100% 40%;
+    --ring: 212 100% 60%;
+    --chart-1: 212 100% 60%;
+    --chart-2: 188 85% 48%;
     --chart-3: 230 60% 72%;
     --chart-4: 260 60% 72%;
     --chart-5: 280 60% 72%;

@@ -39,8 +39,8 @@ export function Footer() {
                 <div className="text-sm text-muted-foreground">
                   <div className="font-medium text-foreground">Our Location</div>
                   <div><BrandNameUser className="inline" /></div>
-                  <div></div>
-                  <div></div>
+                  <div>24328 S Vermont Ave Suite #215</div>
+                  <div>Harbor City, CA 90710</div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -84,18 +84,13 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Business Hours</h3>
             <div className="text-sm text-muted-foreground space-y-2">
-              <div>
-                <div className="font-medium text-foreground">Monday - Friday</div>
-                <div>Coming soon</div>
-              </div>
-              <div>
-                <div className="font-medium text-foreground">Saturday</div>
-                <div>Coming soon</div>
-              </div>
-              <div>
-                <div className="font-medium text-foreground">Sunday</div>
-                <div>Coming soon</div>
-              </div>
+              <div className="flex items-center justify-between"><span className="font-medium text-foreground">Monday</span><span>9:00 AM - 5:00 PM</span></div>
+              <div className="flex items-center justify-between"><span className="font-medium text-foreground">Tuesday</span><span>9:00 AM - 5:00 PM</span></div>
+              <div className="flex items-center justify-between"><span className="font-medium text-foreground">Wednesday</span><span>9:00 AM - 5:00 PM</span></div>
+              <div className="flex items-center justify-between"><span className="font-medium text-foreground">Thursday</span><span>9:00 AM - 5:00 PM</span></div>
+              <div className="flex items-center justify-between"><span className="font-medium text-foreground">Friday</span><span>9:00 AM - 5:00 PM</span></div>
+              <div className="flex items-center justify-between"><span className="font-medium text-foreground">Saturday</span><span>9:00 AM - 5:00 PM</span></div>
+              <div className="flex items-center justify-between"><span className="font-medium text-foreground">Sunday</span><span>9:00 AM - 5:00 PM</span></div>
             </div>
           </div>
         </div>

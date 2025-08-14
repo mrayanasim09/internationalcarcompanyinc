@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import { headers } from 'next/headers'
 import { GeistSans } from 'geist/font/sans'
+import { Montserrat } from 'next/font/google'
 import { CookieConsent } from '@/components/cookie-consent'
 import { ErrorMonitor } from '@/components/error-monitor'
 
@@ -68,6 +69,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const nonce = headers().get('x-nonce') || undefined
+  const montserrat = Montserrat({ subsets: ['latin'], weight: ['400','500','600','700'], variable: '--font-montserrat', display: 'swap' })
   return (
     <html lang="en" suppressHydrationWarning>
     <Script id="theme-script" strategy="beforeInteractive" nonce={nonce}>{`
@@ -124,7 +126,7 @@ export default function RootLayout({
         
         {/* Cache control handled via next.config headers */}
       </head>
-      <body className={GeistSans.className}>
+      <body className={`${GeistSans.className} ${montserrat.variable}`}>
         <Script id="web-vitals" strategy="afterInteractive" nonce={nonce}>{`
           (function(){
             try{

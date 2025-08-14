@@ -26,19 +26,19 @@ export function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-3 text-center">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto bg-card/60 backdrop-blur-md rounded-2xl border border-border p-4 md:p-6 shadow-lg">
           {/* Main Heading - Mobile First */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-3 md:mb-4 leading-tight">
             Welcome to <BrandName className="inline" />
           </h1>
           
           {/* Subtitle */}
-          <p className="text-base sm:text-lg md:text-xl text-foreground/70 mb-5 md:mb-6 max-w-3xl mx-auto leading-relaxed">
-            Discover premium pre-owned vehicles, quality cars, competitive prices, exceptional service, and easy financing—all in one place.
+          <p className="text-base sm:text-lg md:text-xl text-foreground/80 mb-5 md:mb-6 max-w-3xl mx-auto leading-relaxed">
+            Discover premium pre-owned vehicles, transparent pricing, and exceptional service—all in one place.
           </p>
 
           {/* CTA Buttons - Mobile Optimized */}
-          <div className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-5 md:mb-8">
+          <div className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-5 md:mb-6">
             <Link href="/inventory">
               <Button 
                 size="lg" 
@@ -53,7 +53,7 @@ export function HeroSection() {
             <Link href="/contact">
               <Button 
                 size="lg"
-                className="w-full sm:w-auto bg-card text-primary hover:bg-card/90 px-8 py-4 text-lg font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 touch-button"
+                className="w-full sm:w-auto bg-background text-foreground hover:bg-accent px-8 py-4 text-lg font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 touch-button"
                 aria-label="Contact us for assistance"
               >
                 <Phone className="w-5 h-5 mr-2" aria-hidden="true" />

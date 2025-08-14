@@ -81,7 +81,8 @@ export function AboutContent() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-6">Our Story</h2>
             <div className="space-y-4 md:space-y-6 text-muted-foreground text-base md:text-lg leading-relaxed">
-              <p>Coming soon.</p>
+              <p><BrandNameUser className="inline" /> has been committed to a showroom-quality experience with corporate-level service standards, ensuring every customer feels confident and informed.</p>
+              <p>We combine transparent pricing with rigorous multi-point inspections and a curated inventory, so our customers spend less time searching and more time driving.</p>
             </div>
           </div>
         </div>
@@ -123,17 +124,17 @@ export function AboutContent() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
-            <Card className="text-center bg-card border-border">
+            <Card className="text-center bg-card/70 backdrop-blur border border-border rounded-2xl">
               <CardContent className="p-4 md:p-6">
                 <MapPin className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3">Our Location</h3>
                 <p className="text-sm md:text-base text-muted-foreground">
-                  
+                  24328 S Vermont Ave Suite #215<br/>Harbor City, CA 90710
                 </p>
               </CardContent>
             </Card>
             
-            <Card className="text-center bg-card border-border">
+            <Card className="text-center bg-card/70 backdrop-blur border border-border rounded-2xl">
               <CardContent className="p-4 md:p-6">
                 <Phone className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3">Call Us</h3>
@@ -143,7 +144,7 @@ export function AboutContent() {
               </CardContent>
             </Card>
             
-            <Card className="text-center bg-card border-border">
+            <Card className="text-center bg-card/70 backdrop-blur border border-border rounded-2xl">
               <CardContent className="p-4 md:p-6">
                 <Mail className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3">Email Us</h3>

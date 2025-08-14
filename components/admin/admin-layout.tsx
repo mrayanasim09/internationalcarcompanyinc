@@ -42,7 +42,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? "block" : "hidden"}`}>
         <div className="fixed inset-0 bg-background/50" onClick={() => setSidebarOpen(false)}></div>
-        <div className="fixed inset-y-0 left-0 w-64 bg-background shadow-lg border-r border-border">
+        <div className="fixed inset-y-0 left-0 w-64 bg-card/70 backdrop-blur shadow-xl border-r border-border rounded-r-2xl">
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center space-x-2">
               {/* Logo Image */}
@@ -92,7 +92,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
       {/* Desktop sidebar */}
          <div className="hidden lg:block lg:col-start-1 lg:row-span-full lg:w-64">
-          <div className="flex flex-col h-full bg-background text-foreground shadow-lg border-r border-border">
+          <div className="flex flex-col h-full bg-card/70 backdrop-blur text-foreground shadow-xl border-r border-border">
           <div className="flex items-center px-6 py-4 border-b border-border">
             <div className="flex items-center space-x-3">
               {/* Logo Image */}
@@ -122,9 +122,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                       className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent"
-                      }`}
+                        className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                         isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent"
+                       }`}
                     >
                       <IconComponent className="h-4 w-4 mr-3" />
                       {item.name}

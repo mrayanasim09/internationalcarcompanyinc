@@ -73,7 +73,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
 
   return (
     <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
-    <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden bg-card border border-border touch-card">
+    <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur border border-border rounded-2xl touch-card">
       <Link href={`/car/${car.id}`} className="block" aria-label={`View details for ${car.title}`}>
         <div className="relative aspect-video">
           {car.images && car.images[0] && typeof car.images[0] === 'string' && car.images[0].startsWith("/") ? (
@@ -101,7 +101,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
           )}
 
           {/* Price Badge */}
-          <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground font-bold text-sm" aria-label={`Price: ${formatPrice(car.price || 0)}`}>
+          <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground font-bold text-sm shadow-md" aria-label={`Price: ${formatPrice(car.price || 0)}`}>
             {formatPrice(car.price || 0)}
           </Badge>
 
@@ -140,7 +140,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
               </div>
               <div className="flex items-center gap-1" role="listitem">
                 <MapPin className="h-3 w-3" aria-hidden="true" />
-                <span className="truncate max-w-[80px]">{car.location}</span>
+                <span className="truncate max-w-[100px]">{car.location}</span>
               </div>
             </div>
           </div>

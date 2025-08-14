@@ -125,11 +125,13 @@ export function ListingsContent({ initialCars, filters: controlledFilters, onFil
         </div>
       </div>
 
-      <div className={usingExternalFilters ? '' : "flex flex-col lg:flex-row gap-6 md:gap-8"}>
+        <div className={usingExternalFilters ? '' : "flex flex-col lg:flex-row gap-6 md:gap-8"}>
         {/* Filter Panel (internal) */}
         {!usingExternalFilters && (
           <div className="lg:w-1/4">
-            <FilterPanel onFilter={handleFilter} />
+            <div className="bg-card/70 border border-border rounded-2xl p-4 backdrop-blur">
+              <FilterPanel onFilter={handleFilter} />
+            </div>
           </div>
         )}
 

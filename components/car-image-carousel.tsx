@@ -120,8 +120,8 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
               onClick={() => goToImage(index)}
               className={`flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                 index === currentIndex
-                  ? 'border-red-500 ring-2 ring-red-200'
-                  : 'border-gray-300 dark:border-gray-600 hover:border-red-300'
+                  ? 'border-primary ring-2 ring-primary/30'
+                  : 'border-gray-300 dark:border-gray-600 hover:border-primary/50'
               }`}
             >
               <Image
