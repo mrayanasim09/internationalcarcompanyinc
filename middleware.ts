@@ -90,7 +90,7 @@ export function middleware(request: NextRequest) {
     response.headers.set('Content-Security-Policy', [
       "default-src 'self'",
       // Allow nonce'd inline scripts and specific hosts
-      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.google.com https://www.gstatic.com`,
+      `script-src 'self' 'unsafe-inline' 'strict-dynamic' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.google.com https://www.gstatic.com`,
       // Keep 'unsafe-inline' for styles for now to avoid breaking inline style attributes
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
