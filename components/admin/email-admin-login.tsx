@@ -181,9 +181,9 @@ export function EmailAdminLogin() {
     setCurrentEmail("")
   }
 
-    if (step === 'verification') {
+  if (step === 'verification') {
     return (
-        <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <Image
@@ -300,7 +300,7 @@ export function EmailAdminLogin() {
                 <Input
                   id="email"
                   type="email"
-            placeholder="admin@internationalcarcompanyinc.com"
+                  placeholder="admin@internationalcarcompanyinc.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -328,7 +328,7 @@ export function EmailAdminLogin() {
             <Button
               type="submit"
               disabled={isLoading}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>
