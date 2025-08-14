@@ -217,9 +217,15 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({ success: true })
     const isHttps = (request.headers.get('x-forwarded-proto') || new URL(request.url).protocol).toString().includes('https')
     const hostname = new URL(request.url).hostname
-    const parts = hostname.split('.')
-    const baseDomain = parts.length >= 2 ? `${parts[parts.length - 2]}.${parts[parts.length - 1]}` : hostname
-    const cookieDomain = `.${baseDomain}`
+    
+    // Fix domain calculation for multi-part domains
+    let cookieDomain = ''
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      cookieDomain = undefined // Don't set domain for localhost
+    } else if (hostname.includes('.')) {
+      // For production domains, use the full domain
+      cookieDomain = hostname
+    }
     
     console.log('DEBUG: Setting cookies for domain:', cookieDomain)
     
