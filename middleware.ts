@@ -13,6 +13,30 @@ export function middleware(request: NextRequest) {
     // Get the pathname of the request
     const path = request.nextUrl.pathname
 
+    // Special-case: admin login page should load without CSP/nonce stream interference
+    // but still needs a CSRF token cookie before form POSTs.
+    if (path === '/admin/login') {
+      const response = NextResponse.next()
+      const hasCsrfLogin = request.cookies.get('csrf_token')?.value
+      if (!hasCsrfLogin) {
+        const csrfBytes = new Uint8Array(16)
+        crypto.getRandomValues(csrfBytes)
+        let raw = ''
+        for (let i = 0; i < csrfBytes.length; i++) {
+          raw += String.fromCharCode(csrfBytes[i])
+        }
+        const csrfToken = btoa(raw).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '')
+        response.cookies.set('csrf_token', csrfToken, {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          path: '/',
+          maxAge: 60 * 60,
+        })
+      }
+      return response
+    }
+
   // Auto-redirect authenticated users away from login
   if (path === '/admin/login') {
     const jwtToken = request.cookies.get('am_tycoons_admin_token')?.value
