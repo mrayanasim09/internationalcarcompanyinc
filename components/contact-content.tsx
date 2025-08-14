@@ -145,9 +145,13 @@ export function ContactContent() {
     {
       icon: MapPin,
       title: "Visit Our Office",
-      details: ["International Car Company Inc", "", ""],
-      action: "Get Directions",
-      actionUrl: "#",
+      details: [
+        "International Car Company Inc",
+        "24328 S Vermont Ave Suite #215",
+        "Harbor City, CA 90710"
+      ],
+      action: "Open in Google Maps",
+      actionUrl: "https://maps.app.goo.gl/aJ8ZksnKGYunr8VZ7?g_st=iw",
     },
     // Phone cards replaced by dedicated numbers section below
     {
@@ -179,9 +183,13 @@ export function ContactContent() {
   ]
 
   const hours = [
-    { day: "Monday - Friday", time: "9:00 AM - 7:00 PM" },
-    { day: "Saturday", time: "9:00 AM - 6:00 PM" },
-    { day: "Sunday", time: "10:00 AM - 5:00 PM" },
+    { day: "Monday", time: "9:00 AM - 5:00 PM" },
+    { day: "Tuesday", time: "9:00 AM - 5:00 PM" },
+    { day: "Wednesday", time: "9:00 AM - 5:00 PM" },
+    { day: "Thursday", time: "9:00 AM - 5:00 PM" },
+    { day: "Friday", time: "9:00 AM - 5:00 PM" },
+    { day: "Saturday", time: "9:00 AM - 5:00 PM" },
+    { day: "Sunday", time: "9:00 AM - 5:00 PM" },
   ]
 
   return (
@@ -371,12 +379,19 @@ export function ContactContent() {
 
             {/* Map & Hours */}
             <div className="space-y-8">
-              {/* Location Placeholder */}
+              {/* Location */}
               <div>
                  <h3 className="text-2xl font-bold text-foreground mb-4">Find Us</h3>
                  <Card className="bg-card border-border">
-                  <CardContent className="p-6 text-center">
-                    <p className="text-muted-foreground">Location coming soon.</p>
+                  <CardContent className="p-0">
+                    <iframe
+                      title="Google Maps - International Car Company Inc"
+                      src="https://www.google.com/maps?q=24328%20S%20Vermont%20Ave%20Suite%20%23215%2C%20Harbor%20City%2C%20CA%2090710&output=embed"
+                      className="w-full h-[300px] md:h-[360px] border-0 rounded"
+                      loading="lazy"
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
                   </CardContent>
                 </Card>
               </div>
