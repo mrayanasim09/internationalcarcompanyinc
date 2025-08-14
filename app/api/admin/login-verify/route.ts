@@ -219,7 +219,7 @@ export async function POST(request: NextRequest) {
     const hostname = new URL(request.url).hostname
     
     // Fix domain calculation for multi-part domains
-    let cookieDomain = ''
+    let cookieDomain: string | undefined = ''
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       cookieDomain = undefined // Don't set domain for localhost
     } else if (hostname.includes('.')) {
