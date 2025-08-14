@@ -22,6 +22,15 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
+  // Do not render the admin shell on the login page to avoid heavy hydration and RSC issues
+  if (pathname === '/admin/login') {
+    return (
+      <main className="min-h-screen bg-background text-foreground p-4 sm:p-6">
+        {children}
+      </main>
+    )
+  }
+
   const navigation = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Car Management", href: "/admin/dashboard", icon: Car },
