@@ -178,10 +178,15 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({ success: true })
     const isHttps = (request.headers.get('x-forwarded-proto') || new URL(request.url).protocol).toString().includes('https')
+    const hostname = new URL(request.url).hostname
+    const parts = hostname.split('.')
+    const baseDomain = parts.length >= 2 ? `${parts[parts.length - 2]}.${parts[parts.length - 1]}` : hostname
+    const cookieDomain = `.${baseDomain}`
     response.cookies.set('am_tycoons_admin_token', accessToken, {
       httpOnly: true,
       secure: isHttps,
       sameSite: 'lax',
+      domain: cookieDomain,
       maxAge: 60 * 60, // 1 hour
       path: '/',
     })
@@ -189,6 +194,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: isHttps,
       sameSite: 'lax',
+      domain: cookieDomain,
       maxAge: 7 * 24 * 60 * 60, // 7 days
       path: '/',
     })
@@ -197,6 +203,7 @@ export async function POST(request: NextRequest) {
       httpOnly: false,
       secure: isHttps,
       sameSite: 'lax',
+      domain: cookieDomain,
       maxAge: 5 * 60,
       path: '/',
     })
