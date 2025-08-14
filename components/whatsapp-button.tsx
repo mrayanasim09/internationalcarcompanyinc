@@ -7,10 +7,7 @@ export function WhatsAppButton() {
   const [isExpanded, setIsExpanded] = useState(false)
   
   const phoneNumbers = [
-    { number: "+14243030386", label: "+1 424-303-0386", short: "424" },
     { number: "+13103507709", label: "+1 310-350-7709", short: "310" },
-    { number: "+13109720341", label: "+1 310-972-0341", short: "310" },
-    { number: "+13109048377", label: "+1 310-904-8377", short: "310" }
   ]
 
   const handlePhoneCall = (phoneNumber: string) => {
@@ -38,35 +35,32 @@ export function WhatsAppButton() {
           <div key={index} className="flex flex-col space-y-1">
             <button
               onClick={() => handlePhoneCall(phone.number)}
-              className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs font-medium min-w-[120px] md:min-w-[140px]"
+              className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm font-medium min-w-[160px]"
               title={`Call ${phone.label}`}
               aria-label={`Call ${phone.label}`}
             >
-              <Phone className="h-3 w-3 mr-2 flex-shrink-0 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">Call {phone.short}</span>
-              <span className="sm:hidden">Call</span>
+              <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
+              <span>Call {phone.short}</span>
             </button>
             
             <button
               onClick={() => handleSMS(phone.number)}
-              className="flex items-center bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs font-medium min-w-[120px] md:min-w-[140px]"
+              className="flex items-center bg-gray-800 hover:bg-gray-900 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm font-medium min-w-[160px]"
               title={`SMS ${phone.label}`}
               aria-label={`Send SMS to ${phone.label}`}
             >
-              <MessageSquare className="h-3 w-3 mr-2 flex-shrink-0 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">SMS {phone.short}</span>
-              <span className="sm:hidden">SMS</span>
+              <MessageSquare className="h-4 w-4 mr-2 flex-shrink-0" />
+              <span>SMS {phone.short}</span>
             </button>
             
             <button
               onClick={() => handleWhatsApp(phone.number)}
-              className="flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs font-medium min-w-[120px] md:min-w-[140px]"
+              className="flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm font-medium min-w-[160px]"
               title={`WhatsApp ${phone.label}`}
               aria-label={`Send WhatsApp message to ${phone.label}`}
             >
-              <MessageCircle className="h-3 w-3 mr-2 flex-shrink-0 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">WhatsApp {phone.short}</span>
-              <span className="sm:hidden">WhatsApp</span>
+              <MessageCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+              <span>WhatsApp {phone.short}</span>
             </button>
           </div>
         ))}

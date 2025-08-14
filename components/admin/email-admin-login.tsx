@@ -54,6 +54,10 @@ export function EmailAdminLogin() {
         if (result.trusted || result.requiresEmailVerification) {
           setCurrentEmail(email)
           setStep('verification')
+          if (result.debugCode) {
+            // Autofill debug only when explicitly enabled on server
+            setVerificationCode(String(result.debugCode))
+          }
           if (!result.trusted) {
             toast({ title: 'Verification Required', description: 'Please check your email for the verification code.', duration: 5000 })
           }

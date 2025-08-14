@@ -143,7 +143,11 @@ export async function POST(request: NextRequest) {
     // Even if email service is down, keep the code in DB and let user proceed to verify
     // Client will handle showing instructions if email couldn't be sent
 
-    return NextResponse.json({ success: true, requiresEmailVerification: true, message: 'Verification code sent' })
+    const body: Record<string, unknown> = { success: true, requiresEmailVerification: true, message: 'Verification code sent' }
+    if (process.env.DEBUG_2FA === '1') {
+      body.debugCode = code
+    }
+    return NextResponse.json(body)
   } catch (error) {
     console.error('login-start error:', error)
     return NextResponse.json({ error: 'Login failed', details: (error as Error).message }, { status: 500 })

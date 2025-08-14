@@ -17,11 +17,12 @@ export function FloatingActionButton({ className }: FloatingActionButtonProps) {
   }
 
   const handleWhatsApp = () => {
-    window.open("https://wa.me/14243030386", "_blank")
+    const message = encodeURIComponent("Hi! I'm interested in your vehicles. Can you help me?")
+    window.open(`https://wa.me/13103507709?text=${message}`, "_blank")
   }
 
   const handleCall = () => {
-    window.location.href = "tel:+14243030386"
+    window.location.href = "tel:+13103507709"
   }
 
   return (

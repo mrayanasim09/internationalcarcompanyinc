@@ -106,7 +106,7 @@ export function Navbar() {
       </div>
       </nav>
       {/* Spacer to offset fixed header */}
-      <div className="h-16 md:h-28" aria-hidden="true" />
+      <div className="h-16 md:h-24" aria-hidden="true" />
     </>
   )
 }
