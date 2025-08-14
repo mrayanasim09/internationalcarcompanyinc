@@ -19,16 +19,26 @@ const verifySchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('DEBUG: login-verify started')
+    
     if (!csrf.verify(request)) {
+      console.log('DEBUG: CSRF verification failed')
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
+    
+    console.log('DEBUG: CSRF verification passed')
+    
     // Rate limit 2FA attempts
     const guard = createRateLimitMiddleware(rateLimiters.twoFA)
     const blocked = await guard(request)
     if (blocked) return blocked
+    
     const body = await request.json()
+    console.log('DEBUG: Request body:', { email: body.email, hasCode: !!body.code })
+    
     const parsed = verifySchema.safeParse(body)
     if (!parsed.success) {
+      console.log('DEBUG: Schema validation failed:', parsed.error.errors)
       return NextResponse.json(
         { error: 'Invalid input data', details: parsed.error.errors },
         { status: 400 }
@@ -40,6 +50,8 @@ export async function POST(request: NextRequest) {
     const code = String(codeInput).trim().replace(/\D/g, '').padStart(6, '0')
     const deviceId = parsed.data.deviceId
 
+    console.log('DEBUG: Looking up user:', email)
+
     // In case of duplicate emails, prefer the most recently updated/issued code
     const { data: candidates, error: findErr } = await supabaseAdmin
       .from('admin_users')
@@ -48,13 +60,19 @@ export async function POST(request: NextRequest) {
       .order('verification_code_expires_at', { ascending: false })
       .order('updated_at', { ascending: false })
       .limit(5)
+      
     if (findErr) {
+      console.error('DEBUG: Supabase find user error:', findErr)
       if (process.env.NODE_ENV !== 'production') {
         console.error('Supabase find user error:', findErr)
       }
-      return NextResponse.json({ error: 'Verification failed' }, { status: 500 })
+      return NextResponse.json({ error: 'Verification failed', code: 'SUPABASE_FIND', details: findErr.message }, { status: 500 })
     }
+    
+    console.log('DEBUG: Found candidates:', candidates?.length || 0)
+    
     if (!candidates || candidates.length === 0) {
+      console.log('DEBUG: No candidates found')
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
     // Define the expected shape of the row for type safety
@@ -142,6 +160,18 @@ export async function POST(request: NextRequest) {
     const trustedDevices = Array.isArray(userData.trusted_devices) ? userData.trusted_devices : []
     const updatedTrusted = Array.from(new Set([raw, ...trustedDevices])).slice(0, 10)
 
+    console.log('DEBUG: Updating user:', userData.id)
+    console.log('DEBUG: Update data:', {
+      email_verified: true,
+      verification_code: null,
+      verification_code_expires_at: null,
+      last_login: new Date().toISOString(),
+      login_attempts: 0,
+      lockout_until: null,
+      trusted_devices: updatedTrusted,
+      updated_at: new Date().toISOString(),
+    })
+
     const { error: upErr } = await supabaseAdmin
       .from('admin_users')
       .update({
@@ -155,16 +185,22 @@ export async function POST(request: NextRequest) {
         updated_at: new Date().toISOString(),
       })
       .eq('id', userData.id)
+      
     if (upErr) {
+      console.error('DEBUG: Supabase verify update error:', upErr)
       if (process.env.NODE_ENV !== 'production') {
         console.error('Supabase verify update error:', upErr)
       }
-      return NextResponse.json({ error: 'Verification failed' }, { status: 500 })
+      return NextResponse.json({ error: 'Verification failed', code: 'SUPABASE_UPDATE', details: upErr.message }, { status: 500 })
     }
+    
+    console.log('DEBUG: User update successful')
 
     const role = (userData.role as string) || 'viewer'
     const defaultPerms = ROLE_PERMISSIONS[role as AdminRole]
     const permissions: AdminPermissions = (userData.permissions as AdminPermissions) || defaultPerms
+
+    console.log('DEBUG: Creating JWT tokens for role:', role)
 
     // payload info is captured in token creation below
 
@@ -175,6 +211,8 @@ export async function POST(request: NextRequest) {
       permissions,
       twoFactorVerified: true,
     })
+    
+    console.log('DEBUG: JWT tokens created successfully')
 
     const response = NextResponse.json({ success: true })
     const isHttps = (request.headers.get('x-forwarded-proto') || new URL(request.url).protocol).toString().includes('https')
@@ -182,6 +220,9 @@ export async function POST(request: NextRequest) {
     const parts = hostname.split('.')
     const baseDomain = parts.length >= 2 ? `${parts[parts.length - 2]}.${parts[parts.length - 1]}` : hostname
     const cookieDomain = `.${baseDomain}`
+    
+    console.log('DEBUG: Setting cookies for domain:', cookieDomain)
+    
     response.cookies.set('am_tycoons_admin_token', accessToken, {
       httpOnly: true,
       secure: isHttps,
@@ -210,13 +251,16 @@ export async function POST(request: NextRequest) {
 
     // Reset rate limiter on success
     await rateLimiters.twoFA.recordSuccess(request)
+    
+    console.log('DEBUG: login-verify completed successfully')
     return response
   } catch (error) {
+    console.error('DEBUG: login-verify caught error:', error)
     if (process.env.NODE_ENV !== 'production') {
       console.error('login-verify error:', error)
     }
     const err = error as unknown as { message?: string; code?: string }
-    return NextResponse.json({ error: 'Verification failed', details: err?.message || err?.code || 'Unknown error' }, { status: 500 })
+    return NextResponse.json({ error: 'Verification failed', code: 'UNHANDLED', details: err?.message || err?.code || 'Unknown error' }, { status: 500 })
   }
 }
 
