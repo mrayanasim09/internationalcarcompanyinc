@@ -1,24 +1,21 @@
 {
-  "name": "International Car Company Inc - Car Dealership",
-  "short_name": "International Car Co.",
-  "description": "Discover premium vehicles at International Car Company Inc. Professional service, transparent pricing, modern experience.",
+  "name": "International Car Company Inc",
+  "short_name": "ICC",
+  "description": "Premium vehicles with transparent pricing and modern experience",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1e90ff",
   "orientation": "portrait-primary",
   "scope": "/",
-  "lang": "en",
+  "lang": "en-US",
   "categories": ["business", "automotive", "shopping"],
   "icons": [
-    { "src": "/International Car Company Inc. Logo.png", "sizes": "72x72",  "type": "image/png" },
-    { "src": "/International Car Company Inc. Logo.png", "sizes": "96x96",  "type": "image/png" },
-    { "src": "/International Car Company Inc. Logo.png", "sizes": "128x128", "type": "image/png" },
-    { "src": "/International Car Company Inc. Logo.png", "sizes": "144x144", "type": "image/png" },
-    { "src": "/International Car Company Inc. Logo.png", "sizes": "152x152", "type": "image/png" },
-    { "src": "/International Car Company Inc. Logo.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/International Car Company Inc. Logo.png", "sizes": "384x384", "type": "image/png" },
-    { "src": "/International Car Company Inc. Logo.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
   ],
   "screenshots": [
     {

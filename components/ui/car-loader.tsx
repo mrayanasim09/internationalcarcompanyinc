@@ -6,20 +6,14 @@ import { cn } from "@/lib/utils"
 export function CarLoader({ size = 96, className }: { size?: number; className?: string }) {
   return (
     <div className={cn("flex flex-col items-center justify-center py-8", className)} role="status" aria-label="Loading">
-      <div className="relative" style={{ width: size, height: size * 0.5 }}>
-        <Image
-          src="/International Car Company Inc. Logo.png"
-          alt="International Car Company Inc car logo"
-          fill
-          className="object-contain animate-car-drive drop-shadow-md"
-          sizes={`${size}px`}
-          priority={false}
-        />
-        {/* Wheels */}
-        <div className="absolute bottom-0 left-[20%] w-3 h-3 rounded-full bg-primary animate-wheel-spin" />
-        <div className="absolute bottom-0 right-[20%] w-3 h-3 rounded-full bg-primary animate-wheel-spin" />
+      <div className="flex flex-col items-center justify-center space-y-4">
+        <div className="text-2xl font-bold text-primary">
+          International Car Company Inc
+        </div>
+        <div className="text-sm text-muted-foreground">
+          Loading vehicle details...
+        </div>
       </div>
-      <p className="mt-3 text-sm text-muted-foreground">Loading inventory…</p>
     </div>
   )
 }

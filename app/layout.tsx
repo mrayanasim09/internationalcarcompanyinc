@@ -53,15 +53,11 @@ export const metadata: Metadata = {
     title: 'International Car Company Inc - Premium Vehicles',
     description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
     siteName: 'International Car Company Inc',
-    images: [
-      { url: '/International Car Company Inc. Logo.png', width: 1200, height: 630, alt: 'International Car Company Inc Logo' },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'International Car Company Inc - Premium Vehicles',
     description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
-    images: ['/International Car Company Inc. Logo.png'],
   },
   robots: {
     index: true,
@@ -195,6 +191,11 @@ export default function RootLayout({
                   initializeAnalytics();
                 } else if (event.detail === 'declined') {
                   disableAnalytics();
+                  // Remove the GA script if consent is declined
+                  const script = document.getElementById('gtag-src');
+                  if (script) {
+                    script.remove();
+                  }
                 }
               });
               
@@ -203,6 +204,14 @@ export default function RootLayout({
               if (consent === 'accepted') {
                 // Small delay to ensure DOM is ready
                 setTimeout(initializeAnalytics, 100);
+              } else if (consent === 'declined') {
+                // Remove GA script if consent was previously declined
+                setTimeout(() => {
+                  const script = document.getElementById('gtag-src');
+                  if (script) {
+                    script.remove();
+                  }
+                }, 100);
               }
             }
           `}
@@ -210,7 +219,6 @@ export default function RootLayout({
         {/* Preload critical resources */}
         <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
         <link rel="preload" as="image" href="/optimized/placeholder.webp" imageSrcSet="/optimized/placeholder.webp 1200w" imageSizes="100vw" />
-        <link rel="preload" href="/International Car Company Inc. Logo.png" as="image" type="image/png" />
         
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />

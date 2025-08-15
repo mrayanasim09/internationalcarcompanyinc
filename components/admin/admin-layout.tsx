@@ -103,22 +103,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
          <div className="hidden lg:block lg:col-start-1 lg:row-span-full lg:w-64">
           <div className="flex flex-col h-full bg-card/70 backdrop-blur text-foreground shadow-xl border-r border-border">
           <div className="flex items-center px-6 py-4 border-b border-border">
-            <div className="flex items-center space-x-3">
-              {/* Logo Image */}
-              <div className="relative w-16 h-10">
-                <Image
-                  src="/International Car Company Inc. Logo.png"
-                  alt="International Car Company Inc Logo"
-                  fill
-                  className="object-contain"
-                  priority
-                  sizes="64px"
-                />
+            <div className="flex items-center gap-3">
+              <div className="text-xl font-bold text-foreground">
+                International Car Company Inc
               </div>
-              <div>
-                 <div className="text-sm font-bold text-foreground"><BrandName /></div>
-                 <div className="text-xs text-muted-foreground">Professional vehicles. Modern experience.</div>
-              </div>
+              <div className="text-sm text-muted-foreground">Admin Panel</div>
             </div>
           </div>
 

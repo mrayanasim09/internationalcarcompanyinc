@@ -35,18 +35,13 @@ export function Preloader() {
 
   return (
     <div className="fixed inset-0 z-[9999] bg-background flex items-center justify-center">
-      <div className="text-center">
-        {/* Logo - Clean and simple */}
-        <div className="mb-8">
-          <Image
-            src="/International Car Company Inc. Logo.png"
-            alt="International Car Company Inc"
-            width={200}
-            height={80}
-            className="mx-auto h-20 w-auto"
-            priority
-          />
-        </div>
+      <div className="flex flex-col items-center justify-center space-y-6">
+          <div className="text-4xl font-bold text-primary">
+            International Car Company Inc
+          </div>
+          <div className="text-lg text-muted-foreground text-center">
+            Loading your premium vehicle experience...
+          </div>
 
         {/* Loading Animation - Simple and clean */}
         <div className="relative mb-6">

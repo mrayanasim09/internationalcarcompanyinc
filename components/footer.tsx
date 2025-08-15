@@ -20,11 +20,10 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-3 group" aria-label="International Car Company Inc Home">
-               <div className="relative h-10 w-16">
-                 <Image src="/International Car Company Inc. Logo.png" alt="International Car Company Inc Logo" fill className="object-contain" sizes="64px" />
-               </div>
               <div>
-                <div className="text-lg font-bold group-hover:text-primary transition-colors"><BrandNameUser /></div>
+                <div className="text-lg font-bold text-foreground">
+                  International Car Company Inc
+                </div>
                  <div className="text-xs text-muted-foreground">Professional vehicles. Modern experience.</div>
               </div>
             </Link>

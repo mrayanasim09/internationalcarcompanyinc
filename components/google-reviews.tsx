@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { StarRating } from '@/components/star-rating'
-import { Star, MapPin } from 'lucide-react'
+import { Star, MapPin, User } from 'lucide-react'
 import Image from 'next/image'
 
 interface GoogleReview {
@@ -32,59 +32,17 @@ export function GoogleReviews({ placeId = "ChIJN1t_tDeuEmsRUsoyG83frY4", maxRevi
       try {
         setLoading(true)
         
-        // For demo purposes, using mock data since Google Places API requires API key
-        // In production, you would make an API call to Google Places API
-        const mockReviews: GoogleReview[] = [
-          {
-            author_name: "Sarah Johnson",
-            rating: 5,
-            relative_time_description: "2 weeks ago",
-            text: "Amazing experience! The team helped me find the perfect car within my budget. The process was smooth and transparent.",
-            profile_photo_url: "https://via.placeholder.com/40"
-          },
-          {
-            author_name: "Michael Chen",
-            rating: 5,
-            relative_time_description: "1 month ago",
-            text: "Professional service from start to finish. They really know their cars and helped me make an informed decision. Highly recommend!",
-            profile_photo_url: "https://via.placeholder.com/40"
-          },
-          {
-            author_name: "Emily Rodriguez",
-            rating: 5,
-            relative_time_description: "3 weeks ago",
-            text: "Honest pricing and no hidden fees. They really care about customer satisfaction. Highly recommend!",
-            profile_photo_url: "https://via.placeholder.com/40"
-          },
-          {
-            author_name: "David Thompson",
-            rating: 5,
-            relative_time_description: "1 month ago",
-            text: "Found my dream car here! The quality inspection process gave me confidence in my purchase. Great team!",
-            profile_photo_url: "https://via.placeholder.com/40"
-          },
-          {
-            author_name: "Lisa Wang",
-            rating: 5,
-            relative_time_description: "2 months ago",
-            text: "Excellent customer service and a great selection of vehicles. The financing options made it easy to get the car I wanted.",
-            profile_photo_url: "https://via.placeholder.com/40"
-          },
-          {
-            author_name: "James Wilson",
-            rating: 5,
-            relative_time_description: "1 month ago",
-            text: "Trustworthy dealership with quality vehicles. The quality inspection process gives me peace of mind. Will definitely return!",
-            profile_photo_url: "https://via.placeholder.com/40"
-          }
-        ]
-
+        // TODO: Implement actual Google Places API integration
+        // This requires setting up Google Places API with proper API key
+        // For now, show a message that reviews will load from API
+        
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000))
         
-        setReviews(mockReviews.slice(0, maxReviews))
-        setAverageRating(5.0) // Mock average rating
-        setTotalReviews(156) // Mock total reviews
+        // No reviews to show until API is configured
+        setReviews([])
+        setAverageRating(0)
+        setTotalReviews(0)
         setError(null)
       } catch (err) {
         setError('Failed to load reviews')
@@ -163,37 +121,56 @@ export function GoogleReviews({ placeId = "ChIJN1t_tDeuEmsRUsoyG83frY4", maxRevi
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {reviews.map((review, index) => (
-          <Card key={index} className="bg-card/70 backdrop-blur border border-border rounded-2xl hover:shadow-lg transition-shadow duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
-                  <Image
-                    src={review.profile_photo_url || "https://via.placeholder.com/40"}
-                    alt={review.author_name}
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">
-                    {review.author_name}
-                  </h3>
-                  <div className="flex items-center space-x-2">
-                    <StarRating rating={review.rating} size="sm" interactive={false} />
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {review.relative_time_description}
-                    </span>
+        {reviews.length > 0 ? (
+          reviews.map((review, index) => (
+            <Card key={index} className="bg-card/70 backdrop-blur border border-border rounded-2xl hover:shadow-lg transition-shadow duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="w-10 h-10 rounded-full overflow-hidden mr-3 bg-muted flex items-center justify-center">
+                    <User className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">
+                      {review.author_name}
+                    </h3>
+                    <div className="flex items-center space-x-2">
+                      <StarRating rating={review.rating} size="sm" interactive={false} />
+                      <span className="text-sm text-muted-foreground">
+                        {review.relative_time_description}
+                      </span>
+                    </div>
                   </div>
                 </div>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  &ldquo;{review.text}&rdquo;
+                </p>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12">
+            <div className="max-w-md mx-auto">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                &ldquo;{review.text}&rdquo;
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                No Reviews Yet
+              </h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Reviews will appear here once customers leave feedback on Google.
               </p>
-            </CardContent>
-          </Card>
-        ))}
+              <a
+                href="https://www.google.com/maps/search/International+Car+Company+Inc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm"
+              >
+                <MapPin className="h-4 w-4" />
+                <span>Leave a Review</span>
+              </a>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="text-center mt-8">

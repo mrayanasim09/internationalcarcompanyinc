@@ -80,17 +80,13 @@ export function AdminLogin() {
           strategy="lazyOnload"
         />
       ) : null}
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <Image
-            src="/International Car Company Inc. Logo.png"
-            alt="International Car Company Inc Logo"
-            width={150}
-            height={60}
-            className="h-12 w-auto mx-auto mb-4"
-          />
-          <CardTitle>Admin Login</CardTitle>
-        </CardHeader>
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-foreground">
+            International Car Company Inc
+          </h1>
+          <h2 className="mt-2 text-xl text-muted-foreground">Admin Login</h2>
+        </div>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
@@ -120,7 +116,7 @@ export function AdminLogin() {
             ) : null}
           </form>
         </CardContent>
-      </Card>
+      </div>
     </div>
   )
 } 

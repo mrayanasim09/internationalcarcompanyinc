@@ -186,17 +186,10 @@ export function EmailAdminLogin() {
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <Image
-              src="/International Car Company Inc. Logo.png"
-              alt="International Car Company Inc Logo"
-              width={150}
-              height={60}
-              className="h-12 w-auto mx-auto mb-4"
-            />
-            <CardTitle className="flex items-center justify-center gap-2">
-              <Shield className="h-5 w-5" />
-              Email Verification
-            </CardTitle>
+            <h1 className="text-3xl font-bold text-foreground">
+              International Car Company Inc
+            </h1>
+            <h2 className="mt-2 text-xl text-muted-foreground">Email Verification</h2>
           </CardHeader>
           <CardContent className="space-y-4">
             <Alert>
@@ -276,20 +269,10 @@ export function EmailAdminLogin() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <Image
-            src="/International Car Company Inc. Logo.png"
-            alt="International Car Company Inc Logo"
-            width={150}
-            height={60}
-            className="h-12 w-auto mx-auto mb-4"
-          />
-          <CardTitle className="flex items-center justify-center gap-2">
-            <Shield className="h-5 w-5" />
-            Admin Login
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Secure email-based authentication
-          </p>
+          <h1 className="text-3xl font-bold text-foreground">
+            International Car Company Inc
+          </h1>
+          <h2 className="mt-2 text-xl text-muted-foreground">Admin Login</h2>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
