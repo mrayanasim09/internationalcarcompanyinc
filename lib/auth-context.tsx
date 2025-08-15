@@ -24,10 +24,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // For now, just set loading to false since we don't have auth implemented
-    // This prevents the debug messages and API calls
-    setLoading(false)
-    setUser(null)
+    const checkAuth = async () => {
+      try {
+        console.log('DEBUG: AuthProvider checking authentication...')
+        const response = await fetch('/api/admin/me', {
+          credentials: 'include',
+          cache: 'no-store'
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          console.log('DEBUG: AuthProvider received data:', data)
+          
+          if (data.authenticated && data.email) {
+            setUser({
+              email: data.email,
+              role: data.role || 'viewer',
+              permissions: data.permissions
+            })
+            console.log('DEBUG: AuthProvider set user:', data.email)
+          } else {
+            setUser(null)
+            console.log('DEBUG: AuthProvider: not authenticated')
+          }
+        } else {
+          console.log('DEBUG: AuthProvider: /me endpoint returned', response.status)
+          setUser(null)
+        }
+      } catch (error) {
+        console.error('DEBUG: AuthProvider error:', error)
+        setUser(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkAuth()
   }, [])
 
   return (
