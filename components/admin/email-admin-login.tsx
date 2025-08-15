@@ -92,13 +92,38 @@ export function EmailAdminLogin() {
           title: "Verification Successful",
           description: "Welcome to the admin dashboard!",
         })
-        // Ensure a hard navigation so new httpOnly cookies are applied to the next request/middleware
-        try {
-          router.replace("/admin/dashboard")
-        } catch {}
-        if (typeof window !== 'undefined') {
-          window.location.href = "/admin/dashboard"
+        
+        // Wait for cookies to be set, then redirect with multiple attempts
+        let redirectAttempts = 0
+        const maxAttempts = 10
+        
+        const attemptRedirect = () => {
+          redirectAttempts++
+          console.log(`DEBUG: Redirect attempt ${redirectAttempts}/${maxAttempts}`)
+          
+          const hasFlag = document.cookie.includes('icc_admin_verified=1')
+          const hasJWT = document.cookie.includes('icc_admin_token=')
+          
+          if (hasFlag && hasJWT) {
+            console.log('DEBUG: Cookies confirmed, redirecting to dashboard')
+            try {
+              router.replace("/admin/dashboard")
+            } catch {
+              if (typeof window !== 'undefined') {
+                window.location.href = "/admin/dashboard"
+              }
+            }
+          } else if (redirectAttempts < maxAttempts) {
+            // Wait another 500ms and try again
+            setTimeout(attemptRedirect, 500)
+          } else {
+            console.log('DEBUG: Max redirect attempts reached, showing manual button')
+            // Show manual redirect button
+          }
         }
+        
+        // Start redirect attempts
+        setTimeout(attemptRedirect, 500)
       } else {
         const message = result.error || 'Invalid or expired code'
         // Auto-resend in cases where the server indicates no/expired code
@@ -123,13 +148,37 @@ export function EmailAdminLogin() {
 
   // If already verified (short-lived flag), auto-redirect away from login
   useEffect(() => {
-    try {
-      // Check if user has already verified 2FA in this session
-      const hasFlag = typeof document !== 'undefined' && document.cookie.includes('icc_admin_verified=1')
-      if (hasFlag) {
-        router.replace('/admin/dashboard')
+    const checkVerification = () => {
+      try {
+        // Clean up old cookies that might interfere
+        if (typeof document !== 'undefined') {
+          // Remove old am_tycoons cookies
+          document.cookie = 'am_tycoons_admin_refresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.internationalcarcompanyinc.com'
+          document.cookie = 'am_tycoons_admin_refresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
+        }
+        
+        // Check if user has already verified 2FA in this session
+        const hasFlag = typeof document !== 'undefined' && document.cookie.includes('icc_admin_verified=1')
+        const hasJWT = typeof document !== 'undefined' && document.cookie.includes('icc_admin_token=')
+        
+        console.log('DEBUG: Verification check:', { hasFlag, hasJWT, cookies: document.cookie })
+        
+        if (hasFlag && hasJWT) {
+          console.log('DEBUG: Both flags present, redirecting to dashboard')
+          router.replace('/admin/dashboard')
+        }
+      } catch (error) {
+        console.log('DEBUG: Verification check error:', error)
       }
-    } catch {}
+    }
+    
+    // Check immediately
+    checkVerification()
+    
+    // Also check periodically in case cookies are set asynchronously
+    const interval = setInterval(checkVerification, 1000)
+    
+    return () => clearInterval(interval)
   }, [router])
 
   const handleResendCode = async () => {
@@ -234,6 +283,34 @@ export function EmailAdminLogin() {
                   {isLoading ? "Verifying..." : "Verify & Login"}
                 </Button>
               </div>
+              
+              {/* Manual redirect button in case automatic redirect fails */}
+              <div className="text-center mt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    console.log('DEBUG: Manual redirect attempt')
+                    if (typeof window !== 'undefined') {
+                      window.location.href = '/admin/dashboard'
+                    }
+                  }}
+                  className="text-xs text-muted-foreground hover:text-foreground"
+                >
+                  Continue to Dashboard
+                </Button>
+              </div>
+              
+              {/* Debug information */}
+              {process.env.NODE_ENV === 'development' && (
+                <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+                  <div className="font-semibold mb-2">Debug Info:</div>
+                  <div>Email: {currentEmail}</div>
+                  <div>Step: {step}</div>
+                  <div>Cookies: {typeof document !== 'undefined' ? document.cookie : 'N/A'}</div>
+                </div>
+              )}
             </form>
 
             <div className="text-center">

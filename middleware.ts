@@ -7,14 +7,24 @@ export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/admin')) {
     // Basic admin route protection
     const jwtToken = request.cookies.get('icc_admin_token')?.value
+    const verifiedFlag = request.cookies.get('icc_admin_verified')?.value
+    
+    console.log('DEBUG: Middleware processing:', {
+      pathname: request.nextUrl.pathname,
+      hasJWT: !!jwtToken,
+      hasVerifiedFlag: verifiedFlag,
+      cookies: request.cookies.getAll().map(c => c.name)
+    })
     
     // If accessing admin routes without token, redirect to login
     if (!jwtToken && request.nextUrl.pathname !== '/admin/login') {
+      console.log('DEBUG: No JWT token, redirecting to login')
       return NextResponse.redirect(new URL('/admin/login', request.url))
     }
     
-    // If accessing login with valid token, redirect to dashboard
-    if (jwtToken && request.nextUrl.pathname === '/admin/login') {
+    // If accessing login with valid token and verified flag, redirect to dashboard
+    if (jwtToken && verifiedFlag === '1' && request.nextUrl.pathname === '/admin/login') {
+      console.log('DEBUG: Valid JWT and verified flag, redirecting to dashboard')
       try {
         // Simple token validation
         const parts = jwtToken.split('.')
@@ -29,8 +39,15 @@ export function middleware(request: NextRequest) {
           }
         }
       } catch (e) {
+        console.log('DEBUG: Token validation failed:', e)
         // Token invalid, continue with login
       }
+    }
+    
+    // If accessing dashboard without verified flag, redirect to login
+    if (jwtToken && !verifiedFlag && request.nextUrl.pathname === '/admin/dashboard') {
+      console.log('DEBUG: JWT exists but no verified flag, redirecting to login')
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }
   

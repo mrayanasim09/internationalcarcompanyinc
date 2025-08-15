@@ -1,74 +1,84 @@
-import { securityConfig } from './config';
-
-export interface CSPDirectives {
-  [key: string]: string[];
+export const cspConfig = {
+  // Default source restrictions
+  defaultSrc: ["'self'"],
+  
+  // Script sources - allow necessary external scripts
+  scriptSrc: [
+    "'self'",
+    "'unsafe-inline'", // Required for Next.js
+    "'unsafe-eval'",   // Required for Next.js development
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://www.gstatic.com"
+  ],
+  
+  // Style sources - allow Google Fonts and inline styles
+  styleSrc: [
+    "'self'",
+    "'unsafe-inline", // Required for Tailwind CSS
+    "https://fonts.googleapis.com"
+  ],
+  
+  // Font sources - allow Google Fonts
+  fontSrc: [
+    "'self'",
+    "https://fonts.gstatic.com",
+    "data:"
+  ],
+  
+  // Image sources - allow various image sources
+  imgSrc: [
+    "'self'",
+    "data:",
+    "https:",
+    "blob:",
+    "https://*.supabase.co"
+  ],
+  
+  // Media sources
+  mediaSrc: ["'self'"],
+  
+  // Object sources - block potentially dangerous objects
+  objectSrc: ["'none'"],
+  
+  // Base URI - restrict base tag usage
+  baseUri: ["'self'"],
+  
+  // Form actions - restrict form submissions
+  formAction: ["'self'"],
+  
+  // Frame ancestors - prevent clickjacking
+  frameAncestors: ["'none'"],
+  
+  // Upgrade insecure requests
+  upgradeInsecureRequests: true,
+  
+  // Block mixed content
+  blockAllMixedContent: true,
+  
+  // Require trusted types (modern browsers)
+  requireTrustedTypesFor: ["'script'"]
 }
 
-export const createCSPDirectives = (nonce: string): CSPDirectives => {
-  const { csp } = securityConfig;
+export function generateCSPHeader(nonce?: string): string {
+  const directives = [
+    `default-src ${cspConfig.defaultSrc.join(' ')}`,
+    `script-src ${cspConfig.scriptSrc.join(' ')}${nonce ? ` 'nonce-${nonce}'` : ''}`,
+    `style-src ${cspConfig.styleSrc.join(' ')}${nonce ? ` 'nonce-${nonce}'` : ''}`,
+    `font-src ${cspConfig.fontSrc.join(' ')}`,
+    `img-src ${cspConfig.imgSrc.join(' ')}`,
+    `media-src ${cspConfig.mediaSrc.join(' ')}`,
+    `object-src ${cspConfig.objectSrc.join(' ')}`,
+    `base-uri ${cspConfig.baseUri.join(' ')}`,
+    `form-action ${cspConfig.formAction.join(' ')}`,
+    `frame-ancestors ${cspConfig.frameAncestors.join(' ')}`,
+    'upgrade-insecure-requests',
+    'block-all-mixed-content'
+  ]
   
-  return {
-    'default-src': ["'self'"],
-    'script-src': [
-      "'self'",
-      `'nonce-${nonce}'`,
-      ...csp.trustedDomains.scripts
-    ],
-    // Allow styles from self and trusted CDNs. Do NOT include a nonce here,
-    // because if a nonce or hash is present, browsers will ignore 'unsafe-inline'.
-    // Next.js and some UI libs emit inline <style> and style attributes without a nonce.
-    'style-src': [
-      "'self'",
-      ...csp.trustedDomains.styles,
-      "'unsafe-inline'"
-    ],
-    // Explicitly allow inline style attributes (CSP Level 3) for UI libraries
-    'style-src-attr': [
-      "'unsafe-inline'"
-    ],
-    // Do not set style-src-elem separately; keep behavior governed by style-src above
-    'font-src': [
-      "'self'",
-      ...csp.trustedDomains.fonts,
-      'data:'
-    ],
-    'img-src': [
-      "'self'",
-      'data:',
-      'blob:',
-      ...csp.trustedDomains.images
-    ],
-    'connect-src': [
-      "'self'",
-      ...csp.trustedDomains.connections
-    ],
-    'frame-src': [
-      "'self'",
-      ...csp.trustedDomains.frames
-    ],
-    'object-src': ["'none'"],
-    'base-uri': ["'self'"],
-    'form-action': ["'self'"],
-    'frame-ancestors': ["'none'"],
-    'upgrade-insecure-requests': [],
-    'report-uri': [csp.reportUri],
-    'require-trusted-types-for': ["'script'"],
-    'block-all-mixed-content': []
-  };
-};
+  return directives.join('; ')
+}
 
-export const formatCSPHeader = (directives: CSPDirectives): string => {
-  return Object.entries(directives)
-    .map(([key, values]) => {
-      if (values.length === 0) {
-        return key;
-      }
-      return `${key} ${values.join(' ')}`;
-    })
-    .join('; ');
-};
-
-export const createCSPHeader = (nonce: string): string => {
-  const directives = createCSPDirectives(nonce);
-  return formatCSPHeader(directives);
-};
+export function generateReportOnlyCSPHeader(): string {
+  return generateCSPHeader() + '; report-uri /api/csp-report'
+}

@@ -221,12 +221,12 @@ export async function POST(request: NextRequest) {
     const hostname = new URL(request.url).hostname
     
     // Fix domain calculation for multi-part domains
-    let cookieDomain: string | undefined = ''
+    let cookieDomain: string | undefined = undefined
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       cookieDomain = undefined // Don't set domain for localhost
-    } else if (hostname.includes('.')) {
-      // For production domains, use the full domain
-      cookieDomain = hostname
+    } else if (hostname.includes('.') && !hostname.startsWith('.')) {
+      // For production domains, don't set domain to avoid issues
+      cookieDomain = undefined
     }
     
     console.log('DEBUG: Setting cookies for domain:', cookieDomain)

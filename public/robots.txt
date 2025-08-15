@@ -1,8 +1,17 @@
 User-agent: *
 Allow: /
 
+# Security: Disallow access to sensitive areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /.well-known/
+
 # Sitemap
 Sitemap: https://internationalcarcompanyinc.com/sitemap.xml
+
+# Security headers
+X-Robots-Tag: noindex, nofollow
 
 # Disallow admin areas
 Disallow: /admin/

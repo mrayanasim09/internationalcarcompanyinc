@@ -1,4 +1,5 @@
 import bundleAnalyzer from '@next/bundle-analyzer'
+import { generateCSPHeader } from './lib/security/csp'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -60,6 +61,41 @@ const nextConfig = {
       {
         source: '/(.*)',
         headers: [
+          // Content Security Policy (CSP)
+          {
+            key: 'Content-Security-Policy',
+            value: generateCSPHeader()
+          },
+          // Referrer Policy
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
+          },
+          // X-Frame-Options (replaced by CSP frame-ancestors)
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          // Cross Origin Resource Policy
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'same-origin'
+          },
+          // Cross Origin Opener Policy
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin'
+          },
+          // Cross Origin Embedder Policy
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp'
+          },
+          // Permissions Policy
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=()'
+          },
           {
             key: 'Report-To',
             value: JSON.stringify({
@@ -85,6 +121,19 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'no-store, max-age=0',
           },
+          // Additional security headers for API routes
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
+          }
         ],
       },
       {
@@ -94,6 +143,15 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
           },
+          // Security headers for static assets
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
+          }
         ],
       },
     ]
