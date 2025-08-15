@@ -6,6 +6,7 @@ import { Montserrat } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import { CookieConsent } from '@/components/cookie-consent'
 import { ErrorMonitor } from '@/components/error-monitor'
+import { PerformanceMonitor } from '@/components/performance-monitor'
 import { validateEnvironment } from '@/lib/config/env'
 import './globals.css'
 
@@ -90,10 +91,10 @@ export default function RootLayout({
           id="gtag-src"
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-SV90G9ZG56"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           nonce={nonce}
         />
-        <Script id="gtag-init" strategy="lazyOnload" nonce={nonce}>
+        <Script id="gtag-init" strategy="afterInteractive" nonce={nonce}>
           {`
             // Google Analytics consent management with enhanced privacy focus
             function shouldLoadAnalytics() {
@@ -220,6 +221,10 @@ export default function RootLayout({
         <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
         <link rel="preload" as="image" href="/optimized/placeholder.webp" imageSrcSet="/optimized/placeholder.webp 1200w" imageSizes="100vw" />
         
+        {/* Font optimization */}
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" as="style" onLoad="this.onload=null;this.rel='stylesheet'" />
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" /></noscript>
+        
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -241,7 +246,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="International Car Company Inc" />
         
         {/* Viewport optimization */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         
         {/* Cache control handled via next.config headers */}
       </head>
@@ -261,16 +266,31 @@ export default function RootLayout({
                 navigator.sendBeacon && navigator.sendBeacon('/api/debug', body)
               }
               
-              // Load web vitals asynchronously
-              import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js').then(() => {
-                webVitals.onLCP(send)
-                webVitals.onCLS(send)
-                webVitals.onINP && webVitals.onINP(send)
-                webVitals.onFID && webVitals.onFID(send)
-                webVitals.onTTFB && webVitals.onTTFB(send)
-              }).catch(()=>{})
+              // Load web vitals asynchronously with better performance
+              if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => {
+                  import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js').then(() => {
+                    webVitals.onLCP(send)
+                    webVitals.onCLS(send)
+                    webVitals.onINP && webVitals.onINP(send)
+                    webVitals.onFID && webVitals.onFID(send)
+                    webVitals.onTTFB && webVitals.onTTFB(send)
+                  }).catch(()=>{})
+                })
+              } else {
+                // Fallback for older browsers
+                setTimeout(() => {
+                  import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js').then(() => {
+                    webVitals.onLCP(send)
+                    webVitals.onCLS(send)
+                    webVitals.onINP && webVitals.onINP(send)
+                    webVitals.onFID && webVitals.onFID(send)
+                    webVitals.onTTFB && webVitals.onTTFB(send)
+                  }).catch(()=>{})
+                }, 1000)
+              }
               
-              // Additional performance monitoring
+              // Additional performance monitoring with better timing
               if ('performance' in window) {
                 const observer = new PerformanceObserver((list) => {
                   for (const entry of list.getEntries()) {
@@ -297,6 +317,7 @@ export default function RootLayout({
         </Providers>
         <CookieConsent />
         <ErrorMonitor />
+        <PerformanceMonitor />
         {/* AI Chatbot is now gated and mounted from Providers after idle */}
       </body>
     </html>

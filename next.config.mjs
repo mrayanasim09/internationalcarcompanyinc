@@ -30,6 +30,13 @@ const nextConfig = {
         },
       },
     },
+    // Performance optimizations
+    optimizeCss: false, // Disabled due to critters issues
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', 'react-icons'],
+    // Modern JavaScript features
+    esmExternals: 'loose',
+    // Bundle optimization
+    bundlePagesExternals: true,
   },
   images: {
     remotePatterns: [
@@ -66,45 +73,14 @@ const nextConfig = {
               endpoints: [{ url: process.env.CSP_REPORT_URI || 'https://internationalcarcompanyinc.com/api/csp-report' }]
             })
           },
-          // HTTP Strict Transport Security
+          // Additional security headers not covered by middleware
           {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains; preload'
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
           },
-          // Cross-Origin Opener Policy
           {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin'
-          },
-          // Cross-Origin Resource Policy
-          {
-            key: 'Cross-Origin-Resource-Policy',
-            value: 'same-origin'
-          },
-          // X-Content-Type-Options
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          // X-Frame-Options
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          },
-          // X-XSS-Protection
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block'
-          },
-          // Referrer Policy
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin'
-          },
-          // Permissions Policy
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+            key: 'X-Permitted-Cross-Domain-Policies',
+            value: 'none'
           }
         ]
       },
@@ -181,11 +157,28 @@ const nextConfig = {
             chunks: 'all',
             priority: 20,
           },
+          // Separate UI components bundle
+          ui: {
+            test: /[\\/]components[\\/]ui[\\/]/,
+            name: 'ui',
+            chunks: 'all',
+            priority: 15,
+          },
         },
       }
       
       // Enable compression
       config.optimization.minimize = true
+      
+      // Better minification
+      config.optimization.minimizer = config.optimization.minimizer || []
+      
+      // Performance hints
+      config.performance = {
+        hints: 'warning',
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000,
+      }
     }
     
     // Optimize for mobile

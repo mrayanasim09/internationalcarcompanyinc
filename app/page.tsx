@@ -40,7 +40,7 @@ export default function HomePage() {
                 <div className="mx-auto mb-4 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                   <span className="w-6 h-6 rounded-full bg-primary" aria-hidden="true" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
+                <h3 className="text-primary-foreground font-semibold text-sm">
                   {title}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
