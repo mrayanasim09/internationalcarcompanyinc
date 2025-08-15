@@ -95,7 +95,15 @@ export default function RootLayout({
           var d = document.documentElement;
           d.classList.remove('light', 'dark');
           d.classList.add(resolved);
-        } catch (e) {}
+          // Set a flag to prevent hydration mismatch
+          window.__THEME_INITIALIZED__ = true;
+        } catch (e) {
+          // Fallback to dark theme if localStorage fails
+          var d = document.documentElement;
+          d.classList.remove('light', 'dark');
+          d.classList.add('dark');
+          window.__THEME_INITIALIZED__ = true;
+        }
       })();
     `}</Script>
       <head>
@@ -129,10 +137,6 @@ export default function RootLayout({
         <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
         <link rel="preload" as="image" href="/optimized/placeholder.webp" imageSrcSet="/optimized/placeholder.webp 1200w" imageSizes="100vw" />
         <link rel="preload" href="/International Car Company Inc. Logo.png" as="image" type="image/png" />
-        
-        {/* Preload critical fonts */}
-        <link rel="preload" href="/fonts/geist-sans.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/montserrat.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
@@ -171,6 +175,7 @@ export default function RootLayout({
                   userAgent: navigator.userAgent,
                   connection: navigator.connection ? navigator.connection.effectiveType : 'unknown'
                 })
+                // Use debug endpoint for monitoring
                 navigator.sendBeacon && navigator.sendBeacon('/api/debug', body)
               }
               
