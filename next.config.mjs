@@ -174,6 +174,11 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: generateCSPHeader()
           },
+          // CSP Report-Only for development (monitors violations without blocking)
+          ...(process.env.NODE_ENV === 'development' ? [{
+            key: 'Content-Security-Policy-Report-Only',
+            value: generateCSPHeader()
+          }] : []),
           // Referrer Policy
           {
             key: 'Referrer-Policy',
