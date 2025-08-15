@@ -86,26 +86,6 @@ export default function RootLayout({
   const nonce = headers().get('x-nonce') || undefined
   return (
     <html lang="en" suppressHydrationWarning>
-    <Script id="theme-script" strategy="beforeInteractive" nonce={nonce}>{`
-      (function() {
-        try {
-          var storageKey = 'icc-theme';
-          var stored = localStorage.getItem(storageKey);
-          var resolved = (stored === 'dark' || stored === 'light') ? stored : 'dark';
-          var d = document.documentElement;
-          d.classList.remove('light', 'dark');
-          d.classList.add(resolved);
-          // Set a flag to prevent hydration mismatch
-          window.__THEME_INITIALIZED__ = true;
-        } catch (e) {
-          // Fallback to dark theme if localStorage fails
-          var d = document.documentElement;
-          d.classList.remove('light', 'dark');
-          d.classList.add('dark');
-          window.__THEME_INITIALIZED__ = true;
-        }
-      })();
-    `}</Script>
       <head>
         {nonce ? <meta name="csp-nonce" content={nonce} /> : null}
         {/* Google tag (gtag.js) - load lazily to keep main thread free */}
