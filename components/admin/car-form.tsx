@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -15,7 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ImageUpload } from "@/components/image-upload"
 import type { Car } from "@/lib/types"
 import { toast } from "sonner"
-import { Loader2, Plus, X } from "lucide-react"
+import { Loader2, Plus, X, Eye, EyeOff } from "lucide-react"
+import { CarCard } from "@/components/car-card"
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -55,6 +57,69 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
   const [imageUrls, setImageUrls] = useState<string[]>(car?.images || [])
   const [manualUrls, setManualUrls] = useState<string[]>([])
   const [newManualUrl, setNewManualUrl] = useState("")
+  const [showPreview, setShowPreview] = useState(false)
+  const [previewCar, setPreviewCar] = useState<Car | null>(null)
+
+  // Create preview car object from form data
+  const createPreviewCar = (): Car => {
+    const values = form.getValues()
+    const allImages = [...imageUrls, ...manualUrls].filter(Boolean)
+    const features = values.features
+      ? values.features.split("\n").filter(f => f.trim())
+      : []
+    
+    return {
+      id: car?.id || 'preview',
+      title: values.title || 'Car Title',
+      make: values.make || 'Make',
+      model: values.model || 'Model',
+      year: values.year || new Date().getFullYear(),
+      mileage: values.mileage || 0,
+      price: values.price || 0,
+      location: values.location || 'Location',
+      description: values.description || 'Description',
+      images: allImages,
+      features,
+      engine: values.engine || '',
+      transmission: values.transmission || '',
+      exteriorColor: values.exteriorColor || '',
+      interiorColor: values.interiorColor || '',
+      driveType: values.driveType || '',
+      fuelType: values.fuelType || '',
+      vin: values.vin || '',
+      contact: {
+        phone: values.phone || '',
+        whatsapp: values.whatsapp || ''
+      },
+      approved: values.approved,
+      isInventory: values.isInventory,
+      isFeatured: values.isFeatured,
+      rating: car?.rating || 0,
+      reviews: car?.reviews || [],
+      listedAt: car?.listedAt || new Date(),
+      createdAt: car?.createdAt || new Date(),
+      views: car?.views || 0,
+      likes: car?.likes || 0
+    }
+  }
+
+  // Update preview when form data changes
+  useEffect(() => {
+    if (showPreview) {
+      const timeoutId = setTimeout(() => {
+        setPreviewCar(createPreviewCar())
+      }, 300) // Debounce updates to avoid too many re-renders
+      
+      return () => clearTimeout(timeoutId)
+    }
+  }, [showPreview, form.watch(), imageUrls, manualUrls])
+
+  // Initialize preview car when showing preview
+  useEffect(() => {
+    if (showPreview && !previewCar) {
+      setPreviewCar(createPreviewCar())
+    }
+  }, [showPreview])
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -615,6 +680,24 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
         <Button
           type="button"
           variant="outline"
+          onClick={() => setShowPreview(!showPreview)}
+          className="border-border text-foreground hover:bg-accent"
+        >
+          {showPreview ? (
+            <>
+              <EyeOff className="w-4 h-4 mr-2" />
+              Hide Preview
+            </>
+          ) : (
+            <>
+              <Eye className="w-4 h-4 mr-2" />
+              Show Preview
+            </>
+          )}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
           onClick={onCancel}
           className="border-border text-foreground hover:bg-accent"
         >
@@ -629,6 +712,29 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
           {car ? "Update Car" : "Add Car"}
         </Button>
       </div>
+
+      {/* Live Preview */}
+      {showPreview && (
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Eye className="w-4 h-4" />
+              Live Preview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="max-w-md mx-auto">
+              {previewCar ? (
+                <CarCard car={previewCar} />
+              ) : (
+                <div className="flex items-center justify-center h-32">
+                  <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </form>
   )
 }
