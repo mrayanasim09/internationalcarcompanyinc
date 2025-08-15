@@ -111,6 +111,11 @@ export function middleware(request: NextRequest) {
       maxAge: 60 * 60,
     })
   }
+    // TEMP: disable CSP for admin pages to diagnose blank screen
+    if (path.startsWith('/admin')) {
+      response.headers.set('x-nonce', nonce)
+      return response
+    }
     response.headers.set('Content-Security-Policy', [
       "default-src 'self'",
       // Allow scripts for admin dashboard functionality

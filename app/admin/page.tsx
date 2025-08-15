@@ -24,17 +24,37 @@ export default function AdminPage() {
 
   console.log('DEBUG: AdminPage render:', { mounted, loading, isAuthenticated, user })
 
+  // SSR fallback visibility until JS executes
+  const Fallback = (
+    <div id="admin-page-ssr-fallback" className="p-4 text-sm text-muted-foreground">
+      Admin portal is loading...
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+          (function(){
+            try{ var el = document.getElementById('admin-page-ssr-fallback'); if(el){ el.style.display = 'none'; } console.log('DEBUG: AdminPage inline script executed'); }
+            catch(e){ console.warn('DEBUG: inline script error', e); }
+          })();
+        `,
+        }}
+      />
+    </div>
+  )
+
   if (!mounted) {
     console.log('DEBUG: AdminPage not mounted yet')
-    return <div className="min-h-screen" />
+    return Fallback
   }
 
   if (loading) {
     console.log('DEBUG: AdminPage loading...')
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
+      <>
+        {Fallback}
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        </div>
+      </>
     )
   }
 
