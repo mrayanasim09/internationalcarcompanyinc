@@ -1,5 +1,5 @@
 // Subresource Integrity (SRI) hashes for external resources
-export const sriHashes = {
+export const sriHashes: Record<string, string> = {
   // Google Fonts
   'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap': 'sha384-...', // Add actual hash
   
