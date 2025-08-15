@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
-console.log('🔧 AM Tycoons Admin Portal Setup\n');
+console.log('🔧 International Car Company Inc Admin Portal Setup\n');
 
 // Default admin credentials
 const defaultEmail = 'admin@amtycoons.com';

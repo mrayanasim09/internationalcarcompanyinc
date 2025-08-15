@@ -13,7 +13,7 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-console.log('🔧 Setting up Initial Super Admin for AM Tycoons Inc...\n');
+console.log('🔧 Setting up Initial Super Admin for International Car Company Inc...\n');
 
 async function setupSuperAdmin() {
   try {

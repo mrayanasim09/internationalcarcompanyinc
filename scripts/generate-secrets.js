@@ -2,7 +2,7 @@
 
 const crypto = require('crypto');
 
-console.log('🔐 Secure Secret Generator for AM Tycoons Inc.\n');
+console.log('🔐 Secure Secret Generator for International Car Company Inc.\n');
 
 console.log('⚠️  SECURITY WARNING:');
 console.log('• Never share these secrets in plain text');

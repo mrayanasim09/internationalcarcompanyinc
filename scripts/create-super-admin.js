@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
-console.log('🔧 Setting up AM Tycoons Admin Portal...\n');
+console.log('🔧 Setting up International Car Company Inc Admin Portal...\n');
 
 // Generate secure secrets
 const jwtSecret = crypto.randomBytes(64).toString('hex');

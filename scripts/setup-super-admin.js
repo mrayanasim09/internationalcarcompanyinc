@@ -20,7 +20,7 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-console.log('🔧 Setting up AM Tycoons Super Admin Account...\n');
+console.log('🔧 Setting up International Car Company Inc Super Admin Account...\n');
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
