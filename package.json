@@ -16,7 +16,11 @@
     "cypress:headless": "cypress run",
     "e2e": "start-server-and-test dev http://localhost:3000 cypress",
     "e2e:headless": "start-server-and-test dev http://localhost:3000 cypress:headless",
-    "setup-admin": "node scripts/create-super-admin.js"
+    "setup-admin": "node scripts/create-super-admin.js",
+    "analyze": "ANALYZE=true next build",
+    "analyze:bundle": "node scripts/analyze-bundle.js",
+    "build:analyze": "ANALYZE=true pnpm build",
+    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

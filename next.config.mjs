@@ -20,7 +20,16 @@ const nextConfig = {
   // Disable static generation for dynamic routes
   experimental: {
     // optimizeCss: true, // Disabled due to critters module issues
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', 'react-icons'],
+    optimizePackageImports: [
+      'lucide-react', 
+      '@radix-ui/react-icons', 
+      'react-icons',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-select',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast'
+    ],
     // Enable modern optimizations
     turbo: {
       rules: {
@@ -32,7 +41,6 @@ const nextConfig = {
     },
     // Performance optimizations
     optimizeCss: false, // Disabled due to critters issues
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', 'react-icons'],
     // Modern JavaScript features
     esmExternals: 'loose',
     // Bundle optimization
@@ -133,22 +141,42 @@ const nextConfig = {
       config.optimization.usedExports = true
       config.optimization.sideEffects = false
       
-      // Split chunks for better caching
+      // Split chunks for better caching and smaller bundles
       config.optimization.splitChunks = {
         chunks: 'all',
+        maxSize: 244000, // 244KB to stay under 250KB limit
         cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
+          // Separate React and core libraries
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
             chunks: 'all',
-            priority: 10,
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
+            priority: 40,
             enforce: true,
-            priority: 5,
+          },
+          // Separate Next.js
+          next: {
+            test: /[\\/]node_modules[\\/]next[\\/]/,
+            name: 'next',
+            chunks: 'all',
+            priority: 35,
+            enforce: true,
+          },
+          // Separate Supabase
+          supabase: {
+            test: /[\\/]node_modules[\\/]@supabase[\\/]/,
+            name: 'supabase',
+            chunks: 'all',
+            priority: 30,
+            enforce: true,
+          },
+          // Separate UI libraries
+          ui: {
+            test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|react-icons)[\\/]/,
+            name: 'ui-libs',
+            chunks: 'all',
+            priority: 25,
+            enforce: true,
           },
           // Separate admin bundle
           admin: {
@@ -156,13 +184,31 @@ const nextConfig = {
             name: 'admin',
             chunks: 'all',
             priority: 20,
+            enforce: true,
           },
           // Separate UI components bundle
-          ui: {
+          uiComponents: {
             test: /[\\/]components[\\/]ui[\\/]/,
-            name: 'ui',
+            name: 'ui-components',
             chunks: 'all',
             priority: 15,
+            enforce: true,
+          },
+          // Vendor bundle for remaining node_modules
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+            priority: 10,
+            enforce: true,
+          },
+          // Common bundle for shared code
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            enforce: true,
+            priority: 5,
           },
         },
       }
@@ -173,11 +219,11 @@ const nextConfig = {
       // Better minification
       config.optimization.minimizer = config.optimization.minimizer || []
       
-      // Performance hints
+      // Performance hints with realistic limits
       config.performance = {
         hints: 'warning',
-        maxEntrypointSize: 512000,
-        maxAssetSize: 512000,
+        maxEntrypointSize: 500000, // 500KB
+        maxAssetSize: 500000, // 500KB
       }
     }
     
