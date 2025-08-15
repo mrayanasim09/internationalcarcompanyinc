@@ -98,6 +98,25 @@ export function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <CarLoader />
+          <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show loading state while user data is being fetched
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <CarLoader />
+          <p className="mt-4 text-muted-foreground">Loading user data...</p>
+        </div>
+      </div>
+    )
+  }
         <CarLoader size={128} />
       </div>
     )
