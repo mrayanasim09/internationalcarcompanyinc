@@ -271,28 +271,47 @@ export default function RootLayout({
                 navigator.sendBeacon && navigator.sendBeacon('/api/debug', body)
               }
               
-              // Load web vitals asynchronously with better performance
+              // Load web vitals asynchronously with better performance and CSP compliance
+              const loadWebVitals = () => {
+                // Use dynamic import with proper error handling
+                import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js')
+                  .then((webVitals) => {
+                    // Check if webVitals is available
+                    if (webVitals && typeof webVitals.onLCP === 'function') {
+                      webVitals.onLCP(send)
+                      webVitals.onCLS(send)
+                      webVitals.onINP && webVitals.onINP(send)
+                      webVitals.onFID && webVitals.onFID(send)
+                      webVitals.onTTFB && webVitals.onTTFB(send)
+                    } else if (window.webVitals) {
+                      // Fallback to global webVitals if available
+                      const wv = window.webVitals
+                      wv.onLCP(send)
+                      wv.onCLS(send)
+                      wv.onINP && wv.onINP(send)
+                      wv.onFID && wv.onFID(send)
+                      wv.onTTFB && wv.onTTFB(send)
+                    }
+                  })
+                  .catch((error) => {
+                    console.warn('Web Vitals failed to load:', error)
+                    // Fallback: try to load from global scope if already loaded
+                    if (window.webVitals) {
+                      const wv = window.webVitals
+                      wv.onLCP(send)
+                      wv.onCLS(send)
+                      wv.onINP && wv.onINP(send)
+                      wv.onFID && wv.onFID(send)
+                      wv.onTTFB && wv.onTTFB(send)
+                    }
+                  })
+              }
+              
               if ('requestIdleCallback' in window) {
-                requestIdleCallback(() => {
-                  import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js').then(() => {
-                    webVitals.onLCP(send)
-                    webVitals.onCLS(send)
-                    webVitals.onINP && webVitals.onINP(send)
-                    webVitals.onFID && webVitals.onFID(send)
-                    webVitals.onTTFB && webVitals.onTTFB(send)
-                  }).catch(()=>{})
-                })
+                requestIdleCallback(loadWebVitals)
               } else {
                 // Fallback for older browsers
-                setTimeout(() => {
-                  import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js').then(() => {
-                    webVitals.onLCP(send)
-                    webVitals.onCLS(send)
-                    webVitals.onINP && webVitals.onINP(send)
-                    webVitals.onFID && webVitals.onFID(send)
-                    webVitals.onTTFB && webVitals.onTTFB(send)
-                  }).catch(()=>{})
-                }, 1000)
+                setTimeout(loadWebVitals, 1000)
               }
               
               // Additional performance monitoring with better timing
@@ -313,7 +332,9 @@ export default function RootLayout({
                 });
                 observer.observe({ entryTypes: ['navigation'] });
               }
-            }catch(e){}
+            }catch(e){
+              console.warn('Performance monitoring failed:', e)
+            }
           })();
         `}</Script>
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-primary text-primary-foreground px-3 py-2 rounded">Skip to content</a>

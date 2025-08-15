@@ -12,7 +12,18 @@ const cspConfig = {
     "'unsafe-eval'",   // Required for Next.js development
     "https://www.googletagmanager.com",
     "https://www.google-analytics.com",
-    "https://www.gstatic.com"
+    "https://www.gstatic.com",
+    "https://unpkg.com" // Allow web-vitals script
+  ],
+  
+  // Script source elements - specifically for script tags
+  scriptSrcElem: [
+    "'self'",
+    "'unsafe-inline'",
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://www.gstatic.com",
+    "https://unpkg.com"
   ],
   
   // Style sources - allow Google Fonts and inline styles
@@ -41,6 +52,18 @@ const cspConfig = {
   // Media sources
   mediaSrc: ["'self'"],
   
+  // Connect sources - allow external connections for analytics
+  connectSrc: [
+    "'self'",
+    "https://www.google-analytics.com",
+    "https://region1.google-analytics.com",
+    "https://*.supabase.co",
+    "wss://*.supabase.co",
+    "https://www.google.com",
+    "https://maps.googleapis.com",
+    "https://www.googletagmanager.com"
+  ],
+  
   // Object sources - block potentially dangerous objects
   objectSrc: ["'none'"],
   
@@ -64,10 +87,12 @@ function generateCSPHeader() {
   const directives = [
     `default-src ${cspConfig.defaultSrc.join(' ')}`,
     `script-src ${cspConfig.scriptSrc.join(' ')}`,
+    `script-src-elem ${cspConfig.scriptSrcElem.join(' ')}`,
     `style-src ${cspConfig.styleSrc.join(' ')}`,
     `font-src ${cspConfig.fontSrc.join(' ')}`,
     `img-src ${cspConfig.imgSrc.join(' ')}`,
     `media-src ${cspConfig.mediaSrc.join(' ')}`,
+    `connect-src ${cspConfig.connectSrc.join(' ')}`,
     `object-src ${cspConfig.objectSrc.join(' ')}`,
     `base-uri ${cspConfig.baseUri.join(' ')}`,
     `form-action ${cspConfig.formAction.join(' ')}`,
@@ -75,6 +100,11 @@ function generateCSPHeader() {
     'upgrade-insecure-requests',
     'block-all-mixed-content'
   ]
+  
+  // Add CSP report-uri for monitoring violations
+  if (process.env.NODE_ENV === 'development') {
+    directives.push(`report-uri /api/csp-report`)
+  }
   
   return directives.join('; ')
 }
@@ -164,11 +194,11 @@ const nextConfig = {
             key: 'Cross-Origin-Opener-Policy',
             value: 'same-origin'
           },
-          // Cross Origin Embedder Policy
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'require-corp'
-          },
+          // Cross Origin Embedder Policy - disabled to avoid breaking third-party resources
+          // {
+          //   key: 'Cross-Origin-Embedder-Policy',
+          //   value: 'require-corp'
+          // },
           // Permissions Policy
           {
             key: 'Permissions-Policy',

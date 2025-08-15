@@ -40,7 +40,8 @@ export const securityConfig: SecurityConfig = {
         'https://apis.google.com',
         'https://www.google.com',
         'https://www.gstatic.com',
-        'https://region1.google-analytics.com'
+        'https://region1.google-analytics.com',
+        'https://unpkg.com'
       ],
       styles: [
         'https://fonts.googleapis.com'
