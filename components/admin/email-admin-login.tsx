@@ -259,6 +259,19 @@ export function EmailAdminLogin() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
+          {/* Logo Image */}
+          <div className="flex justify-center mb-4">
+            <div className="relative w-16 h-12">
+              <Image
+                src="/International Car Company Inc. Logo.png"
+                alt="International Car Company Inc Logo"
+                fill
+                className="object-contain"
+                priority
+                sizes="64px"
+              />
+            </div>
+          </div>
           <h1 className="text-3xl font-bold text-foreground">
             International Car Company Inc
           </h1>

@@ -35,6 +35,17 @@ export function Navbar() {
             {/* Brand */}
             <div className="flex items-center gap-2 md:gap-3 shrink-0">
               <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
+                {/* Logo Image */}
+                <div className="relative w-8 h-8 md:w-10 md:h-10">
+                  <Image
+                    src="/International Car Company Inc. Logo.png"
+                    alt="International Car Company Inc Logo"
+                    fill
+                    className="object-contain"
+                    priority
+                    sizes="(max-width: 768px) 32px, 40px"
+                  />
+                </div>
                 {/* Brand text - both mobile and desktop clickable */}
                 <div className="leading-tight">
                   <div className="text-sm md:text-base font-bold text-foreground tracking-tight">

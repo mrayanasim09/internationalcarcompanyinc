@@ -27,6 +27,20 @@ export function HeroSection() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
         <div className="max-w-3xl mx-auto bg-card/60 backdrop-blur-md rounded-2xl border border-border p-4 md:p-6 shadow-lg">
+          {/* Logo Image */}
+          <div className="flex justify-center mb-6">
+            <div className="relative w-20 h-16 md:w-24 md:h-20">
+              <Image
+                src="/International Car Company Inc. Logo.png"
+                alt="International Car Company Inc Logo"
+                fill
+                className="object-contain"
+                priority
+                sizes="(max-width: 768px) 80px, 96px"
+              />
+            </div>
+          </div>
+          
           {/* Main Heading - Mobile First */}
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-3 md:mb-4 leading-tight">
             Welcome to <BrandName className="inline" />
