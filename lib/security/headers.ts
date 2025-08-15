@@ -12,9 +12,13 @@ export const createSecurityHeaders = (): SecurityHeaders => {
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
     'Strict-Transport-Security': getHSTSHeader(),
+    // Keep COOP, but relax COEP/CORP to avoid breaking third-party resources and streaming
     'Cross-Origin-Opener-Policy': 'same-origin',
-    'Cross-Origin-Resource-Policy': 'same-origin',
-    'Cross-Origin-Embedder-Policy': 'require-corp',
+    'Cross-Origin-Resource-Policy': 'cross-origin',
+    // Disable COEP; enabling it requires all cross-origin resources to send CORP/COEP headers
+    // which commonly breaks fonts, analytics and Next.js RSC streaming
+    // See: https://developer.mozilla.org/docs/Web/Security/COEP
+    // Do not set Cross-Origin-Embedder-Policy
     'X-DNS-Prefetch-Control': 'on',
     'X-Permitted-Cross-Domain-Policies': 'none'
   };
