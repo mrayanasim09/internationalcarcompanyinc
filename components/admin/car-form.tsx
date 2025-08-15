@@ -16,8 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ImageUpload } from "@/components/image-upload"
 import type { Car } from "@/lib/types"
 import { toast } from "sonner"
-import { Loader2, Plus, X, Eye, EyeOff } from "lucide-react"
-import { CarCard } from "@/components/car-card"
+import { Loader2, Plus, X, Eye, EyeOff, CarIcon } from "lucide-react"
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -58,10 +57,39 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
   const [manualUrls, setManualUrls] = useState<string[]>([])
   const [newManualUrl, setNewManualUrl] = useState("")
   const [showPreview, setShowPreview] = useState(false)
-  const [previewCar, setPreviewCar] = useState<Car | null>(null)
+  const [previewCar, setPreviewCar] = useState<any>(null)
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    mode: 'onChange',
+    defaultValues: {
+      title: car?.title || "",
+      make: car?.make || "",
+      model: car?.model || "",
+      year: car?.year || new Date().getFullYear(),
+      mileage: car?.mileage || 0,
+      price: car?.price || 0,
+      location: car?.location || "",
+      vin: car?.vin || "",
+      phone: car?.contact?.phone || "",
+      whatsapp: car?.contact?.whatsapp || "",
+      engine: car?.engine || "",
+      transmission: car?.transmission || "",
+      exteriorColor: car?.exteriorColor || "",
+      interiorColor: car?.interiorColor || "",
+      driveType: car?.driveType || "",
+      fuelType: car?.fuelType || "",
+      description: car?.description || "",
+      features: car?.features?.join("\n") || "",
+      documents: car?.documents?.map(d => `${d.name},${d.url}`).join("\n") || "",
+      approved: car?.approved ?? true,
+      isInventory: car?.isInventory ?? true,
+      isFeatured: car?.isFeatured ?? false,
+    },
+  })
 
   // Create preview car object from form data
-  const createPreviewCar = (): Car => {
+  const createPreviewCar = () => {
     const values = form.getValues()
     const allImages = [...imageUrls, ...manualUrls].filter(Boolean)
     const features = values.features
@@ -97,9 +125,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
       rating: car?.rating || 0,
       reviews: car?.reviews || [],
       listedAt: car?.listedAt || new Date(),
-      createdAt: car?.createdAt || new Date(),
-      views: car?.views || 0,
-      likes: car?.likes || 0
+      createdAt: car?.createdAt || new Date()
     }
   }
 
@@ -120,35 +146,6 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
       setPreviewCar(createPreviewCar())
     }
   }, [showPreview])
-
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    mode: 'onChange',
-    defaultValues: {
-      title: car?.title || "",
-      make: car?.make || "",
-      model: car?.model || "",
-      year: car?.year || new Date().getFullYear(),
-      mileage: car?.mileage || 0,
-      price: car?.price || 0,
-      location: car?.location || "",
-      vin: car?.vin || "",
-      phone: car?.contact?.phone || "",
-      whatsapp: car?.contact?.whatsapp || "",
-      engine: car?.engine || "",
-      transmission: car?.transmission || "",
-      exteriorColor: car?.exteriorColor || "",
-      interiorColor: car?.interiorColor || "",
-      driveType: car?.driveType || "",
-      fuelType: car?.fuelType || "",
-      description: car?.description || "",
-      features: car?.features?.join("\n") || "",
-      documents: car?.documents?.map(d => `${d.name},${d.url}`).join("\n") || "",
-      approved: car?.approved ?? true,
-      isInventory: car?.isInventory ?? true,
-      isFeatured: car?.isFeatured ?? false,
-    },
-  })
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
@@ -723,9 +720,92 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="max-w-md mx-auto">
+            <div className="max-w-lg mx-auto">
               {previewCar ? (
-                <CarCard car={previewCar} />
+                <div className="space-y-4">
+                  {/* Car Image Preview */}
+                  <div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
+                    {previewCar.images && previewCar.images[0] ? (
+                      <img
+                        src={previewCar.images[0]}
+                        alt={previewCar.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-muted-foreground">
+                        <CarIcon className="w-12 h-12" />
+                      </div>
+                    )}
+                    {/* Price Badge */}
+                    <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground font-bold">
+                      ${previewCar.price?.toLocaleString() || '0'}
+                    </Badge>
+                    {/* Featured Badge */}
+                    {previewCar.isFeatured && (
+                      <Badge variant="warning" className="absolute top-2 right-2">
+                        Featured
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  {/* Car Info */}
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-bold text-foreground">{previewCar.title || 'Car Title'}</h3>
+                    <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+                      <div>
+                        <span className="font-medium">Year:</span> {previewCar.year}
+                      </div>
+                      <div>
+                        <span className="font-medium">Mileage:</span> {previewCar.mileage?.toLocaleString()} mi
+                      </div>
+                      <div>
+                        <span className="font-medium">Make:</span> {previewCar.make}
+                      </div>
+                      <div>
+                        <span className="font-medium">Model:</span> {previewCar.model}
+                      </div>
+                      <div>
+                        <span className="font-medium">Location:</span> {previewCar.location}
+                      </div>
+                      <div>
+                        <span className="font-medium">VIN:</span> {previewCar.vin || 'N/A'}
+                      </div>
+                    </div>
+                    
+                    {/* Description */}
+                    {previewCar.description && (
+                      <div>
+                        <span className="font-medium text-foreground">Description:</span>
+                        <p className="text-sm text-muted-foreground mt-1">{previewCar.description}</p>
+                      </div>
+                    )}
+                    
+                    {/* Features */}
+                    {previewCar.features && previewCar.features.length > 0 && (
+                      <div>
+                        <span className="font-medium text-foreground">Features:</span>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {previewCar.features.map((feature: string, index: number) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {feature}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Contact Info */}
+                    <div className="pt-2 border-t border-border">
+                      <span className="font-medium text-foreground">Contact:</span>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        <div>Phone: {previewCar.contact?.phone || 'N/A'}</div>
+                        {previewCar.contact?.whatsapp && (
+                          <div>WhatsApp: {previewCar.contact.whatsapp}</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <div className="flex items-center justify-center h-32">
                   <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
