@@ -32,6 +32,11 @@ export class JWTManager {
   private constructor() {
     this.secret = env.auth.jwtSecret
     this.refreshSecret = env.auth.sessionSecret
+    console.log('DEBUG: JWTManager instantiated with:')
+    console.log('DEBUG: - JWT Secret length:', this.secret?.length || 0)
+    console.log('DEBUG: - Refresh Secret length:', this.refreshSecret?.length || 0)
+    console.log('DEBUG: - JWT Secret configured:', !!this.secret)
+    console.log('DEBUG: - Refresh Secret configured:', !!this.refreshSecret)
   }
 
   static getInstance(): JWTManager {
@@ -69,16 +74,23 @@ export class JWTManager {
   // Verify access token
   verifyAccessToken(token: string): TokenValidationResult {
     try {
+      console.log('DEBUG: JWTManager.verifyAccessToken called with:')
+      console.log('DEBUG: - Token length:', token?.length || 0)
+      console.log('DEBUG: - Secret length:', this.secret?.length || 0)
+      console.log('DEBUG: - Secret configured:', !!this.secret)
+      
       const payload = jwt.verify(token, this.secret, {
         issuer: 'am-tycoons-inc',
         audience: 'car-dealership-users'
       }) as JWTPayload
 
+      console.log('DEBUG: JWT verification successful, payload:', payload)
       return {
         isValid: true,
         payload
       }
     } catch (error) {
+      console.log('DEBUG: JWT verification failed with error:', error)
       return {
         isValid: false,
         error: error instanceof Error ? error.message : 'Invalid token'

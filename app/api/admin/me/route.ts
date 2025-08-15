@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtManager } from '@/lib/jwt-utils'
+import jwt from 'jsonwebtoken'
 
 export async function GET(request: NextRequest) {
   try {
     console.log('DEBUG: /me endpoint called')
     console.log('DEBUG: JWT_SECRET configured:', !!process.env.JWT_SECRET)
     console.log('DEBUG: SESSION_SECRET configured:', !!process.env.SESSION_SECRET)
+    console.log('DEBUG: JWT_SECRET length:', process.env.JWT_SECRET?.length || 0)
+    console.log('DEBUG: SESSION_SECRET length:', process.env.SESSION_SECRET?.length || 0)
     
     // Check what cookies we're receiving
     const allCookies = request.cookies.getAll()
@@ -14,6 +17,7 @@ export async function GET(request: NextRequest) {
     // If access token present and valid, return user data
     const accessToken = request.cookies.get('am_tycoons_admin_token')?.value
     console.log('DEBUG: Access token present:', !!accessToken)
+    console.log('DEBUG: Access token length:', accessToken?.length || 0)
     
     if (accessToken) {
       // Decode token first to see what's in it
@@ -27,6 +31,30 @@ export async function GET(request: NextRequest) {
         const { email, role, permissions } = result.payload
         console.log('DEBUG: Returning authenticated user:', { email, role })
         return NextResponse.json({ authenticated: true, email, role, permissions })
+      }
+      // Add more debugging for failed verification
+      if (!result.isValid) {
+        console.log('DEBUG: Token verification failed with error:', result.error)
+        console.log('DEBUG: Attempting to verify with different method...')
+        
+        // Try to decode the token manually to see what's in it
+        try {
+          const manualDecode = jwt.decode(accessToken)
+          console.log('DEBUG: Manual JWT decode result:', manualDecode)
+          
+          // Try manual verification with the same secret
+          try {
+            const manualVerify = jwt.verify(accessToken, process.env.JWT_SECRET || '', {
+              issuer: 'am-tycoons-inc',
+              audience: 'car-dealership-users'
+            })
+            console.log('DEBUG: Manual JWT verification successful:', manualVerify)
+          } catch (verifyError) {
+            console.log('DEBUG: Manual JWT verification failed:', verifyError)
+          }
+        } catch (e) {
+          console.log('DEBUG: Manual JWT decode failed:', e)
+        }
       }
     }
 
