@@ -93,19 +93,32 @@ export function EmailAdminLogin() {
           description: "Welcome to the admin dashboard!",
         })
         
-        // Wait for cookies to be set, then redirect with multiple attempts
+        // Wait for session to be ready on the server, then redirect with multiple attempts
         let redirectAttempts = 0
         const maxAttempts = 10
         
-        const attemptRedirect = () => {
+        const checkServerAuth = async (): Promise<boolean> => {
+          try {
+            const res = await fetch('/api/admin/me', { credentials: 'include' })
+            if (!res.ok) return false
+            const data = await res.json().catch(() => ({} as unknown)) as { authenticated?: boolean }
+            return !!data.authenticated
+          } catch {
+            return false
+          }
+        }
+
+        const attemptRedirect = async () => {
           redirectAttempts++
           console.log(`DEBUG: Redirect attempt ${redirectAttempts}/${maxAttempts}`)
           
           const hasFlag = document.cookie.includes('icc_admin_verified=1')
-          const hasJWT = document.cookie.includes('icc_admin_token=')
+          const serverAuthReady = await checkServerAuth()
           
-          if (hasFlag && hasJWT) {
-            console.log('DEBUG: Cookies confirmed, redirecting to dashboard')
+          console.log('DEBUG: Redirect gate:', { hasFlag, serverAuthReady })
+          
+          if (hasFlag && serverAuthReady) {
+            console.log('DEBUG: Server session ready, redirecting to dashboard')
             try {
               router.replace("/admin/dashboard")
             } catch {
@@ -115,7 +128,7 @@ export function EmailAdminLogin() {
             }
           } else if (redirectAttempts < maxAttempts) {
             // Wait another 500ms and try again
-            setTimeout(attemptRedirect, 500)
+            setTimeout(() => { void attemptRedirect() }, 500)
           } else {
             console.log('DEBUG: Max redirect attempts reached, showing manual button')
             // Show manual redirect button
@@ -123,7 +136,7 @@ export function EmailAdminLogin() {
         }
         
         // Start redirect attempts
-        setTimeout(attemptRedirect, 500)
+        setTimeout(() => { void attemptRedirect() }, 500)
       } else {
         const message = result.error || 'Invalid or expired code'
         // Auto-resend in cases where the server indicates no/expired code
@@ -148,7 +161,7 @@ export function EmailAdminLogin() {
 
   // If already verified (short-lived flag), auto-redirect away from login
   useEffect(() => {
-    const checkVerification = () => {
+    const checkVerification = async () => {
       try {
         // Clean up old cookies that might interfere
         if (typeof document !== 'undefined') {
@@ -159,11 +172,20 @@ export function EmailAdminLogin() {
         
         // Check if user has already verified 2FA in this session
         const hasFlag = typeof document !== 'undefined' && document.cookie.includes('icc_admin_verified=1')
-        const hasJWT = typeof document !== 'undefined' && document.cookie.includes('icc_admin_token=')
+        const serverAuthReady = await (async () => {
+          try {
+            const res = await fetch('/api/admin/me', { credentials: 'include' })
+            if (!res.ok) return false
+            const data = await res.json().catch(() => ({} as unknown)) as { authenticated?: boolean }
+            return !!data.authenticated
+          } catch {
+            return false
+          }
+        })()
+
+        console.log('DEBUG: Verification check:', { hasFlag, serverAuthReady, cookies: document.cookie })
         
-        console.log('DEBUG: Verification check:', { hasFlag, hasJWT, cookies: document.cookie })
-        
-        if (hasFlag && hasJWT) {
+        if (hasFlag && serverAuthReady) {
           console.log('DEBUG: Both flags present, redirecting to dashboard')
           router.replace('/admin/dashboard')
         }
@@ -173,10 +195,10 @@ export function EmailAdminLogin() {
     }
     
     // Check immediately
-    checkVerification()
+    void checkVerification()
     
     // Also check periodically in case cookies are set asynchronously
-    const interval = setInterval(checkVerification, 1000)
+    const interval = setInterval(() => { void checkVerification() }, 1000)
     
     return () => clearInterval(interval)
   }, [router])
