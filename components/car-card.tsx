@@ -70,14 +70,17 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
     return null
   }
 
+  // Generate title from car data
+  const carTitle = car.title || `${car.year} ${car.make} ${car.model}`
+
   return (
     <div className="group hover:shadow-xl transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur border border-border rounded-2xl touch-card hover:-translate-y-1 active:scale-95">
-      <Link href={`/car/${car.id}`} className="block" aria-label={`View details for ${car.title}`}>
+      <Link href={`/car/${car.id}`} className="block" aria-label={`View details for ${carTitle}`}>
         <div className="relative aspect-video">
-          {car.images && car.images[0] && typeof car.images[0] === 'string' && car.images[0].startsWith("/") ? (
+          {car.images && car.images[0] && typeof car.images[0] === 'string' ? (
             <Image
               src={car.images[0] as string}
-              alt={`${car.title || 'Car'} - ${car.year || 'N/A'} ${car.make || 'N/A'} ${car.model || 'N/A'}`}
+              alt={`${carTitle} - ${car.year || 'N/A'} ${car.make || 'N/A'} ${car.model || 'N/A'}`}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
@@ -88,8 +91,8 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
             />
           ) : (
             <Image
-              src={car.images && car.images[0] ? (car.images[0] as string) : "/optimized/placeholder.webp"}
-              alt={`${car.title || 'Car'} - ${car.year || 'N/A'} ${car.make || 'N/A'} ${car.model || 'N/A'}`}
+              src="/optimized/placeholder.webp"
+              alt={`${carTitle} - ${car.year || 'N/A'} ${car.make || 'N/A'} ${car.model || 'N/A'}`}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
@@ -104,7 +107,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
           </Badge>
 
           {/* Featured Badge */}
-          {car.isFeatured && (
+          {car.isFeatured === true && (
             <Badge
               variant="warning"
               className="absolute top-2 right-2 font-bold text-xs"
@@ -121,8 +124,8 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
           {/* Title and Basic Info */}
           <div>
             <h3 className="font-semibold text-lg line-clamp-2 mb-2">
-              <Link href={`/car/${car.id}`} className="hover:text-primary transition-colors" aria-label={`View details for ${car.title || 'Car'}`}>
-                {car.title || 'Untitled Vehicle'}
+              <Link href={`/car/${car.id}`} className="hover:text-primary transition-colors" aria-label={`View details for ${carTitle}`}>
+                {carTitle}
               </Link>
             </h3>
             
@@ -130,26 +133,26 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
             <div className="flex items-center justify-between text-sm text-muted-foreground mb-3" role="list" aria-label="Vehicle specifications">
               <div className="flex items-center gap-1" role="listitem">
                 <Calendar className="h-3 w-3" aria-hidden="true" />
-                <span>{car.year}</span>
+                <span>{car.year || 'N/A'}</span>
               </div>
               <div className="flex items-center gap-1" role="listitem">
                 <CarIcon className="h-3 w-3" aria-hidden="true" />
-                <span>{car.mileage.toLocaleString()} mi</span>
+                <span>{(car.mileage || 0).toLocaleString()} mi</span>
               </div>
               <div className="flex items-center gap-1" role="listitem">
                 <MapPin className="h-3 w-3" aria-hidden="true" />
-                <span className="truncate max-w-[100px]">{car.location}</span>
+                <span className="truncate max-w-[100px]">{car.location || 'Harbor City, CA'}</span>
               </div>
             </div>
           </div>
 
           {/* Simple metadata row */}
           <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
-            <span>{car.make} {car.model}</span>
-            <span>{car.year}</span>
+            <span>{car.make || 'N/A'} {car.model || 'N/A'}</span>
+            <span>{car.year || 'N/A'}</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
-            {showCompareButton && (
+            {showCompareButton === true && (
               <Button
                 variant="outline"
                 size="sm"
@@ -159,7 +162,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
                     ? 'bg-blue-50 border-blue-200 text-blue-700' 
                     : ''
                 }`}
-                aria-label={isInComparison(car.id) ? `Remove ${car.title} from comparison` : `Add ${car.title} to comparison`}
+                aria-label={isInComparison(car.id) ? `Remove ${carTitle} from comparison` : `Add ${carTitle} to comparison`}
                 aria-pressed={isInComparison(car.id)}
               >
                 <Share2 className="h-4 w-4 mr-1" aria-hidden="true" />
@@ -172,7 +175,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
               </Button>
             )}
             <Link href={`/car/${car.id}`} className="flex-1">
-              <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-xs py-3 min-h-[48px] touch-manipulation" aria-label={`See full details for ${car.title}`}>
+              <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-xs py-3 min-h-[48px] touch-manipulation" aria-label={`See full details for ${carTitle}`}>
                 See Full Details
               </Button>
             </Link>
