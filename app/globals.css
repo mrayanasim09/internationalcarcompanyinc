@@ -77,6 +77,10 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    
+    /* Fallback styles in case CSS variables fail */
+    background-color: #ffffff;
+    color: #1a1a1a;
   }
   
   /* Allow text selection for content areas */
@@ -86,6 +90,41 @@
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
+  }
+  
+  /* Fallback styles for dark mode */
+  .dark body {
+    background-color: #0f0f0f;
+    color: #ffffff;
+  }
+  
+  /* Ensure basic styling works */
+  .bg-background {
+    background-color: hsl(var(--background)) !important;
+  }
+  
+  .text-foreground {
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  .bg-primary {
+    background-color: hsl(var(--primary)) !important;
+  }
+  
+  .text-primary-foreground {
+    color: hsl(var(--primary-foreground)) !important;
+  }
+  
+  .bg-card {
+    background-color: hsl(var(--card)) !important;
+  }
+  
+  .text-card-foreground {
+    color: hsl(var(--card-foreground)) !important;
+  }
+  
+  .border-border {
+    border-color: hsl(var(--border)) !important;
   }
 }
 

@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button"
 
 export default function HomePage() {
   return (
-    <div className="icc-theme min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       <Navbar />
       
       <HeroSection />

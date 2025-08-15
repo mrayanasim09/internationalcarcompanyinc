@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, X } from "lucide-react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-// ContactTopbar removed per spec
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -26,87 +25,96 @@ export function Navbar() {
   return (
     <>
       <nav
-        className={`icc-theme fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? "bg-background/80 backdrop-blur-md shadow-lg border-b border-border" : "bg-background/60 backdrop-blur"
         }`}
         aria-label="Primary"
       >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Brand */}
-          <div className="flex items-center gap-3 shrink-0">
-            <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
-              <div className="relative h-12 w-20 md:h-16 md:w-28 transition-transform duration-200 group-hover:scale-[1.02]">
-                <Image src="/International Car Company Inc. Logo.png" alt="International Car Company Inc Logo" fill className="object-contain" sizes="(max-width: 768px) 120px, 160px" priority={true} />
-              </div>
-              {/* Brand text - both mobile and desktop clickable */}
-              <div className="leading-tight">
-                <div className="text-base md:text-lg font-bold text-foreground tracking-tight"><BrandNameUser /></div>
-                <div className="hidden sm:block text-[10px] md:text-xs text-muted-foreground">Professional vehicles. Modern experience.</div>
-              </div>
-            </Link>
-          </div>
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-14 md:h-16">
+            {/* Brand */}
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
+              <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
+                <div className="relative h-8 w-12 md:h-10 md:w-16 transition-transform duration-200 group-hover:scale-[1.02]">
+                  <Image 
+                    src="/International Car Company Inc. Logo.png" 
+                    alt="International Car Company Inc Logo" 
+                    fill 
+                    className="object-contain" 
+                    sizes="(max-width: 768px) 48px, 64px" 
+                    priority={true} 
+                  />
+                </div>
+                {/* Brand text - both mobile and desktop clickable */}
+                <div className="leading-tight">
+                  <div className="text-sm md:text-base font-bold text-foreground tracking-tight">
+                    <BrandNameUser />
+                  </div>
+                  <div className="hidden sm:block text-[8px] md:text-xs text-muted-foreground">
+                    Professional vehicles. Modern experience.
+                  </div>
+                </div>
+              </Link>
+            </div>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6 flex-1 justify-end overflow-x-auto">
-            <Link href="/" className="text-foreground/80 hover:text-primary transition-colors font-medium">
-              Home
-            </Link>
-            <Link href="/inventory" className="text-foreground/80 hover:text-primary transition-colors font-medium">
-              Inventory
-            </Link>
-            <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors font-medium">
-              About
-            </Link>
-            <Link href="/contact" className="text-foreground/80 hover:text-primary transition-colors font-medium">
-              Contact
-            </Link>
-          </div>
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center gap-6 flex-1 justify-end overflow-x-auto">
+              <Link href="/" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                Home
+              </Link>
+              <Link href="/inventory" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                Inventory
+              </Link>
+              <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                About
+              </Link>
+              <Link href="/contact" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                Contact
+              </Link>
+            </div>
 
             {/* Theme Toggle only */}
-          <div className="hidden md:flex items-center gap-2 shrink-0 ml-4">
-            <ThemeToggle />
-          </div>
-
-          {/* Mobile: show Theme Toggle + Menu with spacing; prevent overlap by shrinking brand on sm */}
-          <div className="md:hidden flex items-center gap-3 shrink-0">
-            <ThemeToggle />
-            <Button
-              variant="ghost"
-              size="lg"
-              onClick={toggleMenu}
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-              aria-controls="mobile-nav"
-              aria-expanded={isMenuOpen}
-              className="p-3 text-foreground hover:text-primary touch-button"
-            >
-              {isMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
-            </Button>
-          </div>
-        </div>
-
-        {/* Lower contact header removed */}
-
-        {/* Mobile Menu */}
-        <Dialog open={isMenuOpen} onOpenChange={(o) => (o ? setIsMenuOpen(true) : setIsMenuOpen(false))}>
-          <DialogContent className="p-0 border-0 bg-transparent shadow-none">
-            <div id="mobile-nav" className="md:hidden bg-background border-t border-border shadow-lg" aria-label="Mobile navigation">
-              <div className="px-4 pt-4 pb-2 flex justify-end">
-                <ThemeToggle />
-              </div>
-              <div className="px-4 py-4 space-y-2" tabIndex={-1}>
-                <Link href="/" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Home</Link>
-                <Link href="/inventory" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Inventory</Link>
-                <Link href="/about" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>About</Link>
-                <Link href="/contact" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Contact</Link>
-              </div>
+            <div className="hidden md:flex items-center gap-2 shrink-0 ml-4">
+              <ThemeToggle />
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+
+            {/* Mobile: show Theme Toggle + Menu with spacing; prevent overlap by shrinking brand on sm */}
+            <div className="md:hidden flex items-center gap-3 shrink-0">
+              <ThemeToggle />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleMenu}
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                aria-controls="mobile-nav"
+                aria-expanded={isMenuOpen}
+                className="p-2 text-foreground hover:text-primary touch-button"
+              >
+                {isMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          <Dialog open={isMenuOpen} onOpenChange={(o) => (o ? setIsMenuOpen(true) : setIsMenuOpen(false))}>
+            <DialogContent className="p-0 border-0 bg-transparent shadow-none">
+              <div id="mobile-nav" className="md:hidden bg-background border-t border-border shadow-lg" aria-label="Mobile navigation">
+                <div className="px-4 pt-4 pb-2 flex justify-end">
+                  <ThemeToggle />
+                </div>
+                <div className="px-4 py-4 space-y-2" tabIndex={-1}>
+                  <Link href="/" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Home</Link>
+                  <Link href="/inventory" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Inventory</Link>
+                  <Link href="/about" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>About</Link>
+                  <Link href="/contact" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Contact</Link>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </nav>
       {/* Spacer to offset fixed header */}
-      <div className="h-16 md:h-24" aria-hidden="true" />
+      <div className="h-14 md:h-16" aria-hidden="true" />
     </>
   )
 }
