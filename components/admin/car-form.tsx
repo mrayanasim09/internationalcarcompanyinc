@@ -21,9 +21,9 @@ const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   make: z.string().min(1, "Make is required"),
   model: z.string().min(1, "Model is required"),
-  year: z.number().min(1900).max(new Date().getFullYear() + 1),
-  mileage: z.number().min(0),
-  price: z.number().min(0),
+  year: z.number().int().min(1900).max(new Date().getFullYear() + 1),
+  mileage: z.number().int().min(0),
+  price: z.number().positive('Price must be positive'),
   location: z.string().min(1, "Location is required"),
   vin: z.string().optional(),
   phone: z.string().min(1, "Phone is required"),
@@ -58,6 +58,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    mode: 'onChange',
     defaultValues: {
       title: car?.title || "",
       make: car?.make || "",
@@ -185,7 +186,20 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
             description: carData.description,
           })
         })
-        if (!res.ok) throw new Error('Create failed')
+        if (!res.ok) {
+          let message = 'Create failed'
+          try {
+            const err = await res.json()
+            if (err?.details && Array.isArray(err.details)) {
+              message = err.details.map((d: { message?: string }) => d?.message).filter(Boolean).join('\n') || err.error || message
+            } else if (err?.error) {
+              message = err.error
+            }
+          } catch (_) {
+            // ignore parse errors
+          }
+          throw new Error(message)
+        }
         toast.success("Car added successfully!")
       }
 
@@ -277,6 +291,9 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 {...form.register("year", { valueAsNumber: true })}
                 className="bg-background border-border text-foreground"
                 placeholder="2023"
+                min={1900}
+                max={new Date().getFullYear() + 1}
+                step={1}
               />
               {form.formState.errors.year && (
                 <p className="text-blue-400 text-sm mt-1">{form.formState.errors.year.message}</p>
@@ -290,6 +307,8 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 {...form.register("mileage", { valueAsNumber: true })}
                 className="bg-background border-border text-foreground"
                 placeholder="50000"
+                min={0}
+                step={1}
               />
               {form.formState.errors.mileage && (
                 <p className="text-blue-400 text-sm mt-1">{form.formState.errors.mileage.message}</p>
@@ -306,6 +325,8 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 {...form.register("price", { valueAsNumber: true })}
                 className="bg-background border-border text-foreground"
                 placeholder="25000"
+                min={1}
+                step={1}
               />
               {form.formState.errors.price && (
                 <p className="text-blue-400 text-sm mt-1">{form.formState.errors.price.message}</p>
@@ -601,7 +622,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
         </Button>
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !form.formState.isValid}
           className="bg-primary hover:bg-primary/90 text-primary-foreground"
         >
           {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
