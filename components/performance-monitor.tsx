@@ -8,6 +8,7 @@ interface PerformanceMetrics {
   cls: number | null
   fid: number | null
   ttfb: number | null
+  bundleSize: number | null
 }
 
 export function PerformanceMonitor() {
@@ -17,6 +18,7 @@ export function PerformanceMonitor() {
     cls: null,
     fid: null,
     ttfb: null,
+    bundleSize: null,
   })
   const [isVisible, setIsVisible] = useState(false)
 
@@ -53,8 +55,11 @@ export function PerformanceMonitor() {
         const clsObserver = new PerformanceObserver((list) => {
           let clsValue = 0
           for (const entry of list.getEntries()) {
-            if (entry.entryType === 'layout-shift' && !entry.hadRecentInput) {
-              clsValue += (entry as any).value
+            if (entry.entryType === 'layout-shift') {
+              const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }
+              if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
+                clsValue += layoutShiftEntry.value
+              }
             }
           }
           setMetrics(prev => ({ ...prev, cls: Math.round(clsValue * 1000) / 1000 }))
@@ -84,6 +89,42 @@ export function PerformanceMonitor() {
           }
         })
         navigationObserver.observe({ entryTypes: ['navigation'] })
+
+        // Monitor bundle sizes
+        if ('performance' in window) {
+          const calculateBundleSize = () => {
+            try {
+              const resources = performance.getEntriesByType('resource')
+              let totalSize = 0
+              
+              resources.forEach(resource => {
+                if (resource.name.includes('.js') || resource.name.includes('.css')) {
+                  // Estimate size based on transfer size or duration
+                  if ('transferSize' in resource && resource.transferSize) {
+                    totalSize += resource.transferSize
+                  } else if ('duration' in resource && resource.duration) {
+                    // Rough estimate: 1ms ≈ 1KB
+                    totalSize += Math.round(resource.duration)
+                  }
+                }
+              })
+              
+              setMetrics(prev => ({ 
+                ...prev, 
+                bundleSize: Math.round(totalSize / 1024) // Convert to KB
+              }))
+            } catch (error) {
+              console.warn('Could not calculate bundle size:', error)
+            }
+          }
+          
+          // Calculate bundle size after page load
+          if (document.readyState === 'complete') {
+            calculateBundleSize()
+          } else {
+            window.addEventListener('load', calculateBundleSize)
+          }
+        }
 
         // Cleanup
         return () => {
@@ -187,6 +228,15 @@ export function PerformanceMonitor() {
             </span>
             <span className="text-xs text-gray-400">
               {metrics.ttfb ? getScoreLabel('ttfb', metrics.ttfb) : ''}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>Bundle:</span>
+            <span className={metrics.bundleSize && metrics.bundleSize > 500 ? 'text-red-500' : metrics.bundleSize && metrics.bundleSize > 250 ? 'text-yellow-500' : 'text-green-500'}>
+              {metrics.bundleSize ? `${metrics.bundleSize}KB` : 'N/A'}
+            </span>
+            <span className="text-xs text-gray-400">
+              {metrics.bundleSize ? (metrics.bundleSize > 500 ? 'Large' : metrics.bundleSize > 250 ? 'Medium' : 'Good') : ''}
             </span>
           </div>
         </div>

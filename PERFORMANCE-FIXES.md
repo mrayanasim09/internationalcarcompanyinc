@@ -27,25 +27,26 @@ This document summarizes the fixes implemented to resolve the build failures and
 // Split chunks with size limits
 config.optimization.splitChunks = {
   chunks: 'all',
-  maxSize: 244000, // 244KB to stay under 250KB limit
+  maxSize: 200000, // 200KB to stay well under 250KB limit
+  minSize: 20000, // 20KB minimum chunk size
   
   cacheGroups: {
-    react: { test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/, priority: 40 },
-    next: { test: /[\\/]node_modules[\\/]next[\\/]/, priority: 35 },
-    supabase: { test: /[\\/]node_modules[\\/]@supabase[\\/]/, priority: 30 },
-    ui: { test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|react-icons)[\\/]/, priority: 25 },
-    admin: { test: /[\\/]components[\\/]admin[\\/]/, priority: 20 },
-    uiComponents: { test: /[\\/]components[\\/]ui[\\/]/, priority: 15 },
-    vendor: { test: /[\\/]node_modules[\\/]/, priority: 10 },
-    common: { minChunks: 2, priority: 5 }
+    react: { test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/, priority: 40, maxSize: 150000 },
+    next: { test: /[\\/]node_modules[\\/]next[\\/]/, priority: 35, maxSize: 100000 },
+    supabase: { test: /[\\/]node_modules[\\/]@supabase[\\/]/, priority: 30, maxSize: 150000 },
+    ui: { test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|react-icons)[\\/]/, priority: 25, maxSize: 100000 },
+    admin: { test: /[\\/]components[\\/]admin[\\/]/, priority: 20, maxSize: 150000 },
+    uiComponents: { test: /[\\/]components[\\/]ui[\\/]/, priority: 15, maxSize: 100000 },
+    vendor: { test: /[\\/]node_modules[\\/]/, priority: 10, maxSize: 150000 },
+    common: { minChunks: 2, priority: 5, maxSize: 100000 }
   }
 }
 ```
 
 ### Performance Budgets
-- **Individual Chunks**: < 250KB
-- **Entry Points**: < 500KB
-- **Total Bundle**: < 2MB
+- **Individual Chunks**: < 200KB
+- **Entry Points**: < 400KB
+- **Total Bundle**: < 1.5MB
 
 ## 🔧 Tools and Scripts Added
 

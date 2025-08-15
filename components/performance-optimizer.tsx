@@ -42,8 +42,11 @@ export function PerformanceOptimizer({ children }: PerformanceOptimizerProps) {
             }
             
             // Monitor layout shifts
-            if (entry.entryType === 'layout-shift' && !entry.hadRecentInput) {
-              console.warn('Layout shift detected:', entry.value)
+            if (entry.entryType === 'layout-shift') {
+              const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }
+              if (!layoutShiftEntry.hadRecentInput) {
+                console.warn('Layout shift detected:', layoutShiftEntry.value)
+              }
             }
           }
         })

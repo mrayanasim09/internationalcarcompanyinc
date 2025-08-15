@@ -39,6 +39,40 @@ export const dynamicImports = {
     loading: () => <div className="skeleton h-32 w-full" />,
     ssr: false,
   }),
+  
+  // Heavy UI components
+  Dialog: dynamic(() => import('@/components/ui/dialog'), {
+    loading: () => <div className="skeleton h-32 w-full" />,
+  }),
+  
+  DropdownMenu: dynamic(() => import('@/components/ui/dropdown-menu'), {
+    loading: () => <div className="skeleton h-32 w-full" />,
+  }),
+  
+  Select: dynamic(() => import('@/components/ui/select'), {
+    loading: () => <div className="skeleton h-32 w-full" />,
+  }),
+  
+  Tabs: dynamic(() => import('@/components/ui/tabs'), {
+    loading: () => <div className="skeleton h-32 w-full" />,
+  }),
+  
+  Toast: dynamic(() => import('@/components/ui/toast'), {
+    loading: () => <div className="skeleton h-32 w-full" />,
+  }),
+  
+  // Page components - lazy load non-critical pages
+  AboutPage: dynamic(() => import('@/app/about/page'), {
+    loading: () => <div className="skeleton h-96 w-full" />,
+  }),
+  
+  ContactPage: dynamic(() => import('@/app/contact/page'), {
+    loading: () => <div className="skeleton h-96 w-full" />,
+  }),
+  
+  FAQPage: dynamic(() => import('@/app/faq/page'), {
+    loading: () => <div className="skeleton h-96 w-full" />,
+  }),
 }
 
 // Lazy load utilities
@@ -87,4 +121,44 @@ export const preloadComponents = () => {
     import('@/components/ui/card')
     import('@/components/ui/input')
   }
+}
+
+// Bundle size optimization utilities
+export const bundleOptimizations = {
+  // Split heavy libraries
+  splitLibraries: {
+    // Split Radix UI into smaller chunks
+    radixUI: {
+      accordion: () => import('@radix-ui/react-accordion'),
+      dialog: () => import('@radix-ui/react-dialog'),
+      dropdown: () => import('@radix-ui/react-dropdown-menu'),
+      select: () => import('@radix-ui/react-select'),
+      tabs: () => import('@radix-ui/react-tabs'),
+      toast: () => import('@radix-ui/react-toast'),
+    },
+    
+    // Split Lucide icons
+    lucide: {
+      basic: () => import('lucide-react/dist/esm/icons/chevron-down'),
+      navigation: () => import('lucide-react/dist/esm/icons/menu'),
+      actions: () => import('lucide-react/dist/esm/icons/plus'),
+    },
+    
+    // Split React Icons
+    reactIcons: {
+      basic: () => import('react-icons/fa'),
+      social: () => import('react-icons/io'),
+      business: () => import('react-icons/md'),
+    },
+  },
+  
+  // Lazy load routes
+  lazyRoutes: {
+    about: () => import('@/app/about/page'),
+    contact: () => import('@/app/contact/page'),
+    faq: () => import('@/app/faq/page'),
+    inventory: () => import('@/app/inventory/page'),
+    browse: () => import('@/app/browse/page'),
+    listings: () => import('@/app/listings/page'),
+  },
 }

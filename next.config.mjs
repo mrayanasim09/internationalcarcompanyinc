@@ -144,7 +144,8 @@ const nextConfig = {
       // Split chunks for better caching and smaller bundles
       config.optimization.splitChunks = {
         chunks: 'all',
-        maxSize: 244000, // 244KB to stay under 250KB limit
+        maxSize: 200000, // 200KB to stay well under 250KB limit
+        minSize: 20000, // 20KB minimum chunk size
         cacheGroups: {
           // Separate React and core libraries
           react: {
@@ -153,14 +154,16 @@ const nextConfig = {
             chunks: 'all',
             priority: 40,
             enforce: true,
+            maxSize: 150000, // 150KB for React
           },
-          // Separate Next.js
+          // Separate Next.js with smaller chunks
           next: {
             test: /[\\/]node_modules[\\/]next[\\/]/,
             name: 'next',
             chunks: 'all',
             priority: 35,
             enforce: true,
+            maxSize: 100000, // 100KB for Next.js
           },
           // Separate Supabase
           supabase: {
@@ -169,14 +172,16 @@ const nextConfig = {
             chunks: 'all',
             priority: 30,
             enforce: true,
+            maxSize: 150000, // 150KB for Supabase
           },
-          // Separate UI libraries
+          // Separate UI libraries with smaller chunks
           ui: {
             test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|react-icons)[\\/]/,
             name: 'ui-libs',
             chunks: 'all',
             priority: 25,
             enforce: true,
+            maxSize: 100000, // 100KB for UI libraries
           },
           // Separate admin bundle
           admin: {
@@ -185,6 +190,7 @@ const nextConfig = {
             chunks: 'all',
             priority: 20,
             enforce: true,
+            maxSize: 150000, // 150KB for admin
           },
           // Separate UI components bundle
           uiComponents: {
@@ -193,6 +199,7 @@ const nextConfig = {
             chunks: 'all',
             priority: 15,
             enforce: true,
+            maxSize: 100000, // 100KB for UI components
           },
           // Vendor bundle for remaining node_modules
           vendor: {
@@ -201,6 +208,7 @@ const nextConfig = {
             chunks: 'all',
             priority: 10,
             enforce: true,
+            maxSize: 150000, // 150KB for vendors
           },
           // Common bundle for shared code
           common: {
@@ -209,6 +217,7 @@ const nextConfig = {
             chunks: 'all',
             enforce: true,
             priority: 5,
+            maxSize: 100000, // 100KB for common
           },
         },
       }
@@ -222,8 +231,8 @@ const nextConfig = {
       // Performance hints with realistic limits
       config.performance = {
         hints: 'warning',
-        maxEntrypointSize: 500000, // 500KB
-        maxAssetSize: 500000, // 500KB
+        maxEntrypointSize: 400000, // 400KB to stay under 500KB
+        maxAssetSize: 200000, // 200KB per asset
       }
     }
     
