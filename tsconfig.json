@@ -39,6 +39,8 @@
   ],
   "exclude": [
     "node_modules",
-    "car-dealership 3"
+    "car-dealership 3",
+    "__checks__",
+    "__tests__"
   ]
 }

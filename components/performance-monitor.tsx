@@ -70,7 +70,8 @@ export function PerformanceMonitor() {
         const fidObserver = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
             if (entry.entryType === 'first-input') {
-              setMetrics(prev => ({ ...prev, fid: Math.round(entry.processingStart - entry.startTime) }))
+              const fidEntry = entry as PerformanceEventTiming
+              setMetrics(prev => ({ ...prev, fid: Math.round(fidEntry.processingStart - fidEntry.startTime) }))
             }
           }
         })
@@ -100,9 +101,9 @@ export function PerformanceMonitor() {
               resources.forEach(resource => {
                 if (resource.name.includes('.js') || resource.name.includes('.css')) {
                   // Estimate size based on transfer size or duration
-                  if ('transferSize' in resource && resource.transferSize) {
+                  if ('transferSize' in resource && typeof resource.transferSize === 'number' && resource.transferSize > 0) {
                     totalSize += resource.transferSize
-                  } else if ('duration' in resource && resource.duration) {
+                  } else if ('duration' in resource && typeof resource.duration === 'number' && resource.duration > 0) {
                     // Rough estimate: 1ms ≈ 1KB
                     totalSize += Math.round(resource.duration)
                   }
