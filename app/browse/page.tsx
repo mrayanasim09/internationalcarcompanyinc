@@ -10,13 +10,17 @@ import { CarCard } from "@/components/car-card"
 import { SmartSearch } from "@/components/smart-search"
 import { FilterPanel } from "@/components/filter-panel"
 
-
 // Firebase server functions removed
 import type { Car } from "@/lib/types"
 import { LoadingSpinner } from "@/components/loading-spinner"
-import { supabasePublic } from "@/lib/supabase/client"
 import Script from 'next/script'
 import { useCspNonce } from '@/hooks/use-csp-nonce'
+
+// Lazy load Supabase to prevent build-time issues
+const getSupabaseClient = () => {
+  if (typeof window === 'undefined') return null
+  return import('@/lib/supabase/client').then(m => m.supabasePublic)
+}
 
 export default function BrowsePage() {
   const nonce = useCspNonce()
@@ -28,6 +32,13 @@ export default function BrowsePage() {
   useEffect(() => {
     const fetchCars = async () => {
       try {
+        const supabasePublic = await getSupabaseClient()
+        if (!supabasePublic) {
+          setError("Client-side only")
+          setDataLoading(false)
+          return
+        }
+
         const { data, error } = await supabasePublic
           .from('cars')
           .select('*')

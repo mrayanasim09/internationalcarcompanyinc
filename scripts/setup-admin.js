@@ -52,6 +52,27 @@ bcrypt.hash(defaultPassword, 12).then(hash => {
   console.log('NEXT_PUBLIC_GA_ID=your_ga_id');
   console.log('');
   
+  console.log('📧 Email Configuration:');
+  console.log('EMAIL_PROVIDER=resend');
+  console.log('EMAIL_API_KEY=your_resend_api_key');
+  console.log('FROM_EMAIL=noreply@yourdomain.com');
+
+  console.log('🔒 Security Configuration:');
+  console.log('JWT_SECRET=your_32_character_jwt_secret_here');
+  console.log('SESSION_SECRET=your_session_secret_here');
+  console.log('ENCRYPTION_KEY=your_encryption_key_here');
+
+  console.log('📊 Database Configuration:');
+  console.log('NEXT_PUBLIC_SUPABASE_URL=your_supabase_url');
+  console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key');
+  console.log('SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key');
+  console.log('SUPABASE_STORAGE_BUCKET=car-images');
+
+  console.log('🛡️ Rate Limiting:');
+  console.log('RATE_LIMIT_MAX=100');
+  console.log('RATE_LIMIT_WINDOW=900000');
+  console.log('ADMIN_IP_WHITELIST=127.0.0.1,your_admin_ip');
+  
   console.log('⚠️  IMPORTANT:');
   console.log('1. Change the default password after first login');
   console.log('2. Update NEXTAUTH_URL to your actual domain');

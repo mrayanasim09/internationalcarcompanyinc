@@ -31,11 +31,6 @@ export const env = {
   },
   // External Services
   services: {
-    cloudinary: {
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME!,
-      apiKey: process.env.CLOUDINARY_API_KEY!,
-      apiSecret: process.env.CLOUDINARY_API_SECRET!,
-    },
     email: {
       provider: process.env.EMAIL_PROVIDER || 'resend',
       apiKey: process.env.EMAIL_API_KEY!,
@@ -54,39 +49,46 @@ export const env = {
     rateLimitWindow: parseInt(process.env.RATE_LIMIT_WINDOW || '900000'), // 15 minutes
     corsOrigin: process.env.CORS_ORIGIN || 'https://your-site.netlify.app',
     allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
+    adminIpWhitelist: process.env.ADMIN_IP_WHITELIST?.split(',') || [],
   },
   // Monitoring & Analytics
   monitoring: {
     sentryDsn: process.env.SENTRY_DSN,
     googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID,
-    hotjarId: process.env.NEXT_PUBLIC_HOTJAR_ID,
-  },
-  // Feature Flags
-  features: {
-    enablePushNotifications: false,
-    enableTwoFactorAuth: true,
-    enableAnalytics: false,
-    enableChatbot: process.env.ENABLE_CHATBOT === 'true',
-    enableReviews: process.env.ENABLE_REVIEWS === 'true',
   },
 } as const
 
-// Environment validation
+// Environment validation function
 export function validateEnvironment() {
-  const requiredVars = [
+  // Skip validation during build or if explicitly disabled
+  if (process.env.SKIP_ENV_VALIDATION === 'true' || process.env.NODE_ENV !== 'production' || typeof window !== 'undefined') {
+    return
+  }
+
+  const requiredEnvVars = [
     'JWT_SECRET',
     'SESSION_SECRET',
     'ENCRYPTION_KEY',
-    'NEXT_PUBLIC_SUPABASE_URL',
-    'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-    'SUPABASE_SERVICE_ROLE_KEY',
+    'SUPER_ADMIN_EMAIL',
+    'DEFAULT_ADMIN_PASSWORD',
+    'EMAIL_API_KEY',
+    'FROM_EMAIL',
   ]
-
-  const missingVars = requiredVars.filter(varName => !process.env[varName])
-  
+  const missingVars = requiredEnvVars.filter(varName => !process.env[varName])
   if (missingVars.length > 0) {
     throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`)
   }
+  if (process.env.JWT_SECRET && process.env.JWT_SECRET.length < 32) {
+    throw new Error('JWT_SECRET must be at least 32 characters long')
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (process.env.SUPER_ADMIN_EMAIL && !emailRegex.test(process.env.SUPER_ADMIN_EMAIL)) {
+    throw new Error('SUPER_ADMIN_EMAIL must be a valid email address')
+  }
+  if (process.env.DEFAULT_ADMIN_PASSWORD && process.env.DEFAULT_ADMIN_PASSWORD.length < 8) {
+    throw new Error('DEFAULT_ADMIN_PASSWORD must be at least 8 characters long')
+  }
+  console.log('✅ Environment validation passed')
 }
 
 export default env

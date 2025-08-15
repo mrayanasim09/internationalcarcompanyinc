@@ -4,20 +4,20 @@
 
 @layer base {
   :root {
-    /* Light Theme: professional neutral with electric blue accents */
+    /* Light Theme: professional neutral with electric blue accents - improved readability */
     --background: 0 0% 100%;
-    --foreground: 220 20% 10%;
+    --foreground: 220 30% 6%;
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 12%;
+    --card-foreground: 220 30% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 12%;
+    --popover-foreground: 220 30% 8%;
     /* Alt accent palette: showroom blue + teal */
     --primary: 212 100% 47%;
     --primary-foreground: 0 0% 100%;
     --secondary: 214 32% 95%;
-    --secondary-foreground: 220 20% 20%;
+    --secondary-foreground: 220 30% 12%;
     --muted: 220 14% 96%;
-    --muted-foreground: 220 10% 45%;
+    --muted-foreground: 220 20% 30%;
     --accent: 188 85% 42%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 70% 50%;
@@ -34,28 +34,28 @@
   }
 
   .dark {
-    /* Premium Dark: Charcoal/dark slate + Electric Blue */
-    --background: 220 16% 10%;
+    /* Premium Dark: Charcoal/dark slate + Electric Blue - improved readability */
+    --background: 220 16% 6%;
     --foreground: 210 40% 98%;
-    --card: 220 14% 13%;
+    --card: 220 14% 10%;
     --card-foreground: 210 40% 98%;
-    --popover: 220 14% 13%;
+    --popover: 220 14% 10%;
     --popover-foreground: 210 40% 98%;
-    --primary: 212 100% 60%;
+    --primary: 212 100% 70%;
     --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 220 14% 18%;
+    --secondary: 220 14% 14%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 220 14% 18%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 188 85% 48%;
+    --muted: 220 14% 14%;
+    --muted-foreground: 215 30% 75%;
+    --accent: 188 85% 55%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 40%;
     --destructive-foreground: 210 40% 98%;
-    --border: 220 14% 20%;
-    --input: 220 14% 20%;
-    --ring: 212 100% 60%;
-    --chart-1: 212 100% 60%;
-    --chart-2: 188 85% 48%;
+    --border: 220 14% 16%;
+    --input: 220 14% 16%;
+    --ring: 212 100% 70%;
+    --chart-1: 212 100% 70%;
+    --chart-2: 188 85% 55%;
     --chart-3: 230 60% 72%;
     --chart-4: 260 60% 72%;
     --chart-5: 280 60% 72%;
@@ -193,10 +193,10 @@
 
 /* Production-ready mobile optimizations */
 @media (max-width: 768px) {
-  /* Larger touch targets on mobile */
+  /* Larger touch targets on mobile - increased from 44px to 48px */
   button, a, input, select, textarea {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 48px !important;
+    min-width: 48px !important;
   }
   
   /* Better spacing for mobile */
@@ -224,6 +224,32 @@
   
   .mobile-heading {
     @apply text-xl font-bold;
+  }
+  
+  /* Improved mobile button spacing */
+  .mobile-button-group {
+    @apply flex flex-col gap-3;
+  }
+  
+  .mobile-button-group.horizontal {
+    @apply flex-row gap-2;
+  }
+  
+  /* Better mobile form spacing */
+  .mobile-form {
+    @apply space-y-4;
+  }
+  
+  .mobile-form .form-group {
+    @apply space-y-2;
+  }
+  
+  /* Improved mobile navigation spacing */
+  .mobile-nav-item {
+    @apply py-3 px-4;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -258,8 +284,45 @@ html {
 
 /* Better focus indicators for accessibility */
 *:focus {
-  outline: 2px solid #dc2626;
+  outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
+}
+
+*:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Improved button focus states */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* Better form focus states */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-color: hsl(var(--primary));
+}
+
+/* Enhanced touch feedback */
+.touch-feedback:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Better mobile button states */
+@media (max-width: 768px) {
+  button:active,
+  a:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
 }
 
 /* Production-ready text contrast classes */
@@ -283,6 +346,36 @@ html {
   
   .text-contrast-safe-muted {
     @apply text-muted-foreground;
+  }
+  
+  /* Enhanced readability utilities */
+  .text-high-contrast {
+    @apply text-foreground font-medium;
+  }
+  
+  .text-easy-read {
+    @apply text-foreground leading-relaxed;
+  }
+  
+  .text-emphasis {
+    @apply text-primary font-semibold;
+  }
+  
+  .text-subtle-emphasis {
+    @apply text-muted-foreground font-medium;
+  }
+  
+  /* Better form readability */
+  .form-label-readable {
+    @apply text-foreground font-medium text-base;
+  }
+  
+  .form-input-readable {
+    @apply bg-background border-border text-foreground placeholder:text-muted-foreground;
+  }
+  
+  .form-error-readable {
+    @apply text-destructive font-medium text-sm;
   }
 }
 
@@ -367,6 +460,45 @@ img {
   
   .mobile-full-width {
     @apply w-full;
+  }
+  
+  /* Mobile contact improvements */
+  .mobile-contact-bar {
+    @apply fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 shadow-lg;
+  }
+  
+  .mobile-contact-button {
+    @apply min-h-[60px] text-sm font-medium;
+  }
+  
+  .mobile-contact-number {
+    @apply text-xs font-medium;
+  }
+  
+  /* Better mobile spacing */
+  .mobile-section-padding {
+    @apply py-6 px-4;
+  }
+  
+  .mobile-card-padding {
+    @apply p-4;
+  }
+  
+  /* Improved mobile typography */
+  .mobile-heading-large {
+    @apply text-2xl font-bold;
+  }
+  
+  .mobile-heading-medium {
+    @apply text-xl font-semibold;
+  }
+  
+  .mobile-text-body {
+    @apply text-base leading-relaxed;
+  }
+  
+  .mobile-text-small {
+    @apply text-sm leading-relaxed;
   }
 }
 

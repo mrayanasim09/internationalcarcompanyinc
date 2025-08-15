@@ -14,7 +14,6 @@ import {
 } from "lucide-react"
 import type { Car } from "@/lib/types"
 import { useComparison } from "@/lib/comparison-context"
-import { motion } from "framer-motion"
 // StarRating import removed as it's not used
 
 interface CarCardProps {
@@ -72,8 +71,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
   }
 
   return (
-    <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
-    <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur border border-border rounded-2xl touch-card">
+    <div className="group hover:shadow-xl transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur border border-border rounded-2xl touch-card hover:-translate-y-1 active:scale-95">
       <Link href={`/car/${car.id}`} className="block" aria-label={`View details for ${car.title}`}>
         <div className="relative aspect-video">
           {car.images && car.images[0] && typeof car.images[0] === 'string' && car.images[0].startsWith("/") ? (
@@ -181,7 +179,6 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
           </div>
         </div>
       </CardContent>
-    </Card>
-    </motion.div>
+    </div>
   )
 })

@@ -3,12 +3,26 @@ import Script from 'next/script'
 import { headers } from 'next/headers'
 import { GeistSans } from 'geist/font/sans'
 import { Montserrat } from 'next/font/google'
-const montserrat = Montserrat({ subsets: ['latin'], weight: ['400','500','600','700'], variable: '--font-montserrat', display: 'swap' })
+import { Providers } from '@/components/providers'
 import { CookieConsent } from '@/components/cookie-consent'
 import { ErrorMonitor } from '@/components/error-monitor'
+import { validateEnvironment } from '@/lib/config/env'
 
-import { Providers } from '@/components/providers'
-import './globals.css'
+const montserrat = Montserrat({ 
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  display: 'swap',
+})
+
+// Validate environment on startup
+if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
+  try {
+    validateEnvironment()
+  } catch (error) {
+    console.error('Environment validation failed:', error)
+    // Don't throw during build time
+  }
+}
 
 // GeistSans provides a preconfigured font with className
 
@@ -99,17 +113,36 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-SV90G9ZG56');
+            gtag('config', 'G-SV90G9ZG56', {
+              page_title: document.title,
+              page_location: window.location.href,
+              send_page_view: false
+            });
+            
+            // Send page view after a delay to avoid blocking
+            setTimeout(() => {
+              gtag('event', 'page_view');
+            }, 1000);
           `}
         </Script>
-        {/* DNS prefetch (trimmed) */}
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-        
         {/* Preload critical resources */}
         <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
         <link rel="preload" as="image" href="/optimized/placeholder.webp" imageSrcSet="/optimized/placeholder.webp 1200w" imageSizes="100vw" />
+        <link rel="preload" href="/International Car Company Inc. Logo.png" as="image" type="image/png" />
+        
+        {/* Preload critical fonts */}
+        <link rel="preload" href="/fonts/geist-sans.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/montserrat.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
         {/* Sitemap */}
         <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
@@ -122,7 +155,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="International Car Company Inc" />
         
         {/* Viewport optimization */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
         
         {/* Cache control handled via next.config headers */}
       </head>
@@ -131,14 +164,43 @@ export default function RootLayout({
           (function(){
             try{
               const send = (data) => {
-                const body = JSON.stringify({ ...data, ts: Date.now(), path: location.pathname })
+                const body = JSON.stringify({ 
+                  ...data, 
+                  ts: Date.now(), 
+                  path: location.pathname,
+                  userAgent: navigator.userAgent,
+                  connection: navigator.connection ? navigator.connection.effectiveType : 'unknown'
+                })
                 navigator.sendBeacon && navigator.sendBeacon('/api/debug', body)
               }
+              
+              // Load web vitals asynchronously
               import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js').then(() => {
                 webVitals.onLCP(send)
                 webVitals.onCLS(send)
                 webVitals.onINP && webVitals.onINP(send)
+                webVitals.onFID && webVitals.onFID(send)
+                webVitals.onTTFB && webVitals.onTTFB(send)
               }).catch(()=>{})
+              
+              // Additional performance monitoring
+              if ('performance' in window) {
+                const observer = new PerformanceObserver((list) => {
+                  for (const entry of list.getEntries()) {
+                    if (entry.entryType === 'navigation') {
+                      const navEntry = entry;
+                      send({
+                        type: 'navigation',
+                        domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
+                        loadComplete: navEntry.loadEventEnd - navEntry.loadEventStart,
+                        domInteractive: navEntry.domInteractive - navEntry.fetchStart,
+                        firstByte: navEntry.responseStart - navEntry.requestStart
+                      });
+                    }
+                  }
+                });
+                observer.observe({ entryTypes: ['navigation'] });
+              }
             }catch(e){}
           })();
         `}</Script>

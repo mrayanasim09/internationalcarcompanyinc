@@ -63,18 +63,38 @@ try {
   }))
 } catch {}
 
-// Mock Cloudinary (conditionally)
-try {
-  jest.mock('cloudinary', () => ({
-    v2: {
-      config: jest.fn(),
-      uploader: {
-        upload: jest.fn(),
-        destroy: jest.fn(),
-      },
+// Mock Supabase
+jest.mock('@supabase/supabase-js', () => ({
+  createClient: jest.fn(() => ({
+    auth: {
+      signInWithPassword: jest.fn(),
+      signOut: jest.fn(),
+      getUser: jest.fn(),
     },
-  }))
-} catch {}
+    from: jest.fn(() => ({
+      select: jest.fn(() => ({
+        eq: jest.fn(() => ({
+          single: jest.fn(),
+          order: jest.fn(() => ({
+            limit: jest.fn(() => ({
+              range: jest.fn(() => Promise.resolve({ data: [], error: null }))
+            }))
+          }))
+        }))
+      })),
+      insert: jest.fn(() => Promise.resolve({ data: null, error: null })),
+      update: jest.fn(() => Promise.resolve({ data: null, error: null })),
+      delete: jest.fn(() => Promise.resolve({ data: null, error: null })),
+    })),
+    storage: {
+      from: jest.fn(() => ({
+        upload: jest.fn(() => Promise.resolve({ data: null, error: null })),
+        remove: jest.fn(() => Promise.resolve({ data: null, error: null })),
+        getPublicUrl: jest.fn(() => ({ data: { publicUrl: 'https://example.com/image.jpg' } })),
+      })),
+    },
+  })),
+}));
 
 // Mock localStorage
 const localStorageMock = (() => {

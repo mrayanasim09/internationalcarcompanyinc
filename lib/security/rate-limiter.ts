@@ -26,19 +26,28 @@ interface RateLimitEntry {
 
 export class RateLimiter {
   private config: RateLimitConfig
+  private whitelistedIPs: Set<string>
 
   constructor(config: RateLimitConfig) {
-    this.config = {
-      blockDurationMs: config.windowMs * 2, // Default: 2x window time
-      skipOnSuccess: false,
-      ...config
-    }
+    this.config = config
+    // Add IP whitelisting for admin routes
+    this.whitelistedIPs = new Set([
+      '127.0.0.1',
+      '::1',
+      // Add your admin IPs here
+      ...(process.env.ADMIN_IP_WHITELIST?.split(',') || [])
+    ])
   }
 
-  // Get client identifier (IP + User Agent for better uniqueness)
   private getClientId(request: NextRequest): string {
     const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
     const userAgent = request.headers.get('user-agent') || 'unknown'
+    
+    // Check if IP is whitelisted
+    if (this.whitelistedIPs.has(ip)) {
+      return `whitelisted-${ip}`
+    }
+    
     return `${ip}-${Buffer.from(userAgent).toString('base64').slice(0, 20)}`
   }
 
@@ -50,11 +59,29 @@ export class RateLimiter {
     blocked?: boolean
   }> {
     const clientId = identifier || this.getClientId(request)
+    
+    // Allow whitelisted IPs
+    if (clientId.startsWith('whitelisted-')) {
+      return {
+        allowed: true,
+        remaining: this.config.maxAttempts,
+        resetTime: Date.now() + this.config.windowMs
+      }
+    }
+    
     const now = Date.now()
     
     const key = `rate_limit:${clientId}`
     const useRedis = process.env.USE_REDIS === '1' && !!process.env.REDIS_URL
     const store = useRedis ? await getStore() : null
+    
+    // If Redis is not available, use stricter in-memory limits
+    const effectiveConfig = useRedis ? this.config : {
+      ...this.config,
+      maxAttempts: Math.floor(this.config.maxAttempts * 0.5), // Reduce limits when Redis unavailable
+      windowMs: Math.floor(this.config.windowMs * 0.8)
+    }
+    
     let entry: RateLimitEntry = (useRedis ? await store!.get<RateLimitEntry>(key) : cache.get(key)) || {
       count: 0,
       firstAttempt: now
@@ -71,7 +98,7 @@ export class RateLimiter {
     }
 
     // Reset if window has passed
-    if (now - entry.firstAttempt > this.config.windowMs) {
+    if (now - entry.firstAttempt > effectiveConfig.windowMs) {
       entry = {
         count: 1,
         firstAttempt: now,
@@ -82,12 +109,12 @@ export class RateLimiter {
     }
 
     // Check if limit exceeded
-    if (entry.count > this.config.maxAttempts) {
+    if (entry.count > effectiveConfig.maxAttempts) {
       entry.blocked = true
-      entry.blockedUntil = now + (this.config.blockDurationMs || this.config.windowMs)
+      entry.blockedUntil = now + (effectiveConfig.blockDurationMs || effectiveConfig.windowMs)
       
-      if (useRedis) await store!.set(key, entry, Math.ceil((this.config.blockDurationMs || this.config.windowMs) / 1000))
-      else cache.set(key, entry, Math.ceil((this.config.blockDurationMs || this.config.windowMs) / 1000))
+      if (useRedis) await store!.set(key, entry, Math.ceil((effectiveConfig.blockDurationMs || effectiveConfig.windowMs) / 1000))
+      else cache.set(key, entry, Math.ceil((effectiveConfig.blockDurationMs || effectiveConfig.windowMs) / 1000))
       
       return {
         allowed: false,
@@ -98,13 +125,13 @@ export class RateLimiter {
     }
 
     // Update cache
-    if (useRedis) await store!.set(key, entry, Math.ceil(this.config.windowMs / 1000))
-    else cache.set(key, entry, Math.ceil(this.config.windowMs / 1000))
+    if (useRedis) await store!.set(key, entry, Math.ceil(effectiveConfig.windowMs / 1000))
+    else cache.set(key, entry, Math.ceil(effectiveConfig.windowMs / 1000))
 
     return {
       allowed: true,
-      remaining: this.config.maxAttempts - entry.count,
-      resetTime: entry.firstAttempt + this.config.windowMs
+      remaining: effectiveConfig.maxAttempts - entry.count,
+      resetTime: entry.firstAttempt + effectiveConfig.windowMs
     }
   }
 

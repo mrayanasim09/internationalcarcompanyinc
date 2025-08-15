@@ -119,9 +119,9 @@ export function middleware(request: NextRequest) {
     response.headers.set('Content-Security-Policy', [
       "default-src 'self'",
       // Allow scripts for admin dashboard functionality
-      `script-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.google.com https://www.gstatic.com`,
-      // Keep 'unsafe-inline' for styles for now to avoid breaking inline style attributes
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.google.com https://www.gstatic.com`,
+      // Remove unsafe-inline for styles, use nonces instead
+      `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
       "font-src 'self' https://fonts.gstatic.com",
       // Images
       "img-src 'self' data: blob: https://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://maps.gstatic.com https://*.googleusercontent.com",

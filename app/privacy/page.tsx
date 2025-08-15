@@ -13,7 +13,7 @@ export default function PrivacyPage() {
       <ul className="list-disc pl-6 space-y-1">
         <li>Contact details you submit via forms</li>
         <li>Usage analytics (via Google Analytics)</li>
-        <li>Media you upload in the admin portal (stored on Cloudinary)</li>
+        <li>Media you upload in the admin portal (stored on Supabase)</li>
       </ul>
       <h2 className="text-xl font-semibold mt-8 mb-3">How We Use Information</h2>
       <ul className="list-disc pl-6 space-y-1">

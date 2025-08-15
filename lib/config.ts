@@ -2,7 +2,7 @@
 export const config = {
   // JWT Configuration
   jwt: {
-    secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production',
+    secret: process.env.JWT_SECRET!,
     expiresIn: process.env.JWT_EXPIRES_IN || '30m',
   },
   
@@ -13,14 +13,14 @@ export const config = {
   
   // Admin Credentials (in production, use database)
   admin: {
-    email: process.env.ADMIN_EMAIL || 'admin@amtycoons.com',
-    passwordHash: process.env.ADMIN_PASSWORD_HASH || '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/8KqQKqK',
+    email: process.env.ADMIN_EMAIL!,
+    passwordHash: process.env.ADMIN_PASSWORD_HASH!,
   },
   
   // Session Configuration
   session: {
-    secret: process.env.SESSION_SECRET || 'your-session-secret-change-this-in-production',
-    cookieSecret: process.env.COOKIE_SECRET || 'your-cookie-secret-change-this-in-production',
+    secret: process.env.SESSION_SECRET!,
+    cookieSecret: process.env.COOKIE_SECRET!,
     maxAge: 30 * 60 * 1000, // 30 minutes
   },
   

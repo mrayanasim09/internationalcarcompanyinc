@@ -1,16 +1,23 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useEffect } from 'react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { ListingsContent, type ListingsFilters } from '@/components/listings-content'
 import { FilterPanel } from '@/components/filter-panel'
 import { CarLoader } from '@/components/ui/car-loader'
-import { supabasePublic } from '@/lib/supabase/client'
 import type { Car } from '@/lib/types'
 import Script from 'next/script'
 import { useCspNonce } from '@/hooks/use-csp-nonce'
 // CSS animation utilities are used to avoid client boundary issues
+
+// Lazy load Supabase to prevent build-time issues
+const getSupabaseClient = () => {
+  if (typeof window === 'undefined') return null
+  return import('@/lib/supabase/client').then(m => m.supabasePublic)
+}
 
 export default function ListingsPage() {
   const nonce = useCspNonce()
@@ -32,6 +39,13 @@ export default function ListingsPage() {
       try {
         if (process.env.NODE_ENV !== 'production') console.log("🔄 Starting to fetch cars...")
         
+        const supabasePublic = await getSupabaseClient()
+        if (!supabasePublic) {
+          setError("Client-side only")
+          setLoading(false)
+          return
+        }
+
         const { data, error } = await supabasePublic
           .from('cars')
           .select('*')

@@ -69,16 +69,16 @@ export function Navbar() {
           </div>
 
           {/* Mobile: show Theme Toggle + Menu with spacing; prevent overlap by shrinking brand on sm */}
-          <div className="md:hidden flex items-center gap-2 shrink-0">
+          <div className="md:hidden flex items-center gap-3 shrink-0">
             <ThemeToggle />
             <Button
               variant="ghost"
-              size="sm"
+              size="lg"
               onClick={toggleMenu}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-controls="mobile-nav"
               aria-expanded={isMenuOpen}
-              className="p-2 text-foreground hover:text-primary"
+              className="p-3 text-foreground hover:text-primary touch-button"
             >
               {isMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
             </Button>
@@ -94,11 +94,11 @@ export function Navbar() {
               <div className="px-4 pt-4 pb-2 flex justify-end">
                 <ThemeToggle />
               </div>
-              <div className="px-4 py-4 space-y-4" tabIndex={-1}>
-                <Link href="/" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Home</Link>
-                <Link href="/inventory" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Inventory</Link>
-                <Link href="/about" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>About</Link>
-                <Link href="/contact" className="block text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Contact</Link>
+              <div className="px-4 py-4 space-y-2" tabIndex={-1}>
+                <Link href="/" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Home</Link>
+                <Link href="/inventory" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Inventory</Link>
+                <Link href="/about" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>About</Link>
+                <Link href="/contact" className="mobile-nav-item text-lg font-medium text-foreground hover:text-primary transition-colors" onClick={closeMenu}>Contact</Link>
               </div>
             </div>
           </DialogContent>
