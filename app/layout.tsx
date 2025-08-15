@@ -144,19 +144,24 @@ export default function RootLayout({
                   // Disable cross-domain tracking
                   allow_linker: false,
                   // Disable enhanced ecommerce
-                  enhanced_ecommerce: false
+                  enhanced_ecommerce: false,
+                  // Disable scroll tracking and engagement events
+                  engagement_time_msec: 0,
+                  // Disable automatic event collection
+                  send_page_view_on_load: false,
+                  // Disable user engagement tracking
+                  user_engagement: false
                 });
                 
-                // Send page view after a delay and only if still consented
-                setTimeout(() => {
-                  if (window.gtag && shouldLoadAnalytics()) {
-                    window.gtag('event', 'page_view', {
-                      // Minimal page view data
-                      page_title: document.title,
-                      page_location: window.location.href
-                    });
-                  }
-                }, 1000);
+                // Send page view only once per session to reduce requests
+                if (window.gtag && shouldLoadAnalytics() && !sessionStorage.getItem('ga-page-view-sent')) {
+                  window.gtag('event', 'page_view', {
+                    // Minimal page view data
+                    page_title: document.title,
+                    page_location: window.location.href
+                  });
+                  sessionStorage.setItem('ga-page-view-sent', 'true');
+                }
                 
               } catch (error) {
                 console.warn('Failed to initialize analytics:', error);

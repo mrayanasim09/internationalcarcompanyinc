@@ -37,8 +37,7 @@ console.log('📝 NEXT STEPS:');
 console.log('1. Copy these secrets to your .env.local file');
 console.log('2. Generate new Supabase credentials from Supabase Dashboard');
 console.log('3. Generate new Resend API key from Resend Dashboard');
-console.log('4. Generate new reCAPTCHA keys from Google reCAPTCHA');
-console.log('5. Generate new JWT secret (32+ characters)');
+console.log('4. Generate new JWT secret (32+ characters)');
 console.log('6. Generate new session and encryption keys');
 console.log('7. Set up admin email and password');
 console.log('8. Configure rate limiting settings');
@@ -48,7 +47,7 @@ console.log('');
 console.log('🔗 Useful Links:');
 console.log('• Supabase Dashboard: https://app.supabase.com');
 console.log('• Resend Dashboard: https://resend.com');
-console.log('• Google reCAPTCHA: https://www.google.com/recaptcha/admin');
+
 console.log('• JWT Secret Generator: https://generate-secret.vercel.app/32');
 console.log('• Password Generator: https://passwordsgenerator.net/');
 

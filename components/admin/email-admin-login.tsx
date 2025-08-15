@@ -28,17 +28,6 @@ export function EmailAdminLogin() {
     setIsLoading(true)
 
     try {
-      let recaptchaToken: string | undefined
-      // Gracefully skip reCAPTCHA in case it is not loaded to avoid RSC/script race conditions
-      try {
-        const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
-        // @ts-expect-error recaptcha global provided by script at runtime
-        if (typeof window !== 'undefined' && window.grecaptcha && siteKey) {
-          // @ts-expect-error recaptcha global provided by script at runtime
-          recaptchaToken = await window.grecaptcha.execute(siteKey, { action: 'admin_login' })
-        }
-      } catch {}
-
       const controller = new AbortController()
       const timeout = setTimeout(() => controller.abort(), 8000)
 
@@ -46,7 +35,7 @@ export function EmailAdminLogin() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-csrf-token': (document.cookie.match(/(?:^|; )csrf_token=([^;]*)/)?.[1] ?? '') },
         credentials: 'include',
-        body: JSON.stringify({ email, password, recaptchaToken }),
+        body: JSON.stringify({ email, password }),
         signal: controller.signal,
       })
       clearTimeout(timeout)

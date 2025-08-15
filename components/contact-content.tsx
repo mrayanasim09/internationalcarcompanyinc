@@ -26,7 +26,7 @@ export function ContactContent() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
-  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+
 
   // Validation functions
   const validateEmail = (email: string): boolean => {
@@ -93,15 +93,6 @@ export function ContactContent() {
     setIsSubmitting(true)
 
     try {
-      let recaptchaToken: string | undefined
-      try {
-        // @ts-expect-error recaptcha global provided by script at runtime
-        if (window.grecaptcha && siteKey) {
-          // @ts-expect-error recaptcha global provided by script at runtime
-          recaptchaToken = await window.grecaptcha.execute(siteKey, { action: 'contact_form' })
-        }
-      } catch {}
-
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -111,7 +102,6 @@ export function ContactContent() {
           phone: formData.phone,
           subject: formData.subject,
           message: formData.message,
-          recaptchaToken,
         })
       })
       if (!res.ok) {
@@ -194,13 +184,7 @@ export function ContactContent() {
 
   return (
     <div className="bg-background text-foreground">
-      {siteKey ? (
-        <Script
-          src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
-          strategy="lazyOnload"
-          nonce={nonce}
-        />
-      ) : null}
+
       {/* Compact Hero */}
       <section className="relative bg-background pt-10 pb-6">
         <div className="container mx-auto px-4 text-center">
@@ -405,14 +389,7 @@ export function ContactContent() {
                       {isSubmitting ? "Sending..." : "Send Message"}
                     </Button>
                   </form>
-                  {siteKey ? (
-                    <p className="mt-2 text-xs text-subtle-emphasis text-center">
-                      This site is protected by reCAPTCHA and the Google
-                      {' '}<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>{' '}
-                      and
-                      {' '}<a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline">Terms of Service</a>{' '}apply.
-                    </p>
-                  ) : null}
+
                 </CardContent>
               </Card>
             </div>

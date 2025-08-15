@@ -87,7 +87,10 @@ export function Navbar() {
 
           {/* Mobile Menu */}
           <Dialog open={isMenuOpen} onOpenChange={(o) => (o ? setIsMenuOpen(true) : setIsMenuOpen(false))}>
-            <DialogContent className="p-0 border-0 bg-transparent shadow-none">
+            <DialogContent 
+              className="p-0 border-0 bg-transparent shadow-none"
+              aria-describedby="mobile-nav"
+            >
               <div id="mobile-nav" className="md:hidden bg-background border-t border-border shadow-lg" aria-label="Mobile navigation">
                 <div className="px-4 pt-4 pb-2 flex justify-end">
                   <ThemeToggle />

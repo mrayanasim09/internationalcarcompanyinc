@@ -59,10 +59,7 @@ CORS_ORIGIN=http://localhost:3000
 ALLOWED_ORIGINS=http://localhost:3000,https://internationalcarcompanyinc.com
 
 # =========================
-# 🤖 reCAPTCHA Configuration
-# =========================
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
-RECAPTCHA_SECRET_KEY=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
+
 
 # =========================
 # 📊 Analytics & Monitoring
@@ -105,10 +102,7 @@ console.log('   - Go to https://resend.com');
 console.log('   - Create an account and get your API key');
 console.log('   - Update EMAIL_API_KEY in .env.local');
 console.log('');
-console.log('3. Configure reCAPTCHA (optional):');
-console.log('   - Go to https://www.google.com/recaptcha/admin');
-console.log('   - Create a new site and get your keys');
-console.log('   - Update reCAPTCHA keys in .env.local');
+
 console.log('');
 console.log('4. Start the development server:');
 console.log('   npm run dev');
@@ -119,7 +113,7 @@ console.log('');
 console.log('🔗 Useful Links:');
 console.log('• Supabase Dashboard: https://app.supabase.com');
 console.log('• Resend Dashboard: https://resend.com');
-console.log('• Google reCAPTCHA: https://www.google.com/recaptcha/admin');
+console.log('');
 console.log('');
 console.log('⚠️  IMPORTANT:');
 console.log('• Never commit .env.local to version control');

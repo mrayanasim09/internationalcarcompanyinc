@@ -82,8 +82,11 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
                 <Maximize2 className="h-5 w-5" />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl w-full h-[80vh]">
-              <div className="relative h-full">
+            <DialogContent 
+              className="max-w-4xl w-full h-[80vh]"
+              aria-describedby="fullscreen-image-dialog"
+            >
+              <div id="fullscreen-image-dialog" className="relative h-full">
                  {images[currentIndex] ? (
                   <Image
                     src={images[currentIndex]}

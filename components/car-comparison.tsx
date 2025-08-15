@@ -77,7 +77,10 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
         setIsOpen(open)
         if (!open) onClose?.()
       }}>
-        <DialogContent className="w-full max-w-7xl max-h-[90vh] overflow-y-auto p-0">
+        <DialogContent 
+          className="w-full max-w-7xl max-h-[90vh] overflow-y-auto p-0"
+          aria-describedby="comparison-dialog"
+        >
           <Card className="w-full border-0 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between">
               <DialogHeader>
@@ -278,7 +281,10 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
 
       {/* Car Selection Modal */}
       <Dialog open={showCarSelector} onOpenChange={setShowCarSelector}>
-        <DialogContent className="w-full max-w-4xl max-h-[80vh] overflow-y-auto p-0">
+        <DialogContent 
+          className="w-full max-w-4xl max-h-[80vh] overflow-y-auto p-0"
+          aria-describedby="car-selector-dialog"
+        >
           <Card className="w-full border-0 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between">
               <DialogHeader>

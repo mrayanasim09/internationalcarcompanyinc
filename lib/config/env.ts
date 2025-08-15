@@ -36,12 +36,7 @@ export const env = {
       apiKey: process.env.EMAIL_API_KEY!,
       fromEmail: process.env.FROM_EMAIL!,
     },
-    recaptcha: {
-      // Site key is public and safe to expose on the client
-      siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
-      // Secret key must remain server-side only
-      secretKey: process.env.RECAPTCHA_SECRET_KEY,
-    },
+
   },
   // Security & Rate Limiting
   security: {

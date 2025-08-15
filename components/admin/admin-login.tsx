@@ -10,7 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
-import Script from "next/script"
 
 export function AdminLogin() {
   const [email, setEmail] = useState("")
@@ -18,7 +17,6 @@ export function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
-  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,21 +24,11 @@ export function AdminLogin() {
     setIsLoading(true)
 
     try {
-      let recaptchaToken: string | undefined
-      try {
-        // reCAPTCHA v3 execution when available
-        // @ts-expect-error recaptcha global provided by script at runtime
-        if (window.grecaptcha && siteKey) {
-          // @ts-expect-error recaptcha global provided by script at runtime
-          recaptchaToken = await window.grecaptcha.execute(siteKey, { action: 'admin_login' })
-        }
-      } catch {}
-
       const res = await fetch('/api/admin/login-start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-csrf-token': (document.cookie.match(/(?:^|; )csrf_token=([^;]*)/)?.[1] ?? '') },
         credentials: 'include',
-        body: JSON.stringify({ email, password, recaptchaToken })
+        body: JSON.stringify({ email, password })
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || 'Login failed')
@@ -74,12 +62,6 @@ export function AdminLogin() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
-      {siteKey ? (
-        <Script
-          src={`https://www.google.com/recaptcha/api.js?render=${siteKey}`}
-          strategy="lazyOnload"
-        />
-      ) : null}
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-foreground">
@@ -106,14 +88,7 @@ export function AdminLogin() {
             <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={isLoading}>
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
-            {siteKey ? (
-              <p className="mt-2 text-xs text-muted-foreground text-center">
-                This site is protected by reCAPTCHA and the Google
-                {' '}<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>{' '}
-                and
-                {' '}<a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline">Terms of Service</a>{' '}apply.
-              </p>
-            ) : null}
+
           </form>
         </CardContent>
       </div>

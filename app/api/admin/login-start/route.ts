@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { supabaseAdmin } from '@/lib/supabase/admin'
-import { verifyRecaptcha } from '@/lib/security/recaptcha'
+
 import { createRateLimitMiddleware, rateLimiters } from '@/lib/security/rate-limiter'
 import { csrf } from '@/lib/security/csrf'
 
@@ -15,7 +15,7 @@ const startSchema = z.object({
   email: z.string().email('Invalid email address').max(100),
   password: z.string().min(8, 'Password must be at least 8 characters').max(100),
   deviceId: z.string().optional(),
-  recaptchaToken: z.string().optional(),
+
 })
 
 const guard = createRateLimitMiddleware(rateLimiters.adminLogin)
@@ -58,14 +58,7 @@ export async function POST(request: NextRequest) {
     const password = parsed.data.password
     // const deviceId = parsed.data.deviceId // not used; all logins require verification now
 
-    // Verify reCAPTCHA (v3) only when a token was provided
-    if (parsed.data.recaptchaToken) {
-      const remoteIp = request.headers.get('x-forwarded-for') || request.ip || undefined
-      const recaptcha = await verifyRecaptcha(parsed.data.recaptchaToken, remoteIp, 'admin_login', 0.3)
-      if (!recaptcha.success) {
-        return NextResponse.json({ error: 'reCAPTCHA verification failed' }, { status: 400 })
-      }
-    }
+
 
     // Lookup admin user in Supabase
     const { data: users, error: findErr } = await supabaseAdmin

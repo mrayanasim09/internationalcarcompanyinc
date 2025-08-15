@@ -25,7 +25,18 @@ const nextConfig = {
     ],
     // Remove all problematic experimental features
     optimizeCss: false,
+    // Disable RSC query parameters
+    serverComponentsExternalPackages: [],
+    // Disable RSC query parameters
+    ppr: false,
+    // Disable RSC query parameters in URLs
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
+  // Disable RSC query parameters and optimize for production
+  skipTrailingSlashRedirect: true,
+  skipMiddlewareUrlNormalize: true,
   images: {
     remotePatterns: [
       {

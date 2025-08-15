@@ -368,7 +368,10 @@ export function SuperAdminDashboard({ currentUser }: AdminManagementProps) {
                     Create New Admin
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent 
+                  className="sm:max-w-[500px]"
+                  aria-describedby="create-admin-dialog"
+                >
                   <DialogHeader>
                     <DialogTitle>Create New Admin User</DialogTitle>
                   </DialogHeader>
@@ -524,7 +527,10 @@ export function SuperAdminDashboard({ currentUser }: AdminManagementProps) {
 
       {/* Edit Admin Dialog */}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent 
+          className="sm:max-w-[500px]"
+          aria-describedby="edit-admin-dialog"
+        >
           <DialogHeader>
             <DialogTitle>Edit Admin User</DialogTitle>
           </DialogHeader>

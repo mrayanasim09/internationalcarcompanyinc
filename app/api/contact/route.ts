@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { createRateLimitMiddleware, rateLimiters } from '@/lib/security/rate-limiter'
-import { verifyRecaptcha } from '@/lib/security/recaptcha'
+
 
 // Input validation schema
 const contactSchema = z.object({
@@ -13,7 +13,7 @@ const contactSchema = z.object({
   carId: z.string().optional(),
   subject: z.string().optional(),
   preferredContact: z.enum(['email', 'phone', 'whatsapp']).optional(),
-  recaptchaToken: z.string().optional(),
+
 })
 
 const guard = createRateLimitMiddleware(rateLimiters.contactForm)
@@ -66,15 +66,7 @@ export async function POST(request: NextRequest) {
 
     const contactData = validationResult.data
 
-    // Verify reCAPTCHA (v3)
-    const remoteIp = request.headers.get('x-forwarded-for') || request.ip || undefined
-    const recaptcha = await verifyRecaptcha(contactData.recaptchaToken, remoteIp, 'contact_form', 0.3)
-    if (!recaptcha.success) {
-      return NextResponse.json(
-        { error: 'reCAPTCHA verification failed', details: recaptcha.errors, score: recaptcha.score },
-        { status: 400 }
-      )
-    }
+
 
     // Sanitize inputs
     const sanitizedData = {
