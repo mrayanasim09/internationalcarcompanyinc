@@ -14,12 +14,19 @@ export const createCSPDirectives = (nonce: string): CSPDirectives => {
       `'nonce-${nonce}'`,
       ...csp.trustedDomains.scripts
     ],
+    // Allow styles from self and trusted CDNs. Do NOT include a nonce here,
+    // because if a nonce or hash is present, browsers will ignore 'unsafe-inline'.
+    // Next.js and some UI libs emit inline <style> and style attributes without a nonce.
     'style-src': [
       "'self'",
-      `'nonce-${nonce}'`,
       ...csp.trustedDomains.styles,
-      "'unsafe-inline'" // Temporarily allow for compatibility
+      "'unsafe-inline'"
     ],
+    // Explicitly allow inline style attributes (CSP Level 3) for UI libraries
+    'style-src-attr': [
+      "'unsafe-inline'"
+    ],
+    // Do not set style-src-elem separately; keep behavior governed by style-src above
     'font-src': [
       "'self'",
       ...csp.trustedDomains.fonts,

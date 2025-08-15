@@ -60,7 +60,8 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
     dangerouslyAllowSVG: false,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Do not set a conflicting CSP here; it can clash with our middleware CSP
+    contentSecurityPolicy: undefined,
     // Enable modern image formats
     unoptimized: false,
     // Better image optimization
