@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { authManager } from '@/lib/auth-utils'
 import { cookies } from 'next/headers'
 import { jwtManager } from '@/lib/jwt-utils'
+import jwt from 'jsonwebtoken'
 
 export async function POST() {
   try {
@@ -11,39 +12,69 @@ export async function POST() {
     // Create response
     const response = NextResponse.json({ success: true })
 
-    // Clear the session cookies
-    response.cookies.set('am_tycoons_admin_token', '', {
+    // Clear all admin cookies
+    response.cookies.set('icc_admin_token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 0, // Expire immediately
-      path: '/'
-    })
-    response.cookies.set('am_tycoons_admin_refresh', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       maxAge: 0,
-      path: '/'
+      path: '/',
     })
 
-    // Best-effort: blacklist current access/refresh JTI if present
+    response.cookies.set('icc_admin_refresh', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 0,
+      path: '/',
+    })
+
+    // Clear verification flag
+    response.cookies.set('icc_admin_verified', '', {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 0,
+      path: '/',
+    })
+
+    // Also try to blacklist the tokens if we can extract them
     try {
-      const accessToken = cookies().get('am_tycoons_admin_token')?.value
+      const accessToken = cookies().get('icc_admin_token')?.value
       if (accessToken) {
-        const decoded = jwtManager.decodeToken(accessToken) as { jti?: string; exp?: number } | null
-        if (decoded?.jti && decoded?.exp) {
-          await jwtManager.blacklistJti(decoded.jti, decoded.exp)
+        const decoded = jwt.decode(accessToken) as any
+        if (decoded?.exp) {
+          await jwtManager.blacklistToken(accessToken, decoded.exp)
         }
       }
-      const refreshToken = cookies().get('am_tycoons_admin_refresh')?.value
+      
+      const refreshToken = cookies().get('icc_admin_refresh')?.value
       if (refreshToken) {
-        const decoded = jwtManager.decodeToken(refreshToken) as { jti?: string; exp?: number } | null
-        if (decoded?.jti && decoded?.exp) {
-          await jwtManager.blacklistJti(decoded.jti, decoded.exp)
+        const decoded = jwt.decode(refreshToken) as any
+        if (decoded?.exp) {
+          await jwtManager.blacklistToken(refreshToken, decoded.exp)
         }
       }
-    } catch {}
+    } catch (error) {
+      console.error('Error blacklisting tokens during logout:', error)
+    }
+
+    // Clear cookies again in case the above failed
+    response.cookies.set('icc_admin_token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 0,
+      path: '/',
+    })
+
+    response.cookies.set('icc_admin_refresh', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 0,
+      path: '/',
+    })
 
     return response
 

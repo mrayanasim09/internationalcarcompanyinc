@@ -2,6 +2,18 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createCSPHeader } from './lib/security/csp'
 import { applySecurityHeaders } from './lib/security/headers'
+
+// Helper function to safely get and validate JWT token
+function getValidJWTToken(request: NextRequest): string | null {
+  const jwtToken = request.cookies.get('icc_admin_token')?.value
+  if (jwtToken && typeof jwtToken === 'string' && jwtToken.length > 0) {
+    const trimmedToken = jwtToken.trim()
+    if (trimmedToken.length > 0) {
+      return trimmedToken
+    }
+  }
+  return null
+}
  
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
@@ -42,10 +54,10 @@ export function middleware(request: NextRequest) {
 
     // Auto-redirect authenticated users away from login
     if (path === '/admin/login') {
-      const jwtToken = request.cookies.get('am_tycoons_admin_token')?.value
-      if (jwtToken) {
+      const trimmedToken = getValidJWTToken(request)
+      if (trimmedToken) {
         try {
-          const parts = jwtToken.split('.')
+          const parts = trimmedToken.split('.')
           if (parts.length >= 2) {
             let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/')
             const pad = base64.length % 4
@@ -56,20 +68,22 @@ export function middleware(request: NextRequest) {
               return NextResponse.redirect(new URL('/admin/dashboard', request.url))
             }
           }
-        } catch {}
+        } catch (e) {
+          // Token invalid, continue with login
+        }
       }
     }
 
     // Check if the path starts with /admin
     if (path.startsWith('/admin') && path !== '/admin/login') {
       // Prefer new JWT cookie
-      const jwtToken = request.cookies.get('am_tycoons_admin_token')?.value
-      if (!jwtToken) {
+      const trimmedToken = getValidJWTToken(request)
+      if (!trimmedToken) {
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
       // Lightweight decode to check expiry and 2FA in Edge runtime (no signature verification here)
       try {
-        const parts = jwtToken.split('.')
+        const parts = trimmedToken.split('.')
         if (parts.length < 2) throw new Error('bad token')
         let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/')
         const pad = base64.length % 4
@@ -80,7 +94,7 @@ export function middleware(request: NextRequest) {
           return NextResponse.redirect(new URL('/admin/login', request.url))
         }
         // If verification flag cookie is present, allow one-time pass even if token payload lacks the 2FA bit yet
-        const hasVerifiedFlag = request.cookies.get('am_tycoons_admin_verified')?.value === '1'
+        const hasVerifiedFlag = request.cookies.get('icc_admin_verified')?.value === '1'
         if (!payload.twoFactorVerified && !hasVerifiedFlag) {
           return NextResponse.redirect(new URL('/admin/login', request.url))
         }

@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     if (!storedCode) {
       // If user already has a valid, verified token cookie, treat as success to avoid dead-end UX
       try {
-        const existingToken = request.cookies.get('am_tycoons_admin_token')?.value
+        const existingToken = request.cookies.get('icc_admin_token')?.value
         if (existingToken) {
           const parts = existingToken.split('.')
           if (parts.length >= 2) {
@@ -231,7 +231,7 @@ export async function POST(request: NextRequest) {
     
     console.log('DEBUG: Setting cookies for domain:', cookieDomain)
     
-    response.cookies.set('am_tycoons_admin_token', accessToken, {
+    response.cookies.set('icc_admin_token', accessToken, {
       httpOnly: true,
       secure: isHttps,
       sameSite: 'lax',
@@ -239,7 +239,7 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60, // 1 hour
       path: '/',
     })
-    response.cookies.set('am_tycoons_admin_refresh', refreshToken, {
+    response.cookies.set('icc_admin_refresh', refreshToken, {
       httpOnly: true,
       secure: isHttps,
       sameSite: 'lax',
@@ -248,7 +248,7 @@ export async function POST(request: NextRequest) {
       path: '/',
     })
     // Set a short-lived flag for client to reliably detect success and redirect
-    response.cookies.set('am_tycoons_admin_verified', '1', {
+    response.cookies.set('icc_admin_verified', '1', {
       httpOnly: false,
       secure: isHttps,
       sameSite: 'lax',

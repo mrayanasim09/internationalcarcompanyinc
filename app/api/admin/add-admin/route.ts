@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
     // Require super_admin
-    const token = request.cookies.get('am_tycoons_admin_token')?.value
+    const token = request.cookies.get('icc_admin_token')?.value
     const result = token ? jwtManager.verifyAccessToken(token) : { isValid: false }
     if (!result.isValid || !result.payload || result.payload.role !== 'super_admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })

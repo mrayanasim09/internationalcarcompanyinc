@@ -135,7 +135,8 @@ export function EmailAdminLogin() {
   // If already verified (short-lived flag), auto-redirect away from login
   useEffect(() => {
     try {
-      const hasFlag = typeof document !== 'undefined' && document.cookie.includes('am_tycoons_admin_verified=1')
+      // Check if user has already verified 2FA in this session
+      const hasFlag = typeof document !== 'undefined' && document.cookie.includes('icc_admin_verified=1')
       if (hasFlag) {
         router.replace('/admin/dashboard')
       }

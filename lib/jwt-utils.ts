@@ -56,7 +56,7 @@ export class JWTManager {
     const jti = crypto.randomUUID()
     return jwt.sign({ ...payload, jti }, this.secret, {
       expiresIn: this.accessTokenExpiry,
-      issuer: 'am-tycoons-inc',
+      issuer: 'international-car-company-inc',
       audience: 'car-dealership-users'
     })
   }
@@ -66,7 +66,7 @@ export class JWTManager {
     const jti = crypto.randomUUID()
     return jwt.sign({ ...payload, jti }, this.refreshSecret, {
       expiresIn: this.refreshTokenExpiry,
-      issuer: 'am-tycoons-inc',
+      issuer: 'international-car-company-inc',
       audience: 'car-dealership-refresh'
     })
   }
@@ -80,7 +80,7 @@ export class JWTManager {
       console.log('DEBUG: - Secret configured:', !!this.secret)
       
       const payload = jwt.verify(token, this.secret, {
-        issuer: 'am-tycoons-inc',
+        issuer: 'international-car-company-inc',
         audience: 'car-dealership-users'
       }) as JWTPayload
 
@@ -102,7 +102,7 @@ export class JWTManager {
   verifyRefreshToken(token: string): TokenValidationResult {
     try {
       const payload = jwt.verify(token, this.refreshSecret, {
-        issuer: 'am-tycoons-inc',
+        issuer: 'international-car-company-inc',
         audience: 'car-dealership-refresh'
       }) as JWTPayload
 

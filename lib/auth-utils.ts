@@ -1,77 +1,89 @@
 
 import { cookies } from 'next/headers'
-import { jwtManager } from '@/lib/jwt-utils'
-import type { AdminPermissions } from '@/lib/types'
+import { jwtManager } from './jwt-utils'
 
-export interface AdminUser {
-  id: string
+export interface AdminAuth {
+  userId: string
   email: string
-  role: 'super_admin' | 'admin' | 'editor' | 'viewer'
-  permissions?: AdminPermissions
-  lastLogin?: Date
+  role: string
+  permissions: any
+  sessionId?: string
 }
 
-export async function getCurrentAdmin(): Promise<AdminUser | null> {
-  try {
-    const cookieStore = cookies()
-    const token = cookieStore.get('am_tycoons_admin_token')?.value
-    let accessToken = token
+export async function getAdminAuth(): Promise<AdminAuth | null> {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('icc_admin_token')?.value
+  
+  if (!token) {
+    return null
+  }
 
-    // Attempt verification; if invalid try refresh via refresh token
-    let result = accessToken ? jwtManager.verifyAccessToken(accessToken) : { isValid: false }
-    if (!result.isValid || !result.payload) {
-      const refresh = cookieStore.get('am_tycoons_admin_refresh')?.value
-      if (refresh) {
-        const refreshed = jwtManager.refreshAccessToken(refresh)
-        if (refreshed && refreshed.accessToken) {
-          accessToken = refreshed.accessToken
-          // Persist new tokens
-          cookieStore.set('am_tycoons_admin_token', accessToken, {
+  try {
+    const result = jwtManager.verifyAccessToken(token)
+    
+    if (result.isValid && result.payload) {
+      return {
+        userId: result.payload.userId,
+        email: result.payload.email,
+        role: result.payload.role,
+        permissions: result.payload.permissions,
+        sessionId: result.payload.sessionId
+      }
+    }
+    
+    // If access token is invalid, try refresh token
+    const refresh = cookieStore.get('icc_admin_refresh')?.value
+    if (refresh) {
+      const refreshed = jwtManager.refreshAccessToken(refresh)
+      if (refreshed && refreshed.accessToken) {
+        // Decode the new access token to get user info
+        const decodedToken = jwtManager.decodeToken(refreshed.accessToken)
+        if (decodedToken) {
+          // Set new cookies
+          cookieStore.set('icc_admin_token', refreshed.accessToken, {
             httpOnly: true,
-            sameSite: 'lax',
             secure: process.env.NODE_ENV === 'production',
-            path: '/',
-            maxAge: 60 * 60,
+            sameSite: 'strict',
+            maxAge: 15 * 60, // 15 minutes
           })
+          
           if (refreshed.newRefreshToken) {
-            cookieStore.set('am_tycoons_admin_refresh', refreshed.newRefreshToken, {
+            cookieStore.set('icc_admin_refresh', refreshed.newRefreshToken, {
               httpOnly: true,
-              sameSite: 'lax',
               secure: process.env.NODE_ENV === 'production',
-              path: '/',
-              maxAge: 7 * 24 * 60 * 60,
+              sameSite: 'strict',
+              maxAge: 7 * 24 * 60 * 60, // 7 days
             })
           }
-          result = jwtManager.verifyAccessToken(accessToken)
+          
+          return {
+            userId: decodedToken.userId,
+            email: decodedToken.email,
+            role: decodedToken.role,
+            permissions: decodedToken.permissions,
+            sessionId: decodedToken.sessionId
+          }
         }
       }
     }
-
-    if (!result.isValid || !result.payload) return null
-
-    // Reject if blacklisted (hard invalidation before exp)
-    if (await jwtManager.isJtiBlacklisted((result.payload as unknown as { jti?: string }).jti)) {
-      return null
-    }
-
-    const { userId, email, role, permissions } = result.payload
-    return {
-      id: userId,
-      email,
-      role: role as AdminUser['role'],
-      permissions: permissions as AdminPermissions,
-    }
-  } catch {
+    
+    return null
+  } catch (error) {
+    console.error('Auth error:', error)
     return null
   }
 }
 
-export async function requireAdmin(): Promise<AdminUser> {
+export async function requireAdmin(): Promise<AdminAuth> {
   const admin = await getCurrentAdmin()
   if (!admin) {
     throw new Error('Authentication required')
   }
   return admin
+}
+
+export async function getCurrentAdmin(): Promise<AdminAuth | null> {
+  return getAdminAuth()
 }
 
 export async function logoutAdmin(): Promise<void> {

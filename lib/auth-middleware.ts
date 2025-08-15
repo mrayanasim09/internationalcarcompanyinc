@@ -1,63 +1,91 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { jwtManager } from '@/lib/jwt-utils'
+import { jwtManager } from './jwt-utils'
 
 export interface AuthenticatedRequest extends NextRequest {
   user?: {
     userId: string
     email: string
     role: string
-    permissions: string[]
+    permissions: any
   }
 }
 
+export async function authMiddleware(req: NextRequest): Promise<NextResponse | null> {
+  try {
+    const token = req.cookies.get('icc_admin_token')?.value
+    
+    if (!token) {
+      return null
+    }
+
+    // Verify the token
+    const result = jwtManager.verifyAccessToken(token)
+    
+    if (!result.isValid || !result.payload) {
+      // Clear invalid cookies
+      const response = NextResponse.next()
+      response.cookies.delete('icc_admin_token')
+      response.cookies.delete('icc_admin_session')
+      return response
+    }
+
+    // Check if token is blacklisted
+    const jti = (result.payload as any).jti
+    if (jti && await jwtManager.isJtiBlacklisted(jti)) {
+      const response = NextResponse.next()
+      response.cookies.delete('icc_admin_token')
+      response.cookies.delete('icc_admin_session')
+      return response
+    }
+
+    return null
+  } catch (error) {
+    console.error('Auth middleware error:', error)
+    return null
+  }
+}
+
+// Higher-order function to wrap handlers with authentication
 export function withAuth(handler: (req: AuthenticatedRequest) => Promise<NextResponse>) {
   return async (req: NextRequest) => {
     try {
-      const token = req.cookies.get('am_tycoons_admin_token')?.value
-
+      const token = req.cookies.get('icc_admin_token')?.value
+      
       if (!token) {
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        )
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
       }
 
+      // Verify the token
       const result = jwtManager.verifyAccessToken(token)
+      
       if (!result.isValid || !result.payload) {
-        return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 })
-      }
-      if (await jwtManager.isJtiBlacklisted((result.payload as { jti?: string }).jti)) {
-        return NextResponse.json({ error: 'Token revoked' }, { status: 401 })
+        return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
       }
 
-      ;(req as AuthenticatedRequest).user = {
+      // Check if token is blacklisted
+      const jti = (result.payload as any).jti
+      if (jti && await jwtManager.isJtiBlacklisted(jti)) {
+        return NextResponse.json({ error: 'Token blacklisted' }, { status: 401 })
+      }
+
+      // Add user to request
+      const authenticatedReq = req as AuthenticatedRequest
+      authenticatedReq.user = {
         userId: result.payload.userId,
         email: result.payload.email,
         role: result.payload.role,
-        // flatten structured permissions to string keys permitted
-        permissions: Object.entries(result.payload.permissions || {})
-          .filter(([, allowed]) => Boolean(allowed))
-          .map(([key]) => key)
+        permissions: result.payload.permissions
       }
 
-      return handler(req as AuthenticatedRequest)
+      return handler(authenticatedReq)
     } catch (error) {
-      console.error('Auth middleware error:', error)
-      
-      // Clear invalid cookies
-      const response = NextResponse.json(
-        { error: 'Invalid or expired token' },
-        { status: 401 }
-      )
-      
-      response.cookies.delete('am_tycoons_admin_token')
-      response.cookies.delete('am_tycoons_admin_session')
-      
-      return response
+      console.error('Auth wrapper error:', error)
+      return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
     }
   }
 }
 
+// Higher-order function to wrap handlers with role-based authorization
 export function withRole(requiredRole: string) {
   return (handler: (req: AuthenticatedRequest) => Promise<NextResponse>) => {
     return withAuth(async (req: AuthenticatedRequest) => {
@@ -95,7 +123,7 @@ export function withPermission(requiredPermission: string) {
 export function refreshTokenMiddleware(handler: (req: AuthenticatedRequest) => Promise<NextResponse>) {
   return async (req: NextRequest) => {
     try {
-      const token = req.cookies.get('am_tycoons_admin_token')?.value
+      const token = req.cookies.get('icc_admin_token')?.value
       
       if (!token) {
         return handler(req as AuthenticatedRequest)

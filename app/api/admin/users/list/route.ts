@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
   try {
     // AuthZ: super_admin or admin can list users (but admins see limited fields)
-    const token = request.cookies.get('am_tycoons_admin_token')?.value
+    const token = request.cookies.get('icc_admin_token')?.value
     const result = token ? jwtManager.verifyAccessToken(token) : { isValid: false }
     if (!result.isValid || !result.payload) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })

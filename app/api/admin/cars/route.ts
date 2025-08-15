@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
       ...carData,
       description: carData.description || '',
       images: carData.images || [],
-      createdBy: user.id,
+      createdBy: user.userId,
       createdAt: new Date(),
       approved: true, // FIXED: New cars are approved by default
       isInventory: true, // FIXED: New cars are in inventory by default
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
         listed_at: new Date().toISOString(),
         views: 0,
         likes: 0,
-        created_by: user.id,
+        created_by: user.userId,
       })
       .select('id')
       .limit(1)
@@ -229,7 +229,7 @@ export async function PUT(request: NextRequest) {
       // Build update object only with defined values
       const updateObject: Record<string, unknown> = {
         updated_at: new Date().toISOString(),
-        updated_by: user.id,
+        updated_by: user.userId,
       }
 
       // Only add fields that are defined
