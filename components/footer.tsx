@@ -5,6 +5,7 @@ import Image from "next/image"
 import { BrandNameUser } from "@/components/brand-name-user"
 import { Phone, MessageCircle } from "lucide-react"
 import { Mail, MapPin } from "lucide-react"
+import { CookiePreferences } from "@/components/cookie-preferences"
  
 const phoneNumbers = [
   { e164: "+13103507709", label: "+1 310-350-7709" },
@@ -99,7 +100,8 @@ export function Footer() {
         <div className="border-t border-border mt-6 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">© 2025 <BrandNameUser className="inline" /> All rights reserved.</p>
-            <div className="flex gap-6 text-sm">
+            <div className="flex gap-6 text-sm items-center">
+              <CookiePreferences />
               <Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy Policy</Link>
               <Link href="/terms" className="text-muted-foreground hover:text-primary">Terms & Conditions</Link>
               <Link href="/sitemap.xml" className="text-muted-foreground hover:text-primary">Sitemap</Link>

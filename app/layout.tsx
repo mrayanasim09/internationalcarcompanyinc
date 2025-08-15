@@ -7,6 +7,7 @@ import { Providers } from '@/components/providers'
 import { CookieConsent } from '@/components/cookie-consent'
 import { ErrorMonitor } from '@/components/error-monitor'
 import { validateEnvironment } from '@/lib/config/env'
+import './globals.css'
 
 const montserrat = Montserrat({ 
   subsets: ['latin'],
@@ -88,7 +89,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {nonce ? <meta name="csp-nonce" content={nonce} /> : null}
-        {/* Google tag (gtag.js) - load lazily to keep main thread free */}
+        {/* Google tag (gtag.js) - load only after consent */}
         <Script
           id="gtag-src"
           async
@@ -98,19 +99,112 @@ export default function RootLayout({
         />
         <Script id="gtag-init" strategy="lazyOnload" nonce={nonce}>
           {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-SV90G9ZG56', {
-              page_title: document.title,
-              page_location: window.location.href,
-              send_page_view: false
-            });
+            // Google Analytics consent management with enhanced privacy focus
+            function shouldLoadAnalytics() {
+              if (typeof window === 'undefined') return false;
+              if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') return false;
+              
+              const consent = localStorage.getItem('icc-cookie-consent');
+              return consent === 'accepted';
+            }
             
-            // Send page view after a delay to avoid blocking
-            setTimeout(() => {
-              gtag('event', 'page_view');
-            }, 1000);
+            function initializeAnalytics() {
+              if (!shouldLoadAnalytics()) return;
+              
+              try {
+                window.dataLayer = window.dataLayer || [];
+                
+                if (typeof window.gtag === 'undefined') {
+                  window.gtag = function() {
+                    window.dataLayer.push(arguments);
+                  };
+                }
+                
+                window.gtag('js', new Date());
+                
+                // Enhanced privacy-focused configuration
+                window.gtag('config', 'G-SV90G9ZG56', {
+                  page_title: document.title,
+                  page_location: window.location.href,
+                  send_page_view: false,
+                  anonymize_ip: true,
+                  allow_google_signals: false,
+                  allow_ad_personalization_signals: false,
+                  cookie_flags: 'SameSite=None;Secure',
+                  // Disable enhanced conversions and remarketing
+                  allow_enhanced_conversions: false,
+                  // Minimize data collection
+                  send_page_view_on_load: false,
+                  // Respect Do Not Track
+                  respect_dnt: true,
+                  // Disable demographics and interests
+                  demographics: false,
+                  interests: false,
+                  // Disable advertising features
+                  advertising_features: false,
+                  // Set cookie expiration to session
+                  cookie_expires: 0,
+                  // Disable cross-domain tracking
+                  allow_linker: false,
+                  // Disable enhanced ecommerce
+                  enhanced_ecommerce: false
+                });
+                
+                // Send page view after a delay and only if still consented
+                setTimeout(() => {
+                  if (window.gtag && shouldLoadAnalytics()) {
+                    window.gtag('event', 'page_view', {
+                      // Minimal page view data
+                      page_title: document.title,
+                      page_location: window.location.href
+                    });
+                  }
+                }, 1000);
+                
+              } catch (error) {
+                console.warn('Failed to initialize analytics:', error);
+              }
+            }
+            
+            function disableAnalytics() {
+              if (typeof window === 'undefined') return;
+              
+              try {
+                if (window.gtag) {
+                  window.gtag('config', 'G-SV90G9ZG56', {
+                    send_page_view: false
+                  });
+                }
+                
+                // Clear dataLayer to prevent data collection
+                if (window.dataLayer) {
+                  window.dataLayer = [];
+                }
+                
+                // Remove gtag function
+                delete window.gtag;
+              } catch (error) {
+                console.warn('Failed to disable analytics:', error);
+              }
+            }
+            
+            // Listen for consent changes
+            if (typeof window !== 'undefined') {
+              window.addEventListener('icc-analytics-consent', (event) => {
+                if (event.detail === 'accepted') {
+                  initializeAnalytics();
+                } else if (event.detail === 'declined') {
+                  disableAnalytics();
+                }
+              });
+              
+              // Check if consent was already given
+              const consent = localStorage.getItem('icc-cookie-consent');
+              if (consent === 'accepted') {
+                // Small delay to ensure DOM is ready
+                setTimeout(initializeAnalytics, 100);
+              }
+            }
           `}
         </Script>
         {/* Preload critical resources */}
