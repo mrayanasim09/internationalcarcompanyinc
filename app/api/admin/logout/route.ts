@@ -83,6 +83,7 @@ export async function POST() {
     
     // Even if logout fails, clear the cookie
     const response = NextResponse.json({ success: true })
+    // Clean up any old am_tycoons cookies that might exist
     response.cookies.set('am_tycoons_admin_token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

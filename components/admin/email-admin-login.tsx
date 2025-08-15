@@ -165,7 +165,7 @@ export function EmailAdminLogin() {
       try {
         // Clean up old cookies that might interfere
         if (typeof document !== 'undefined') {
-          // Remove old am_tycoons cookies
+          // Remove old am_tycoons cookies if they exist
           document.cookie = 'am_tycoons_admin_refresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.internationalcarcompanyinc.com'
           document.cookie = 'am_tycoons_admin_refresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
         }

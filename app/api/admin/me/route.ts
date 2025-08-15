@@ -48,11 +48,19 @@ export async function GET(request: NextRequest) {
         // Try manual verification with the same secret
         try {
           const secret = process.env.JWT_SECRET || ''
-          const payload = jwt.verify(accessToken, secret, {
+          const manualPayload = jwt.verify(accessToken, secret, {
             issuer: 'international-car-company-inc',
-            audience: 'car-dealership-access',
+            audience: 'car-dealership-users',
           }) as JWTPayload
-          console.log('DEBUG: Manual JWT verification successful:', payload)
+          console.log('DEBUG: Manual JWT verification successful:', manualPayload)
+          
+          // Return the manually verified payload
+          return NextResponse.json({ 
+            authenticated: true, 
+            email: manualPayload.email, 
+            role: manualPayload.role, 
+            permissions: manualPayload.permissions 
+          })
         } catch (verifyError) {
           console.log('DEBUG: Manual JWT verification failed:', verifyError)
           
@@ -119,7 +127,7 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      if (payload.success && payload.payload) {
+      if (payload.isValid && payload.payload) {
         const { email, role, permissions } = payload.payload
         console.log('DEBUG: Returning authenticated user:', { email, role })
         return NextResponse.json({ authenticated: true, email, role, permissions })
