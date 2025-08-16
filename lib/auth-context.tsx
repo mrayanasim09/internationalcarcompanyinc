@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 
 interface AuthUser {
   email: string
@@ -22,6 +23,9 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const pathname = usePathname()
+
+  console.log('DEBUG: AuthProvider mounted, pathname:', pathname)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -35,6 +39,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (response.ok) {
           const data = await response.json()
           console.log('DEBUG: AuthProvider received data:', data)
+          console.log('DEBUG: AuthProvider response status:', response.status)
+          console.log('DEBUG: AuthProvider response headers:', Object.fromEntries(response.headers.entries()))
           
           if (data.authenticated && data.email) {
             setUser({
@@ -60,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     checkAuth()
-  }, [])
+  }, [pathname])
 
   return (
     <AuthContext.Provider value={{ user, loading }}>

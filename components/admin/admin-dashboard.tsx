@@ -117,10 +117,6 @@ export function AdminDashboard() {
       </div>
     )
   }
-        <CarLoader size={128} />
-      </div>
-    )
-  }
 
   if (error) {
     return (

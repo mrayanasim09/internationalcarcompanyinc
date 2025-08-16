@@ -31,7 +31,7 @@ export function StickyContactBar() {
               <button
                 onClick={() => call(n)}
                 aria-label={`Call ${l}`}
-                className="text-foreground truncate"
+                className="text-foreground truncate hover:text-primary transition-colors"
               >
                 {l}
               </button>
@@ -40,18 +40,18 @@ export function StickyContactBar() {
               <button
                 onClick={() => call(n)}
                 aria-label={`Call ${l}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-primary-foreground min-h-[36px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-primary-foreground min-h-[36px] hover:bg-primary/90 transition-colors"
               >
                 <Phone className="h-4 w-4" />
-                <span className="text-xs font-medium">Call</span>
+                <span className="text-xs font-medium text-primary-foreground">Call</span>
               </button>
               <button
                 onClick={() => sms(n)}
                 aria-label={`SMS ${l}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent text-foreground min-h-[36px]"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground min-h-[36px] hover:bg-secondary/80 transition-colors"
               >
                 <MessageSquare className="h-4 w-4" />
-                <span className="text-xs font-medium">SMS</span>
+                <span className="text-xs font-medium text-secondary-foreground">SMS</span>
               </button>
             </div>
           </div>

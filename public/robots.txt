@@ -10,13 +10,6 @@ Disallow: /.well-known/
 # Sitemap
 Sitemap: https://internationalcarcompanyinc.com/sitemap.xml
 
-# Security headers
-X-Robots-Tag: noindex, nofollow
-
-# Disallow admin areas
-Disallow: /admin/
-Disallow: /api/
-
 # Allow important pages
 Allow: /
 Allow: /about

@@ -40,7 +40,7 @@ export function WhatsAppButton() {
               aria-label={`Call ${phone.label}`}
             >
               <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
-              <span>Call {phone.short}</span>
+              <span className="text-white">Call {phone.short}</span>
             </button>
             
             <button
@@ -50,17 +50,17 @@ export function WhatsAppButton() {
               aria-label={`Send SMS to ${phone.label}`}
             >
               <MessageSquare className="h-4 w-4 mr-2 flex-shrink-0" />
-              <span>SMS {phone.short}</span>
+              <span className="text-white">SMS {phone.short}</span>
             </button>
             
             <button
               onClick={() => handleWhatsApp(phone.number)}
-              className="flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm font-medium min-w-[160px]"
+              className="flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm font-medium min-w-[160px]"
               title={`WhatsApp ${phone.label}`}
               aria-label={`Send WhatsApp message to ${phone.label}`}
             >
               <MessageCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-              <span>WhatsApp {phone.short}</span>
+              <span className="text-white">WhatsApp {phone.short}</span>
             </button>
           </div>
         ))}

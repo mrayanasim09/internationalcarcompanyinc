@@ -81,7 +81,7 @@ export function HeroSection() {
             <div className="flex items-center justify-center space-x-3 bg-primary-foreground/10 backdrop-blur-sm rounded-lg p-3">
               <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center" aria-hidden="true" />
               <div className="text-left">
-                <h3 className="text-primary-foreground font-semibold text-sm">Quality Vehicles</h3>
+                <h2 className="text-primary-foreground font-semibold text-sm">Quality Vehicles</h2>
                 <p className="text-muted-foreground text-xs">Thoroughly inspected and certified pre-owned cars</p>
               </div>
             </div>
@@ -89,7 +89,7 @@ export function HeroSection() {
             <div className="flex items-center justify-center space-x-3 bg-primary-foreground/10 backdrop-blur-sm rounded-lg p-3">
               <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center" aria-hidden="true" />
               <div className="text-left">
-                <h3 className="text-primary-foreground font-semibold text-sm">Competitive Pricing</h3>
+                <h2 className="text-primary-foreground font-semibold text-sm">Competitive Pricing</h2>
                 <p className="text-muted-foreground text-xs">Best value for your money with transparent pricing</p>
               </div>
             </div>
@@ -97,7 +97,7 @@ export function HeroSection() {
             <div className="flex items-center justify-center space-x-3 bg-primary-foreground/10 backdrop-blur-sm rounded-lg p-3">
               <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center" aria-hidden="true" />
               <div className="text-left">
-                <h3 className="text-primary-foreground font-semibold text-sm">Expert Service</h3>
+                <h2 className="text-primary-foreground font-semibold text-sm">Expert Service</h2>
                 <p className="text-muted-foreground text-xs">Professional team dedicated to your satisfaction</p>
               </div>
             </div>

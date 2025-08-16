@@ -17,6 +17,8 @@ type JWTPayload = {
 export async function GET(request: NextRequest) {
   try {
     console.log('DEBUG: /me endpoint called')
+    console.log('DEBUG: /me request URL:', request.url)
+    console.log('DEBUG: /me request method:', request.method)
     console.log('DEBUG: JWT_SECRET configured:', !!process.env.JWT_SECRET)
     console.log('DEBUG: SESSION_SECRET configured:', !!process.env.SESSION_SECRET)
     console.log('DEBUG: JWT_SECRET length:', process.env.JWT_SECRET?.length || 0)
@@ -55,12 +57,19 @@ export async function GET(request: NextRequest) {
           console.log('DEBUG: Manual JWT verification successful:', manualPayload)
           
           // Return the manually verified payload
-          return NextResponse.json({ 
+          const response = NextResponse.json({ 
             authenticated: true, 
             email: manualPayload.email, 
             role: manualPayload.role, 
             permissions: manualPayload.permissions 
           })
+          console.log('DEBUG: /me manual verification response:', { 
+            authenticated: true, 
+            email: manualPayload.email, 
+            role: manualPayload.role, 
+            permissions: manualPayload.permissions 
+          })
+          return response
         } catch (verifyError) {
           console.log('DEBUG: Manual JWT verification failed:', verifyError)
           
@@ -130,7 +139,9 @@ export async function GET(request: NextRequest) {
       if (payload.isValid && payload.payload) {
         const { email, role, permissions } = payload.payload
         console.log('DEBUG: Returning authenticated user:', { email, role })
-        return NextResponse.json({ authenticated: true, email, role, permissions })
+        const response = NextResponse.json({ authenticated: true, email, role, permissions })
+        console.log('DEBUG: /me response data:', { authenticated: true, email, role, permissions })
+        return response
       }
     }
 
@@ -149,6 +160,7 @@ export async function GET(request: NextRequest) {
         
         if (refreshed) {
           const response = NextResponse.json({ authenticated: true, email, role, permissions })
+          console.log('DEBUG: /me refresh token response:', { authenticated: true, email, role, permissions })
           const isHttps = (request.headers.get('x-forwarded-proto') || new URL(request.url).protocol).toString().includes('https')
           const hostname = new URL(request.url).hostname
           
@@ -186,7 +198,9 @@ export async function GET(request: NextRequest) {
 
     // Not authenticated
     console.log('DEBUG: No valid tokens found, returning unauthenticated')
-    return NextResponse.json({ authenticated: false }, { status: 200 })
+    const response = NextResponse.json({ authenticated: false }, { status: 200 })
+    console.log('DEBUG: /me final fallback response:', { authenticated: false })
+    return response
   } catch (error) {
     console.error('DEBUG: /me endpoint error:', error)
     return NextResponse.json({ authenticated: false }, { status: 200 })

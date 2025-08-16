@@ -1,64 +1,62 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
-import { headers } from 'next/headers'
-import { GeistSans } from 'geist/font/sans'
-import { Montserrat } from 'next/font/google'
-import { Providers } from '@/components/providers'
-import { CookieConsent } from '@/components/cookie-consent'
-import { ErrorMonitor } from '@/components/error-monitor'
-import { PerformanceMonitor } from '@/components/performance-monitor'
-import { validateEnvironment } from '@/lib/config/env'
+import { Inter } from 'next/font/google'
 import './globals.css'
+import { headers } from 'next/headers'
+import Script from 'next/script'
+import { NonceProvider } from '@/components/nonce-context'
+import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from '@/components/ui/sonner'
+import { ErrorBoundary } from '@/components/error-boundary'
+import { PerformanceMonitor } from '@/components/performance-monitor'
+import { CookieConsent } from '@/components/cookie-consent'
+import { WhatsAppButton } from '@/components/whatsapp-button'
+import { StickyContactBar } from '@/components/sticky-contact-bar'
+import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
+import { Preloader } from '@/components/preloader'
 
-const montserrat = Montserrat({ 
-  subsets: ['latin'],
-  variable: '--font-montserrat',
-  display: 'swap',
-})
-
-// Validate environment on startup
-if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
-  try {
-    validateEnvironment()
-  } catch (error) {
-    console.error('Environment validation failed:', error)
-    // Don't throw during build time
-  }
-}
-
-// GeistSans provides a preconfigured font with className
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: {
-    default: 'International Car Company Inc - Premium Vehicles',
-    template: '%s | International Car Company Inc'
+    default: 'International Car Company Inc. - Premium Used Cars',
+    template: '%s | International Car Company Inc.'
   },
-  description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
-  keywords: ['pre-owned vehicles', 'used cars', 'car dealership', 'International Car Company Inc', 'quality cars', 'transparent pricing', 'financing'],
-  authors: [{ name: 'International Car Company Inc' }],
-  creator: 'International Car Company Inc',
-  publisher: 'International Car Company Inc',
+  description: 'Discover premium used cars at International Car Company Inc. We offer a wide selection of quality vehicles with competitive financing options. Visit us today!',
+  keywords: ['used cars', 'car dealership', 'auto sales', 'financing', 'trade-in', 'car inspection'],
+  authors: [{ name: 'International Car Company Inc.' }],
+  creator: 'International Car Company Inc.',
+  publisher: 'International Car Company Inc.',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://www.internationalcarcompanyinc.com'),
+  metadataBase: new URL('https://internationalcarcompanyinc.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://www.internationalcarcompanyinc.com',
-    title: 'International Car Company Inc - Premium Vehicles',
-    description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
-    siteName: 'International Car Company Inc',
+    url: 'https://internationalcarcompanyinc.com',
+    title: 'International Car Company Inc. - Premium Used Cars',
+    description: 'Discover premium used cars at International Car Company Inc. We offer a wide selection of quality vehicles with competitive financing options.',
+    siteName: 'International Car Company Inc.',
+    images: [
+      {
+        url: '/International Car Company Inc. Logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'International Car Company Inc. Logo',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'International Car Company Inc - Premium Vehicles',
-    description: 'Discover premium vehicles at International Car Company Inc. Modern experience, transparent pricing, and professional service.',
+    title: 'International Car Company Inc. - Premium Used Cars',
+    description: 'Discover premium used cars at International Car Company Inc. We offer a wide selection of quality vehicles with competitive financing options.',
+    images: ['/International Car Company Inc. Logo.png'],
   },
   robots: {
     index: true,
@@ -223,128 +221,47 @@ export default function RootLayout({
           `}
         </Script>
         {/* Preload critical resources */}
-        <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
-        <link rel="preload" as="image" href="/optimized/placeholder.webp" imageSrcSet="/optimized/placeholder.webp 1200w" imageSizes="100vw" />
+        <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/International Car Company Inc. Logo.png" as="image" />
         
-        {/* Font optimization */}
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" as="style" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" />
+        {/* DNS prefetch for external domains */}
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="//www.google-analytics.com" />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="//*.supabase.co" />
         
-        {/* DNS prefetch for external resources */}
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        {/* Preconnect to critical external domains */}
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* Sitemap */}
-        <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
-        
-        {/* Manifest for PWA */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#1e90ff" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="International Car Company Inc" />
-        
-        {/* Viewport optimization */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        
-        {/* Cache control handled via next.config headers */}
+        <link rel="preconnect" href="https://*.supabase.co" crossOrigin="anonymous" />
       </head>
-      <body className={`${GeistSans.className} ${montserrat.variable}`}>
-        <Script id="web-vitals" strategy="afterInteractive" nonce={nonce}>{`
-          (function(){
-            try{
-              const send = (data) => {
-                const body = JSON.stringify({ 
-                  ...data, 
-                  ts: Date.now(), 
-                  path: location.pathname,
-                  userAgent: navigator.userAgent,
-                  connection: navigator.connection ? navigator.connection.effectiveType : 'unknown'
-                })
-                // Use debug endpoint for monitoring
-                navigator.sendBeacon && navigator.sendBeacon('/api/debug', body)
-              }
-              
-              // Load web vitals asynchronously with better performance and CSP compliance
-              const loadWebVitals = () => {
-                // Use dynamic import with proper error handling
-                import('https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js')
-                  .then((webVitals) => {
-                    // Check if webVitals is available
-                    if (webVitals && typeof webVitals.onLCP === 'function') {
-                      webVitals.onLCP(send)
-                      webVitals.onCLS(send)
-                      webVitals.onINP && webVitals.onINP(send)
-                      webVitals.onFID && webVitals.onFID(send)
-                      webVitals.onTTFB && webVitals.onTTFB(send)
-                    } else if (window.webVitals) {
-                      // Fallback to global webVitals if available
-                      const wv = window.webVitals
-                      wv.onLCP(send)
-                      wv.onCLS(send)
-                      wv.onINP && wv.onINP(send)
-                      wv.onFID && wv.onFID(send)
-                      wv.onTTFB && wv.onTTFB(send)
-                    }
-                  })
-                  .catch((error) => {
-                    console.warn('Web Vitals failed to load:', error)
-                    // Fallback: try to load from global scope if already loaded
-                    if (window.webVitals) {
-                      const wv = window.webVitals
-                      wv.onLCP(send)
-                      wv.onCLS(send)
-                      wv.onINP && wv.onINP(send)
-                      wv.onFID && wv.onFID(send)
-                      wv.onTTFB && wv.onTTFB(send)
-                    }
-                  })
-              }
-              
-              if ('requestIdleCallback' in window) {
-                requestIdleCallback(loadWebVitals)
-              } else {
-                // Fallback for older browsers
-                setTimeout(loadWebVitals, 1000)
-              }
-              
-              // Additional performance monitoring with better timing
-              if ('performance' in window) {
-                const observer = new PerformanceObserver((list) => {
-                  for (const entry of list.getEntries()) {
-                    if (entry.entryType === 'navigation') {
-                      const navEntry = entry;
-                      send({
-                        type: 'navigation',
-                        domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
-                        loadComplete: navEntry.loadEventEnd - navEntry.loadEventStart,
-                        domInteractive: navEntry.domInteractive - navEntry.fetchStart,
-                        firstByte: navEntry.responseStart - navEntry.requestStart
-                      });
-                    }
-                  }
-                });
-                observer.observe({ entryTypes: ['navigation'] });
-              }
-            }catch(e){
-              console.warn('Performance monitoring failed:', e)
-            }
-          })();
-        `}</Script>
-        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-primary text-primary-foreground px-3 py-2 rounded">Skip to content</a>
-        <Providers>
-          <main id="main">{children}</main>
-        </Providers>
-        <CookieConsent />
-        <ErrorMonitor />
-        <PerformanceMonitor />
-        {/* AI Chatbot is now gated and mounted from Providers after idle */}
+      <body className={inter.className}>
+        <NonceProvider nonce={nonce}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ErrorBoundary>
+              <PerformanceMonitor />
+              <Preloader />
+              <div className="min-h-screen flex flex-col">
+                <Navbar />
+                <main className="flex-1">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+              <StickyContactBar />
+              <WhatsAppButton />
+              <CookieConsent />
+              <Toaster />
+            </ErrorBoundary>
+          </ThemeProvider>
+        </NonceProvider>
       </body>
     </html>
   )
