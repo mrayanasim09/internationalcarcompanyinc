@@ -74,7 +74,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
   const carTitle = car.title || `${car.year} ${car.make} ${car.model}`
 
   return (
-    <div className="group hover:shadow-xl transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur border border-border rounded-2xl touch-card hover:-translate-y-1 active:scale-95">
+    <div className="group hover:shadow-xl transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur border border-border rounded-2xl touch-card hover:-translate-y-1 active:scale-95 touch-manipulation touch-feedback">
       <Link href={`/car/${car.id}`} className="block" aria-label={`View details for ${carTitle}`}>
         <div className="relative aspect-video">
           {car.images && car.images[0] && typeof car.images[0] === 'string' ? (
@@ -151,7 +151,7 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
             <span>{car.make || 'N/A'} {car.model || 'N/A'}</span>
             <span>{car.year || 'N/A'}</span>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 mobile-button-group">
             {showCompareButton === true && (
               <Button
                 variant="outline"

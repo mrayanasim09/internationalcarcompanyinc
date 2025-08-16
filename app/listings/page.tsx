@@ -7,7 +7,7 @@ import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { ListingsContent, type ListingsFilters } from '@/components/listings-content'
 import { FilterPanel } from '@/components/filter-panel'
-import { CarLoader } from '@/components/ui/car-loader'
+import { CarLoader, CarGridSkeleton } from '@/components/ui/car-loader'
 import type { Car } from '@/lib/types'
 import Script from 'next/script'
 import { useCspNonce } from '@/hooks/use-csp-nonce'
@@ -24,6 +24,7 @@ export default function ListingsPage() {
   const [cars, setCars] = useState<Car[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
   const [filters, setFilters] = useState<ListingsFilters>({
     search: '',
     make: '',
@@ -33,6 +34,34 @@ export default function ListingsPage() {
     maxYear: null,
     maxMileage: null,
   })
+
+  // Pull-to-refresh functionality
+  useEffect(() => {
+    let startY = 0
+    let currentY = 0
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY
+    }
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      currentY = e.touches[0].clientY
+      const diff = currentY - startY
+      
+      if (diff > 100 && window.scrollY === 0) {
+        setRefreshing(true)
+        window.location.reload()
+      }
+    }
+    
+    document.addEventListener('touchstart', handleTouchStart)
+    document.addEventListener('touchmove', handleTouchMove)
+    
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchmove', handleTouchMove)
+    }
+  }, [])
 
   useEffect(() => {
     async function fetchCars() {
@@ -116,9 +145,11 @@ export default function ListingsPage() {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-center items-center py-12">
-            <CarLoader size={144} />
+          <div className="mb-8 animate-fade-in">
+            <h1 className="text-3xl font-bold text-foreground mb-4">Our Complete Inventory</h1>
+            <p className="text-lg text-muted-foreground">Loading vehicles...</p>
           </div>
+          <CarGridSkeleton count={6} />
         </div>
         <Footer />
       </div>

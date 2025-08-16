@@ -48,16 +48,16 @@ export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
           <>
             <Button 
               onClick={() => handlePhoneCall(phoneNumbers[0].number)}
-              className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[44px]"
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[48px] font-semibold"
             >
-              <Phone className="h-4 w-4 mr-2" />
+              <Phone className="h-5 w-5 mr-2" />
               Call Now
             </Button>
             <Button 
               onClick={() => handleSMS(phoneNumbers[0].number)}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[44px]"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[48px] font-semibold"
             >
-              <MessageCircle className="h-4 w-4 mr-2" />
+              <MessageCircle className="h-5 w-5 mr-2" />
               SMS
             </Button>
           </>
@@ -83,17 +83,17 @@ export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
               <>
                 <Button 
                   onClick={() => handlePhoneCall(phoneNumbers[0].number)}
-                  className="flex-1 sm:flex-none bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[44px]"
+                  className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px] font-semibold"
                 >
-                  <Phone className="h-4 w-4 mr-2" />
+                  <Phone className="h-5 w-5 mr-2" />
                   <span className="hidden sm:inline">Call Now</span>
                   <span className="sm:hidden">Call</span>
                 </Button>
                 <Button 
                   onClick={() => handleSMS(phoneNumbers[0].number)}
-                  className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[44px]"
+                  className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px] font-semibold"
                 >
-                  <MessageCircle className="h-4 w-4 mr-2" />
+                  <MessageCircle className="h-5 w-5 mr-2" />
                   <span className="hidden sm:inline">SMS</span>
                   <span className="sm:hidden">Text</span>
                 </Button>

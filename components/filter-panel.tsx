@@ -165,18 +165,18 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
         <Button 
           onClick={() => setIsOpen(!isOpen)}
           variant="outline" 
-          className="w-full flex items-center justify-between p-4 h-auto bg-card border-2 border-border hover:bg-accent"
+          className="w-full flex items-center justify-between p-4 h-14 bg-card border-2 border-border hover:bg-accent touch-manipulation"
         >
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
-            <span className="font-medium">Filters</span>
+                      <div className="flex items-center gap-2">
+              <Filter className="h-5 w-5" />
+              <span className="font-medium text-base">Filters</span>
             {activeFiltersCount > 0 && (
               <Badge variant="destructive" className="ml-2">
                 {activeFiltersCount}
               </Badge>
             )}
           </div>
-          {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          {isOpen ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
         </Button>
       </div>
 
@@ -199,7 +199,7 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
           </div>
         </CardHeader>
         
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 filter-panel-mobile">
           {/* Search */}
           <div>
             <Label htmlFor="search" className="text-sm font-medium mb-2 block">Search</Label>

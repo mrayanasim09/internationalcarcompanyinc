@@ -34,7 +34,7 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 carousel-container">
       {/* Main Image */}
       <div className="relative group">
         <div className="relative h-96 md:h-[500px] rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
@@ -62,13 +62,15 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200 md:opacity-0 md:group-hover:opacity-100 min-h-[48px] min-w-[48px] flex items-center justify-center"
+                aria-label="Previous image"
               >
                 <ChevronLeft className="h-6 w-6" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200 md:opacity-0 md:group-hover:opacity-100 min-h-[48px] min-w-[48px] flex items-center justify-center"
+                aria-label="Next image"
               >
                 <ChevronRight className="h-6 w-6" />
               </button>

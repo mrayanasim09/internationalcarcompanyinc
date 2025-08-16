@@ -14,6 +14,7 @@ import { StickyContactBar } from '@/components/sticky-contact-bar'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Preloader } from '@/components/preloader'
+import { MobileBottomNav } from '@/components/mobile-bottom-nav'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -255,6 +256,7 @@ export default function RootLayout({
                 </main>
                 <Footer />
               </div>
+              <MobileBottomNav />
               <StickyContactBar />
               <WhatsAppButton />
               <CookieConsent />
