@@ -15,7 +15,6 @@ interface LazyImageProps {
   priority?: boolean
   sizes?: string
   quality?: number
-  blurDataURL?: string
 }
 
 export function LazyImage({
@@ -28,8 +27,7 @@ export function LazyImage({
   placeholder = "/placeholder.jpg",
   priority = false,
   sizes = "100vw",
-  quality = 75,
-  blurDataURL
+  quality = 75
 }: LazyImageProps) {
   const imgRef = useRef<HTMLImageElement>(null)
   const [isInView, setIsInView] = useState(false)
@@ -130,8 +128,7 @@ export function LazyImage({
       onLoad={handleLoad}
       onError={handleError}
       loading={priority ? "eager" : "lazy"}
-      placeholder={blurDataURL ? "blur" : "empty"}
-      blurDataURL={blurDataURL}
+      placeholder="empty"
     />
   )
 }

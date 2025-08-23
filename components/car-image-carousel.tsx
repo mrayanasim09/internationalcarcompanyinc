@@ -24,6 +24,8 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
 
   // Preload next and previous images for better mobile performance
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     const preloadImages = () => {
       const nextIndex = (currentIndex + 1) % images.length
       const prevIndex = (currentIndex - 1 + images.length) % images.length
@@ -41,9 +43,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
       }
     }
 
-    if (typeof window !== 'undefined') {
-      preloadImages()
-    }
+    preloadImages()
   }, [currentIndex, images, loadedImages])
 
   const nextImage = () => {
@@ -178,14 +178,18 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     }
 
     const element = fullscreenRef.current
+    if (!element) return
+
     element.addEventListener('touchstart', handleTouchStart, { passive: false })
     element.addEventListener('touchmove', handleTouchMove, { passive: false })
     element.addEventListener('touchend', handleTouchEnd, { passive: false })
 
     return () => {
-      element.removeEventListener('touchstart', handleTouchStart)
-      element.removeEventListener('touchmove', handleTouchMove)
-      element.removeEventListener('touchend', handleTouchEnd)
+      if (element) {
+        element.removeEventListener('touchstart', handleTouchStart)
+        element.removeEventListener('touchmove', handleTouchMove)
+        element.removeEventListener('touchend', handleTouchEnd)
+      }
     }
   }, [isFullscreen, scale])
 
@@ -267,8 +271,6 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
               onLoad={() => setImageError(false)}
               priority={currentIndex === 0}
               quality={85}
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxAAPwCdABmX/9k="
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
