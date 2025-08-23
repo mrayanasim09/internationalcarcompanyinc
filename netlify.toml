@@ -1,0 +1,109 @@
+[build]
+  command = "pnpm install --no-frozen-lockfile && pnpm build"
+  publish = ".next"
+
+[build.environment]
+  NEXT_TELEMETRY_DISABLED = "1"
+  PNPM_FLAGS = "--no-frozen-lockfile"
+  DEBUG_2FA = "1"
+  CSRF_SECRET = "1a0091848e163e1dfe909da7ce1bba47817e261cd6936000c594acbae2ba451b"
+  NEXT_PUBLIC_SUPABASE_URL = "https://cxymkwhpxzcebuaonkta.supabase.co"
+  SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4eW1rd2hweHpjZWJ1YW9ua3RhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDc4NzY0MCwiZXhwIjoyMDcwMzYzNjQwfQ.0qHBlmDr_0M2Y-oBCEEQ1mOB0TU3gJTMmkFsD9Ih6OI"
+  JWT_SECRET = "8747a03dd1b2b89b12635cebd52eba6ceb6b94a893d208f2f58f15fa86b2c0e7"
+  SESSION_SECRET = "887a72c9e3ccae0cf92a69d64de5b1262729c1543e79eed36608435efc1bece0"
+  ENCRYPTION_KEY = "e6de25275ccd925f46f390d9dc61838eabfc5ef8a0927a70e03fc48559e0b6c1"
+  NODE_ENV = "production"
+  NEXT_PUBLIC_GA_ID = "G-SV90G9ZG56"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+    X-DNS-Prefetch-Control = "on"
+    X-Download-Options = "noopen"
+    X-Robots-Tag = "index, follow"
+    X-Requested-With = "XMLHttpRequest"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.ico"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects for SEO and user experience
+[[redirects]]
+  from = "/cars"
+  to = "/inventory"
+  status = 301
+
+[[redirects]]
+  from = "/vehicles"
+  to = "/inventory"
+  status = 301
+
+[[redirects]]
+  from = "/dealership"
+  to = "/about"
+  status = 301
+
+[[redirects]]
+  from = "/contact-us"
+  to = "/contact"
+  status = 301
+
+[[redirects]]
+  from = "/faqs"
+  to = "/faq"
+  status = 301
+
+# Security redirects
+[[redirects]]
+  from = "/.well-known/security.txt"
+  to = "/security.txt"
+  status = 200
+
+
+
+

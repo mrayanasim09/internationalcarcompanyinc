@@ -1,0 +1,151 @@
+"use client"
+
+import { useState, useEffect, useCallback } from "react"
+import Link from "next/link"
+import { BrandNameUser } from "@/components/brand-name-user"
+import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { Menu, X } from "lucide-react"
+import Image from "next/image"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+
+export function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > 10)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [handleScroll])
+
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen(prev => !prev)
+  }, [])
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false)
+  }, [])
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    setIsMenuOpen(open)
+  }, [])
+
+  return (
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? "bg-background/95 backdrop-blur-sm shadow-lg border-b border-border" : "bg-background/90 backdrop-blur-sm"
+        }`}
+        aria-label="Primary"
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-20 md:h-28">
+            {/* Brand - Made bigger and more clickable */}
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
+              <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
+                {/* Logo Image - Made bigger on all screens */}
+                <div className="relative w-16 h-16 md:w-28 md:h-28">
+                  <Image 
+                    src="/International Car Company Inc. Logo.png" 
+                    alt="International Car Company Inc Logo" 
+                    fill 
+                    className="object-contain transition-transform group-hover:scale-105" 
+                    priority 
+                    sizes="(max-width:768px) 64px, 112px" 
+                  />
+                </div>
+                {/* Brand text - Always visible on mobile, smaller font size */}
+                <div className="block leading-tight">
+                  <div className="text-xs md:text-sm font-bold text-foreground tracking-tight">
+                    <BrandNameUser />
+                  </div>
+                  <div className="hidden sm:block text-[8px] md:text-xs text-muted-foreground">
+                    Professional vehicles. Modern experience.
+                  </div>
+                </div>
+              </Link>
+            </div>
+
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center gap-6 flex-1 justify-end overflow-x-auto">
+              <Link href="/" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                Home
+              </Link>
+              <Link href="/inventory" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                Inventory
+              </Link>
+              <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                About
+              </Link>
+              <Link href="/contact" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                Contact
+              </Link>
+            </div>
+
+            {/* Theme Toggle only */}
+            <div className="hidden md:flex items-center gap-2 shrink-0 ml-4">
+              <ThemeToggle />
+            </div>
+
+            {/* Mobile: show Theme Toggle + Menu with proper spacing */}
+            <div className="md:hidden flex items-center gap-3 shrink-0">
+              <ThemeToggle />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleMenu}
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                aria-controls="mobile-nav"
+                aria-expanded={isMenuOpen}
+                className="p-2 text-foreground hover:text-primary touch-button min-w-[44px] min-h-[44px]"
+                type="button"
+              >
+                {isMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Menu - Fixed positioning and structure */}
+          {isMenuOpen && (
+            <div className="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg z-50">
+              <div id="mobile-nav" className="px-6 py-4 space-y-4" aria-label="Mobile navigation">
+                <Link 
+                  href="/" 
+                  className="block text-lg font-medium text-foreground hover:text-primary transition-colors py-3 border-b border-border/50" 
+                  onClick={closeMenu}
+                >
+                  Home
+                </Link>
+                <Link 
+                  href="/inventory" 
+                  className="block text-lg font-medium text-foreground hover:text-primary transition-colors py-3 border-b border-border/50" 
+                  onClick={closeMenu}
+                >
+                  Inventory
+                </Link>
+                <Link 
+                  href="/about" 
+                  className="block text-lg font-medium text-foreground hover:text-primary transition-colors py-3 border-b border-border/50" 
+                  onClick={closeMenu}
+                >
+                  About
+                </Link>
+                <Link 
+                  href="/contact" 
+                  className="block text-lg font-medium text-foreground hover:text-primary transition-colors py-3 border-b border-border/50" 
+                  onClick={closeMenu}
+                >
+                  Contact
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+    </>
+  )
+}
