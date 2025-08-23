@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react"
 import Image from "next/image"
 import { useSwipeGestures } from '@/hooks/use-mobile-gestures'
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 interface CarImageCarouselProps {
   images: string[]
@@ -177,6 +177,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
               className="object-cover transition-transform duration-200 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 1000px"
               onError={handleImageError}
+              onLoad={() => setImageError(false)}
               priority={currentIndex === 0}
             />
           ) : (
@@ -280,6 +281,8 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
           className="fixed inset-0 w-screen h-screen max-w-none p-0 border-0 bg-black z-[9999] flex items-center justify-center"
           aria-describedby="fullscreen-image-dialog"
         >
+          <DialogTitle className="sr-only">Car Image Fullscreen View</DialogTitle>
+          <DialogDescription className="sr-only">Fullscreen view of car images with zoom and navigation controls</DialogDescription>
               <div 
                 id="fullscreen-image-dialog" 
                 className="relative h-full w-full overflow-hidden flex items-center justify-center"
@@ -294,6 +297,8 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                       className="object-contain"
                       sizes="100vw"
                       priority={true}
+                      onError={() => setImageError(true)}
+                      onLoad={() => setImageError(false)}
                       style={{
                         transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                         transition: scale === 1 ? 'transform 0.2s ease-out' : 'none'

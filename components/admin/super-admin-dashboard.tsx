@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
 import { useToast } from "@/components/ui/use-toast"
 type AdminUser = {
   id: string
@@ -372,6 +372,7 @@ export function SuperAdminDashboard({ currentUser }: AdminManagementProps) {
                   className="sm:max-w-[500px]"
                   aria-describedby="create-admin-dialog"
                 >
+                  <DialogDescription className="sr-only">Create a new admin user with specific permissions and role</DialogDescription>
                   <DialogHeader>
                     <DialogTitle>Create New Admin User</DialogTitle>
                   </DialogHeader>
@@ -531,6 +532,7 @@ export function SuperAdminDashboard({ currentUser }: AdminManagementProps) {
           className="sm:max-w-[500px]"
           aria-describedby="edit-admin-dialog"
         >
+          <DialogDescription className="sr-only">Edit admin user details, permissions, and role</DialogDescription>
           <DialogHeader>
             <DialogTitle>Edit Admin User</DialogTitle>
           </DialogHeader>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Settings, Cookie } from 'lucide-react'
@@ -50,6 +50,7 @@ export function CookiePreferences() {
         className="sm:max-w-md"
         aria-describedby="cookie-preferences-dialog"
       >
+        <DialogDescription className="sr-only">Manage your cookie preferences and privacy settings for this website</DialogDescription>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Cookie className="h-5 w-5" />

@@ -10,7 +10,7 @@ import Image from "next/image"
 import { useComparison } from "@/lib/comparison-context"
 import type { Car } from "@/lib/types"
 import { StarRating } from "@/components/star-rating"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog"
 
 interface CarComparisonProps {
   availableCars: Car[]
@@ -81,6 +81,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
           className="w-full max-w-7xl max-h-[90vh] overflow-y-auto p-0"
           aria-describedby="comparison-dialog"
         >
+          <DialogDescription className="sr-only">Compare selected cars side by side to view their features, specifications, and pricing differences</DialogDescription>
           <Card className="w-full border-0 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between">
               <DialogHeader>
@@ -285,6 +286,7 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
           className="w-full max-w-4xl max-h-[80vh] overflow-y-auto p-0"
           aria-describedby="car-selector-dialog"
         >
+          <DialogDescription className="sr-only">Browse and select cars to add to your comparison list</DialogDescription>
           <Card className="w-full border-0 shadow-none">
             <CardHeader className="flex flex-row items-center justify-between">
               <DialogHeader>
