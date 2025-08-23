@@ -64,23 +64,31 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     onFullscreenChange?.(open)
   }
 
-  // Handle pinch to zoom in fullscreen
+  // Enhanced touch handling for fullscreen mode
   useEffect(() => {
     if (!isFullscreen || !fullscreenRef.current) return
 
     let initialDistance = 0
     let initialScale = 1
     let initialPosition = { x: 0, y: 0 }
+    let lastTouchTime = 0
+    let touchCount = 0
 
     const handleTouchStart = (e: TouchEvent) => {
+      e.preventDefault()
+      touchCount = e.touches.length
+      
       if (e.touches.length === 2) {
+        // Two finger touch - pinch gesture
         initialDistance = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
         )
         initialScale = scale
       } else if (e.touches.length === 1) {
+        // Single finger touch - pan gesture
         initialPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+        lastTouchTime = Date.now()
       }
     }
 
@@ -88,6 +96,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
       e.preventDefault()
       
       if (e.touches.length === 2) {
+        // Handle pinch to zoom
         const distance = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
@@ -95,6 +104,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         const newScale = Math.max(0.5, Math.min(3, (distance / initialDistance) * initialScale))
         setScale(newScale)
       } else if (e.touches.length === 1 && scale > 1) {
+        // Handle pan when zoomed in
         const deltaX = e.touches[0].clientX - initialPosition.x
         const deltaY = e.touches[0].clientY - initialPosition.y
         setPosition(prev => ({
@@ -105,17 +115,38 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
       }
     }
 
-    const handleTouchEnd = () => {
-      if (scale < 1) {
-        setScale(1)
-        setPosition({ x: 0, y: 0 })
+    const handleTouchEnd = (e: TouchEvent) => {
+      e.preventDefault()
+      
+      if (e.touches.length === 0) {
+        // All touches ended
+        if (touchCount === 1 && scale <= 1) {
+          // Single tap - check for double tap
+          const now = Date.now()
+          if (now - lastTouchTime < 300) {
+            // Double tap - zoom in/out
+            if (scale === 1) {
+              setScale(2)
+            } else {
+              resetZoom()
+            }
+          }
+        }
+        
+        // Reset if scale is too small
+        if (scale < 0.5) {
+          setScale(1)
+          setPosition({ x: 0, y: 0 })
+        }
+        
+        touchCount = 0
       }
     }
 
     const element = fullscreenRef.current
     element.addEventListener('touchstart', handleTouchStart, { passive: false })
     element.addEventListener('touchmove', handleTouchMove, { passive: false })
-    element.addEventListener('touchend', handleTouchEnd)
+    element.addEventListener('touchend', handleTouchEnd, { passive: false })
 
     return () => {
       element.removeEventListener('touchstart', handleTouchStart)
@@ -156,7 +187,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isFullscreen])
 
-  // Enable swipe gestures on mobile - disable during button interactions
+  // Enable swipe gestures on mobile - only for navigation, not zoom
   const [swipeEnabled, setSwipeEnabled] = useState(true)
   
   useSwipeGestures(containerRef, {
@@ -165,7 +196,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
   }, { minSwipeDistance: 50 })
 
   return (
-    <div className="w-full h-full carousel-container overflow-hidden">
+    <div className="w-full h-full carousel-container overflow-hidden touch-no-select">
       {/* Main Image */}
       <div className="relative group w-full h-full" ref={containerRef}>
         <div className="relative w-full h-full overflow-hidden bg-gray-100 dark:bg-gray-800">
@@ -285,7 +316,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
           <DialogDescription className="sr-only">Fullscreen view of car images with zoom and navigation controls</DialogDescription>
               <div 
                 id="fullscreen-image-dialog" 
-                className="relative h-full w-full overflow-hidden flex items-center justify-center"
+                className="relative h-full w-full overflow-hidden flex items-center justify-center touch-pan-x touch-pan-y"
                 ref={fullscreenRef}
               >
                 {images[currentIndex] ? (
@@ -294,14 +325,15 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                       src={images[currentIndex]}
                       alt={`${carTitle} - Image ${currentIndex + 1}`}
                       fill
-                      className="object-contain"
+                      className="object-contain select-none fullscreen-image"
                       sizes="100vw"
                       priority={true}
                       onError={() => setImageError(true)}
                       onLoad={() => setImageError(false)}
                       style={{
                         transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                        transition: scale === 1 ? 'transform 0.2s ease-out' : 'none'
+                        transition: scale === 1 ? 'transform 0.2s ease-out' : 'none',
+                        touchAction: 'none'
                       }}
                     />
                     
@@ -386,7 +418,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                     {/* Zoom instructions */}
                     {scale === 1 && (
                       <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm z-30">
-                        Pinch to zoom • Swipe to navigate • Use +/- keys
+                        Pinch to zoom • Double-tap to zoom • Swipe to navigate
                       </div>
                     )}
                   </div>

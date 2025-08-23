@@ -126,7 +126,7 @@ export function useMobileGestures(
 
   // Handle touch start
   const handleTouchStart = useCallback((e: TouchEvent) => {
-    e.preventDefault()
+    // Don't prevent default here to allow other touch handlers to work
     setIsTouching(true)
     
     const touch = e.touches[0]
@@ -215,9 +215,9 @@ export function useMobileGestures(
     if (!element) return
 
     const enableGestures = () => {
-      element.addEventListener('touchstart', handleTouchStart, { passive: false })
-      element.addEventListener('touchmove', handleTouchMove, { passive: false })
-      element.addEventListener('touchend', handleTouchEnd, { passive: false })
+      element.addEventListener('touchstart', handleTouchStart, { passive: true })
+      element.addEventListener('touchmove', handleTouchMove, { passive: true })
+      element.addEventListener('touchend', handleTouchEnd, { passive: true })
       setIsEnabled(true)
     }
 
