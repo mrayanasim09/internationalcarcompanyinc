@@ -13,9 +13,16 @@ interface ContactToBuyProps {
 
 export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
   
-  // Prefer per-car contact info only. If not provided, hide phone-based CTAs entirely
-  const dynamicPhone = car?.contact?.phone && String(car.contact.phone).trim() ? String(car.contact.phone).trim() : null
-  const phoneNumbers = dynamicPhone ? [{ number: dynamicPhone, label: dynamicPhone, type: "Listing" }] : []
+  // Define both phone numbers
+  const mobilePhone = "+1 310-350-7709"
+  const landlinePhone = "+1 424-250-9663"
+  
+  // Prefer per-car contact info if provided, otherwise use default numbers
+  const dynamicPhone = car?.contact?.phone && String(car.contact.phone).trim() ? String(car.contact.phone).trim() : mobilePhone
+  const phoneNumbers = [
+    { number: dynamicPhone, label: dynamicPhone, type: "Mobile" },
+    { number: landlinePhone, label: landlinePhone, type: "Landline" }
+  ]
 
   const handlePhoneCall = (phoneNumber: string) => {
     window.open(`tel:${phoneNumber}`, '_self')
@@ -23,6 +30,13 @@ export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
 
   const handleSMS = (phoneNumber: string) => {
     window.open(`sms:${phoneNumber}`, '_self')
+  }
+
+  const handleWhatsApp = (phoneNumber: string) => {
+    const message = encodeURIComponent(
+      `Hi! I'd like to schedule a viewing for the ${car.title} (${car.year}). When would be a good time?`
+    )
+    window.open(`https://wa.me/${phoneNumber.replace(/\D/g, '')}?text=${message}`, '_blank')
   }
 
   const handleScheduleViewing = (phoneNumber: string) => {
@@ -43,29 +57,39 @@ export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
 
   if (variant === "inline") {
     return (
-      <div className="flex flex-col sm:flex-row gap-3">
-        {phoneNumbers.length > 0 ? (
-          <>
-            <Button 
-              onClick={() => handlePhoneCall(phoneNumbers[0].number)}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[48px] font-semibold"
-            >
-              <Phone className="h-5 w-5 mr-2" />
-              Call Now
-            </Button>
-            <Button 
-              onClick={() => handleSMS(phoneNumbers[0].number)}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[48px] font-semibold"
-            >
-              <MessageCircle className="h-5 w-5 mr-2" />
-              SMS
-            </Button>
-          </>
-        ) : (
-          <Button asChild className="flex-1 bg-card border border-border hover:bg-accent text-foreground min-h-[44px]">
-            <a href="/contact">Contact Us</a>
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button 
+            onClick={() => handlePhoneCall(phoneNumbers[0].number)}
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[48px] font-semibold"
+          >
+            <Phone className="h-5 w-5 mr-2" />
+            Call Mobile
           </Button>
-        )}
+          <Button 
+            onClick={() => handlePhoneCall(phoneNumbers[1].number)}
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[48px] font-semibold"
+          >
+            <Phone className="h-5 w-5 mr-2" />
+            Call Landline
+          </Button>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button 
+            onClick={() => handleSMS(phoneNumbers[0].number)}
+            className="flex-1 bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[48px] font-semibold"
+          >
+            <MessageCircle className="h-5 w-5 mr-2" />
+            SMS Mobile
+          </Button>
+          <Button 
+            onClick={() => handleWhatsApp(phoneNumbers[0].number)}
+            className="flex-1 bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[48px] font-semibold"
+          >
+            <MessageCircle className="h-5 w-5 mr-2" />
+            WhatsApp
+          </Button>
+        </div>
       </div>
     )
   }
@@ -79,61 +103,79 @@ export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
             <p className="text-sm text-gray-600 dark:text-gray-400">{car.title}</p>
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
-            {phoneNumbers.length > 0 ? (
-              <>
-                <Button 
-                  onClick={() => handlePhoneCall(phoneNumbers[0].number)}
-                  className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px] font-semibold"
-                >
-                  <Phone className="h-5 w-5 mr-2" />
-                  <span className="hidden sm:inline">Call Now</span>
-                  <span className="sm:hidden">Call</span>
-                </Button>
-                <Button 
-                  onClick={() => handleSMS(phoneNumbers[0].number)}
-                  className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px] font-semibold"
-                >
-                  <MessageCircle className="h-5 w-5 mr-2" />
-                  <span className="hidden sm:inline">SMS</span>
-                  <span className="sm:hidden">Text</span>
-                </Button>
-              </>
-            ) : (
-              <Button asChild className="flex-1 sm:flex-none bg-card border border-border hover:bg-accent text-foreground min-h-[44px]">
-                <a href="/contact">Contact Us</a>
-              </Button>
-            )}
+            <Button 
+              onClick={() => handlePhoneCall(phoneNumbers[0].number)}
+              className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px] font-semibold"
+            >
+              <Phone className="h-5 w-5 mr-2" />
+              <span className="hidden sm:inline">Call Mobile</span>
+              <span className="sm:hidden">Call</span>
+            </Button>
+            <Button 
+              onClick={() => handleSMS(phoneNumbers[0].number)}
+              className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px] font-semibold"
+            >
+              <MessageCircle className="h-5 w-5 mr-2" />
+              <span className="hidden sm:inline">SMS</span>
+              <span className="sm:hidden">Text</span>
+            </Button>
           </div>
         </div>
       </div>
     )
   }
 
-  // Compact card: remove duplicate phone numbers; keep a single CTA and schedule viewing
+  // Compact card with both phone numbers
   return (
     <Card className="bg-card border border-border">
-      <CardContent className="p-4 space-y-3">
+      <CardContent className="p-4 space-y-4">
         <div className="text-center">
           <h3 className="text-lg font-bold text-foreground">Interested in this vehicle?</h3>
           <p className="text-sm text-muted-foreground">Contact us to learn more or schedule a viewing.</p>
-          {phoneNumbers.length > 0 && phoneNumbers[0]?.label && (
-            <p className="text-sm text-foreground mt-1">Phone: {phoneNumbers[0].label}</p>
-          )}
+          <div className="mt-2 space-y-1">
+            <p className="text-xs text-foreground">Mobile: {phoneNumbers[0].label}</p>
+            <p className="text-xs text-foreground">Landline: {phoneNumbers[1].label}</p>
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {phoneNumbers.length > 0 && (
-            <Button 
-              onClick={() => handleScheduleViewing(phoneNumbers[0].number)}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground touch-button"
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              Schedule Viewing
-            </Button>
-          )}
-          <Button asChild className="w-full bg-card border border-border hover:bg-accent text-foreground touch-button">
-            <a href="/contact">Contact Us</a>
+        <div className="grid grid-cols-2 gap-2">
+          <Button 
+            onClick={() => handlePhoneCall(phoneNumbers[0].number)}
+            className="w-full bg-green-600 hover:bg-green-700 text-white touch-button text-xs"
+          >
+            <Phone className="h-3 w-3 mr-1" />
+            Call Mobile
+          </Button>
+          <Button 
+            onClick={() => handlePhoneCall(phoneNumbers[1].number)}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white touch-button text-xs"
+          >
+            <Phone className="h-3 w-3 mr-1" />
+            Call Landline
           </Button>
         </div>
+        <div className="grid grid-cols-2 gap-2">
+          <Button 
+            onClick={() => handleSMS(phoneNumbers[0].number)}
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white touch-button text-xs"
+          >
+            <MessageCircle className="h-3 w-3 mr-1" />
+            SMS
+          </Button>
+          <Button 
+            onClick={() => handleWhatsApp(phoneNumbers[0].number)}
+            className="w-full bg-green-500 hover:bg-green-600 text-white touch-button text-xs"
+          >
+            <MessageCircle className="h-3 w-3 mr-1" />
+            WhatsApp
+          </Button>
+        </div>
+        <Button 
+          onClick={() => handleScheduleViewing(phoneNumbers[0].number)}
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground touch-button"
+        >
+          <Calendar className="h-4 w-4 mr-2" />
+          Schedule Viewing
+        </Button>
       </CardContent>
     </Card>
   )

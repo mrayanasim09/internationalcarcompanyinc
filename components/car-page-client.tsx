@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { CarDetails } from '@/components/car-details'
 import { CarImageCarousel } from '@/components/car-image-carousel'
-import { FloatingCompareButton } from '@/components/floating-compare-button'
 import { ContactToBuy } from '@/components/contact-to-buy'
 import { CarPageLoader } from '@/components/ui/production-loader'
 import { ErrorDisplay } from '@/components/ui/error-display'
@@ -107,22 +106,22 @@ export function CarPageClient({ carId }: CarPageClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section with Main Image */}
-      <div className="relative w-full h-64 sm:h-80 md:h-[500px] lg:h-[600px] bg-gradient-to-b from-gray-900 to-gray-800">
+      {/* Hero Section with Main Image - Reduced height on mobile */}
+      <div className="relative w-full h-48 sm:h-64 md:h-[500px] lg:h-[600px] bg-gradient-to-b from-gray-900 to-gray-800">
         <CarImageCarousel images={car.images || []} title={car.title} />
         
         {/* Hero Content Overlay - Improved mobile layout */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 sm:p-6 md:p-8">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 sm:p-4 md:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 leading-tight">
+            <h1 className="text-lg sm:text-xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2 leading-tight">
               {car.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-white/90">
-              <span className="text-sm sm:text-lg md:text-xl">{car.year}</span>
-              <span className="text-sm sm:text-lg md:text-xl">{car.make}</span>
-              <span className="text-sm sm:text-lg md:text-xl">{car.model}</span>
+            <div className="flex flex-wrap items-center gap-1 sm:gap-2 md:gap-4 text-white/90">
+              <span className="text-xs sm:text-sm md:text-lg lg:text-xl">{car.year}</span>
+              <span className="text-xs sm:text-sm md:text-lg lg:text-xl">{car.make}</span>
+              <span className="text-xs sm:text-sm md:text-lg lg:text-xl">{car.model}</span>
               {car.price && (
-                <span className="text-lg sm:text-xl md:text-3xl font-bold text-green-400">
+                <span className="text-sm sm:text-lg md:text-xl lg:text-3xl font-bold text-green-400">
                   ${car.price.toLocaleString()}
                 </span>
               )}
@@ -132,15 +131,15 @@ export function CarPageClient({ carId }: CarPageClientProps) {
       </div>
 
       {/* Main Content - Improved mobile layout */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-6 lg:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
           {/* Main Content - 2/3 width on large screens */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6 md:space-y-8">
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8">
             <CarDetails car={car} />
           </div>
           
           {/* Sidebar - 1/3 width on large screens, full width on mobile */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-4 md:space-y-6">
             {/* Contact Section */}
             <div className="lg:sticky lg:top-8">
               <ContactToBuy car={car} />
@@ -148,8 +147,8 @@ export function CarPageClient({ carId }: CarPageClientProps) {
             
             {/* VIN Information */}
             {car.vin && (
-              <div className="bg-card border rounded-lg p-4 sm:p-6">
-                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Vehicle Information</h3>
+              <div className="bg-card border rounded-lg p-3 sm:p-4 md:p-6">
+                <h3 className="text-sm sm:text-base md:text-lg font-semibold mb-2 sm:mb-3 md:mb-4">Vehicle Information</h3>
                 <div className="space-y-2">
                   <div>
                     <p className="text-xs sm:text-sm text-muted-foreground">VIN</p>
@@ -162,8 +161,6 @@ export function CarPageClient({ carId }: CarPageClientProps) {
         </div>
       </div>
 
-      {/* Floating Compare Button */}
-      <FloatingCompareButton car={car} />
       
       <Script
         id="car-structured-data"

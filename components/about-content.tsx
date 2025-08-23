@@ -147,8 +147,9 @@ export function AboutContent() {
               <CardContent className="p-4 md:p-6">
                 <Phone className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3">Call Us</h3>
-                <div className="space-y-1 text-sm md:text-base text-muted-foreground">
-                  <p>+1 310-350-7709</p>
+                <div className="space-y-2 text-sm md:text-base text-muted-foreground">
+                  <p className="font-medium">Mobile: +1 310-350-7709</p>
+                  <p className="font-medium">Landline: +1 424-250-9663</p>
                 </div>
               </CardContent>
             </Card>
@@ -158,7 +159,7 @@ export function AboutContent() {
                 <div className="flex flex-col items-center">
                   <Mail className="h-10 w-10 md:h-12 md:w-12 text-primary mb-3 md:mb-4" />
                   <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3">Email Us</h3>
-                  <p className="text-sm md:text-base text-muted-foreground text-center">
+                  <p className="text-sm md:text-base text-muted-foreground text-center break-all">
                     info@internationalcarcompanyinc.com
                   </p>
                 </div>

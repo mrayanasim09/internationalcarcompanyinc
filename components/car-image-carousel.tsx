@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Maximize2, ZoomIn } from "lucide-react"
 import Image from "next/image"
 import { useRef, useEffect } from 'react'
 import { useSwipeGestures } from '@/hooks/use-mobile-gestures'
@@ -40,7 +40,7 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
   useSwipeGestures(containerRef, {
     onSwipeLeft: nextImage,
     onSwipeRight: prevImage,
-  }, { minSwipeDistance: 40 })
+  }, { minSwipeDistance: 30 })
 
   return (
     <div className="w-full h-full carousel-container">
@@ -52,7 +52,7 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
               src={images[currentIndex]}
               alt={`${carTitle} - Image ${currentIndex + 1}`}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-200 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 1000px"
               onError={handleImageError}
               priority={currentIndex === 0}
@@ -66,47 +66,72 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
             </div>
           )}
           
-          {/* Navigation Arrows */}
+          {/* Navigation Arrows - Always visible on mobile, faster transitions */}
           {images.length > 1 && (
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200 md:opacity-0 md:group-hover:opacity-100 min-h-[48px] min-w-[48px] flex items-center justify-center"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-150 md:opacity-0 md:group-hover:opacity-100 min-h-[44px] min-w-[44px] flex items-center justify-center z-10"
                 aria-label="Previous image"
               >
-                <ChevronLeft className="h-6 w-6" />
+                <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200 md:opacity-0 md:group-hover:opacity-100 min-h-[48px] min-w-[48px] flex items-center justify-center"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-150 md:opacity-0 md:group-hover:opacity-100 min-h-[44px] min-w-[44px] flex items-center justify-center z-10"
                 aria-label="Next image"
               >
-                <ChevronRight className="h-6 w-6" />
+                <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
             </>
           )}
 
-          {/* Fullscreen Button */}
+          {/* Fullscreen Button - Always visible on mobile */}
           <Dialog>
             <DialogTrigger asChild>
-              <button className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100">
-                <Maximize2 className="h-5 w-5" />
+              <button className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10">
+                <ZoomIn className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </DialogTrigger>
             <DialogContent 
-              className="max-w-4xl w-full h-[80vh]"
+              className="max-w-[95vw] w-full h-[90vh] sm:max-w-4xl sm:h-[80vh] p-0"
               aria-describedby="fullscreen-image-dialog"
             >
-              <div id="fullscreen-image-dialog" className="relative h-full">
-                 {images[currentIndex] ? (
-                  <Image
-                    src={images[currentIndex]}
-                    alt={`${carTitle} - Image ${currentIndex + 1}`}
-                     fill
-                     className="object-contain"
-                    sizes="100vw"
-                    priority={true}
-                  />
+              <div id="fullscreen-image-dialog" className="relative h-full w-full">
+                {images[currentIndex] ? (
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={images[currentIndex]}
+                      alt={`${carTitle} - Image ${currentIndex + 1}`}
+                      fill
+                      className="object-contain"
+                      sizes="100vw"
+                      priority={true}
+                    />
+                    {/* Navigation in fullscreen */}
+                    {images.length > 1 && (
+                      <>
+                        <button
+                          onClick={prevImage}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center"
+                          aria-label="Previous image"
+                        >
+                          <ChevronLeft className="h-6 w-6" />
+                        </button>
+                        <button
+                          onClick={nextImage}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center"
+                          aria-label="Next image"
+                        >
+                          <ChevronRight className="h-6 w-6" />
+                        </button>
+                      </>
+                    )}
+                    {/* Image counter in fullscreen */}
+                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                      {currentIndex + 1} / {images.length}
+                    </div>
+                  </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
                     <div className="text-center">
@@ -119,20 +144,20 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
           </Dialog>
 
           {/* Image Counter */}
-          <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+          <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black/70 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
             {currentIndex + 1} / {images.length}
           </div>
         </div>
       </div>
 
-      {/* Thumbnail Navigation */}
+      {/* Thumbnail Navigation - Improved for mobile */}
       {images.length > 1 && (
-        <div className="flex space-x-2 overflow-x-auto pb-2">
+        <div className="flex space-x-2 overflow-x-auto pb-2 mt-2 px-2">
           {images.map((image, index) => (
             <button
               key={index}
               onClick={() => goToImage(index)}
-              className={`flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+              className={`flex-shrink-0 w-16 h-12 sm:w-20 sm:h-16 rounded-lg overflow-hidden border-2 transition-all duration-150 ${
                 index === currentIndex
                   ? 'border-primary ring-2 ring-primary/30'
                   : 'border-gray-300 dark:border-gray-600 hover:border-primary/50'
