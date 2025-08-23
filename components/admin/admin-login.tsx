@@ -67,8 +67,10 @@ export function AdminLogin() {
       if (!res.ok) throw new Error(data?.error || 'Login failed')
       
       // Set admin access for error monitoring
-      localStorage.setItem('icc-admin-access', 'true')
-      localStorage.setItem('icc-admin-login-time', new Date().toISOString())
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('icc-admin-access', 'true')
+        localStorage.setItem('icc-admin-login-time', new Date().toISOString())
+      }
       
       toast({
         title: "Success",

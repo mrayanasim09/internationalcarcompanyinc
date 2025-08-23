@@ -188,6 +188,8 @@ export function AdvancedSearch({
 
   // Save current search
   const saveSearch = useCallback(() => {
+    if (typeof window === 'undefined') return
+    
     const searchName = prompt('Enter a name for this search:')
     if (searchName && searchName.trim()) {
       const newSavedSearch = {
@@ -211,6 +213,8 @@ export function AdvancedSearch({
 
   // Load saved searches from localStorage
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     const saved = localStorage.getItem('icc-saved-searches')
     if (saved) {
       try {
@@ -234,6 +238,8 @@ export function AdvancedSearch({
 
   // Delete saved search
   const deleteSavedSearch = useCallback((index: number) => {
+    if (typeof window === 'undefined') return
+    
     const updatedSearches = savedSearches.filter((_, i) => i !== index)
     setSavedSearches(updatedSearches)
     localStorage.setItem('icc-saved-searches', JSON.stringify(updatedSearches))

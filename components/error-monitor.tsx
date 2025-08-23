@@ -39,6 +39,8 @@ export function ErrorMonitor() {
   }, [removeNotification])
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     // Enable monitor only after admin login and only when notifications exist
     const adminAccess = localStorage.getItem('icc-admin-access')
     const adminLoginTime = localStorage.getItem('icc-admin-login-time')
@@ -135,6 +137,8 @@ export function ErrorMonitor() {
   }, [addNotification, isAdminUser])
 
   const toggleAlerts = () => {
+    if (typeof window === 'undefined') return
+    
     const next = !alertsEnabled
     setAlertsEnabled(next)
     localStorage.setItem('icc-admin-alerts', next ? 'enabled' : 'disabled')

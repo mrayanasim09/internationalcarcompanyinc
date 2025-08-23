@@ -5,6 +5,8 @@ export function useAnalyticsConsent() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     // Check consent status on mount
     const consent = localStorage.getItem('icc-cookie-consent')
     if (consent === 'accepted' || consent === 'declined') {
@@ -16,32 +18,34 @@ export function useAnalyticsConsent() {
   }, [])
 
   const acceptAnalytics = () => {
+    if (typeof window === 'undefined') return
+    
     localStorage.setItem('icc-cookie-consent', 'accepted')
     localStorage.setItem('icc-cookie-date', new Date().toISOString())
     setHasConsent(true)
     
     // Dispatch event for analytics initialization
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('icc-analytics-consent', { 
-        detail: 'accepted' 
-      }))
-    }
+    window.dispatchEvent(new CustomEvent('icc-analytics-consent', { 
+      detail: 'accepted' 
+    }))
   }
 
   const declineAnalytics = () => {
+    if (typeof window === 'undefined') return
+    
     localStorage.setItem('icc-cookie-consent', 'declined')
     localStorage.setItem('icc-cookie-date', new Date().toISOString())
     setHasConsent(false)
     
     // Dispatch event to disable analytics
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('icc-analytics-consent', { 
-        detail: 'declined' 
-      }))
-    }
+    window.dispatchEvent(new CustomEvent('icc-analytics-consent', { 
+      detail: 'declined' 
+    }))
   }
 
   const clearConsent = () => {
+    if (typeof window === 'undefined') return
+    
     localStorage.removeItem('icc-cookie-consent')
     localStorage.removeItem('icc-cookie-date')
     setHasConsent(null)

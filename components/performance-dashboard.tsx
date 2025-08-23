@@ -283,6 +283,8 @@ export function PerformanceDashboard() {
 
   // Save metrics to history
   const saveToHistory = useCallback(() => {
+    if (typeof window === 'undefined') return
+    
     const newEntry: PerformanceHistory = {
       timestamp: Date.now(),
       metrics: { ...metrics }
@@ -297,6 +299,8 @@ export function PerformanceDashboard() {
 
   // Load history from localStorage
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     const saved = localStorage.getItem('icc-performance-history')
     if (saved) {
       try {
