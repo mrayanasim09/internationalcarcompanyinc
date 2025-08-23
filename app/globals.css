@@ -574,6 +574,25 @@ button, [role="button"], a, input, textarea, select {
     z-index: 40 !important;
     opacity: 1 !important;
   }
+  
+  /* Mobile fullscreen optimizations */
+  .carousel-container [role="dialog"] {
+    touch-action: none;
+  }
+  
+  /* Ensure zoom controls are visible on mobile */
+  .carousel-container [role="dialog"] button[aria-label*="Zoom"],
+  .carousel-container [role="dialog"] button[aria-label*="Reset"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 50 !important;
+  }
+  
+  /* Prevent mobile browser gestures in fullscreen */
+  .carousel-container [role="dialog"] {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Desktop-specific car image adjustments */
@@ -595,9 +614,32 @@ button, [role="button"], a, input, textarea, select {
 }
 
 /* Ensure zoom controls are always visible in fullscreen */
-.fullscreen-image + div[class*="absolute top-4 left-4"] {
+.fullscreen-image + div[class*="absolute top-4 left-4"],
+.fullscreen-image + div[class*="absolute top-2 sm:top-4 left-2 sm:left-4"] {
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+/* Mobile fullscreen specific styles */
+@media (max-width: 768px) {
+  /* Prevent browser back gesture in fullscreen */
+  [role="dialog"][data-state="open"] {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Ensure close button is visible on mobile */
+  [role="dialog"][data-state="open"] button[aria-label="Close fullscreen"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 60 !important;
+  }
+  
+  /* Mobile zoom controls styling */
+  [role="dialog"][data-state="open"] .flex.flex-col.sm\\:flex-row {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
 }
 
 /* Logo sizing improvements */

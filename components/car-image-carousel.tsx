@@ -104,9 +104,11 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     const handleTouchStart = (e: TouchEvent) => {
       touchCount = e.touches.length
       
+      // Prevent default for all touches in fullscreen to avoid conflicts
+      e.preventDefault()
+      
       if (e.touches.length === 2) {
         // Two finger touch - pinch gesture
-        e.preventDefault()
         isZooming = true
         initialDistance = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
@@ -116,7 +118,6 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
       } else if (e.touches.length === 1) {
         // Single finger touch - pan gesture
         if (scale > 1) {
-          e.preventDefault()
           isPanning = true
           initialPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }
         }
@@ -125,9 +126,11 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     }
 
     const handleTouchMove = (e: TouchEvent) => {
+      // Always prevent default in fullscreen to avoid conflicts
+      e.preventDefault()
+      
       if (e.touches.length === 2) {
         // Handle pinch to zoom
-        e.preventDefault()
         const distance = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
@@ -136,7 +139,6 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         setScale(newScale)
       } else if (e.touches.length === 1 && scale > 1 && isPanning) {
         // Handle pan when zoomed in
-        e.preventDefault()
         const deltaX = e.touches[0].clientX - initialPosition.x
         const deltaY = e.touches[0].clientY - initialPosition.y
         setPosition(prev => ({
@@ -222,10 +224,32 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
   // Enable swipe gestures on mobile - only for navigation, not zoom
   const [swipeEnabled, setSwipeEnabled] = useState(true)
   
+  // Disable swipe gestures when in fullscreen to prevent navigation conflicts
   useSwipeGestures(containerRef, {
-    onSwipeLeft: swipeEnabled ? nextImage : () => {},
-    onSwipeRight: swipeEnabled ? prevImage : () => {},
+    onSwipeLeft: (swipeEnabled && !isFullscreen) ? nextImage : () => {},
+    onSwipeRight: (swipeEnabled && !isFullscreen) ? prevImage : () => {},
   }, { minSwipeDistance: 50 })
+
+  // Prevent browser back gesture when in fullscreen
+  useEffect(() => {
+    if (!isFullscreen) return
+
+    const preventBackGesture = (e: TouchEvent) => {
+      // Prevent swipe from left edge (browser back gesture)
+      if (e.touches[0].clientX < 50) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+
+    document.addEventListener('touchstart', preventBackGesture, { passive: false })
+    document.addEventListener('touchmove', preventBackGesture, { passive: false })
+
+    return () => {
+      document.removeEventListener('touchstart', preventBackGesture)
+      document.removeEventListener('touchmove', preventBackGesture)
+    }
+  }, [isFullscreen])
 
   return (
     <div className="w-full h-full carousel-container overflow-hidden touch-no-select">
@@ -373,18 +397,18 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                       }}
                     />
                     
-                    {/* Zoom Controls - Always visible in fullscreen */}
-                    <div className="absolute top-4 left-4 flex gap-2 z-30">
+                    {/* Zoom Controls - Always visible in fullscreen, mobile-optimized */}
+                    <div className="absolute top-2 sm:top-4 left-2 sm:left-4 flex flex-col sm:flex-row gap-2 z-30">
                       <button
                         onTouchStart={(e) => {
                           e.stopPropagation()
                           e.preventDefault()
                         }}
                         onClick={handleZoomIn}
-                        className="bg-black/80 hover:bg-black text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center touch-manipulation shadow-lg"
+                        className="bg-black/90 hover:bg-black text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] sm:min-h-[48px] sm:min-w-[48px] flex items-center justify-center touch-manipulation shadow-lg border-2 border-white/20"
                         aria-label="Zoom in"
                       >
-                        <ZoomIn className="h-5 w-5" />
+                        <ZoomIn className="h-4 w-4 sm:h-5 sm:w-5" />
                       </button>
                       <button
                         onTouchStart={(e) => {
@@ -392,10 +416,10 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                           e.preventDefault()
                         }}
                         onClick={handleZoomOut}
-                        className="bg-black/80 hover:bg-black text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center touch-manipulation shadow-lg"
+                        className="bg-black/90 hover:bg-black text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] sm:min-h-[48px] sm:min-w-[48px] flex items-center justify-center touch-manipulation shadow-lg border-2 border-white/20"
                         aria-label="Zoom out"
                       >
-                        <ZoomOut className="h-5 w-5" />
+                        <ZoomOut className="h-4 w-4 sm:h-5 sm:w-5" />
                       </button>
                       {scale !== 1 && (
                         <button
@@ -404,7 +428,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                             e.preventDefault()
                           }}
                           onClick={resetZoom}
-                          className="bg-black/80 hover:bg-black text-white px-4 py-3 rounded-full transition-all duration-150 min-h-[48px] flex items-center justify-center touch-manipulation text-sm shadow-lg"
+                          className="bg-black/90 hover:bg-black text-white px-3 py-2 sm:px-4 sm:py-3 rounded-full transition-all duration-150 min-h-[44px] sm:min-h-[48px] flex items-center justify-center touch-manipulation text-xs sm:text-sm shadow-lg border-2 border-white/20"
                           aria-label="Reset zoom"
                         >
                           Reset
@@ -412,7 +436,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                       )}
                     </div>
                     
-                    {/* Navigation in fullscreen */}
+                    {/* Navigation in fullscreen - Mobile optimized */}
                     {images.length > 1 && (
                       <>
                         <button
@@ -422,10 +446,10 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                             e.stopPropagation()
                             prevImage()
                           }}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white p-4 rounded-full transition-all duration-150 min-h-[56px] min-w-[56px] flex items-center justify-center z-50 touch-manipulation shadow-lg"
+                          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/90 hover:bg-black text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] sm:min-h-[56px] sm:min-w-[56px] flex items-center justify-center z-50 touch-manipulation shadow-lg border-2 border-white/20"
                           aria-label="Previous image"
                         >
-                          <ChevronLeft className="h-7 w-7" />
+                          <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
                         </button>
                         <button
                           onTouchStart={(e) => e.stopPropagation()}
@@ -434,15 +458,15 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                             e.stopPropagation()
                             nextImage()
                           }}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white p-4 rounded-full transition-all duration-150 min-h-[56px] min-w-[56px] flex items-center justify-center z-50 touch-manipulation shadow-lg"
+                          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/90 hover:bg-black text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] sm:min-h-[56px] sm:min-w-[56px] flex items-center justify-center z-50 touch-manipulation shadow-lg border-2 border-white/20"
                           aria-label="Next image"
                         >
-                          <ChevronRight className="h-7 w-7" />
+                          <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
                         </button>
                       </>
                     )}
                     
-                    {/* Close button */}
+                    {/* Close button - Mobile optimized */}
                     <button
                       onTouchStart={(e) => e.stopPropagation()}
                       onClick={(e) => {
@@ -450,10 +474,10 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                         e.stopPropagation()
                         handleFullscreenChange(false)
                       }}
-                      className="absolute top-4 right-4 bg-black/80 hover:bg-black text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-50 touch-manipulation shadow-lg"
+                      className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-black/90 hover:bg-black text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] sm:min-h-[48px] sm:min-w-[48px] flex items-center justify-center z-50 touch-manipulation shadow-lg border-2 border-white/20"
                       aria-label="Close fullscreen"
                     >
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
