@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from "react"
-import { ChevronLeft, ChevronRight, Maximize2, ZoomIn } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
-import { useRef, useEffect } from 'react'
 import { useSwipeGestures } from '@/hooks/use-mobile-gestures'
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 
@@ -15,26 +14,118 @@ interface CarImageCarouselProps {
 export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [imageError, setImageError] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
   const containerRef = useRef<HTMLDivElement>(null)
+  const fullscreenRef = useRef<HTMLDivElement>(null)
 
   const nextImage = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
     setImageError(false)
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
   }
 
   const prevImage = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
     setImageError(false)
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
   }
 
   const goToImage = (index: number) => {
     setCurrentIndex(index)
     setImageError(false)
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
   }
 
   const handleImageError = () => {
     setImageError(true)
   }
+
+  // Handle pinch to zoom in fullscreen
+  useEffect(() => {
+    if (!isFullscreen || !fullscreenRef.current) return
+
+    let initialDistance = 0
+    let initialScale = 1
+    let initialPosition = { x: 0, y: 0 }
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        initialDistance = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        )
+        initialScale = scale
+      } else if (e.touches.length === 1) {
+        initialPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+      }
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault()
+      
+      if (e.touches.length === 2) {
+        const distance = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        )
+        const newScale = Math.max(0.5, Math.min(3, (distance / initialDistance) * initialScale))
+        setScale(newScale)
+      } else if (e.touches.length === 1 && scale > 1) {
+        const deltaX = e.touches[0].clientX - initialPosition.x
+        const deltaY = e.touches[0].clientY - initialPosition.y
+        setPosition(prev => ({
+          x: prev.x + deltaX,
+          y: prev.y + deltaY
+        }))
+        initialPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+      }
+    }
+
+    const handleTouchEnd = () => {
+      if (scale < 1) {
+        setScale(1)
+        setPosition({ x: 0, y: 0 })
+      }
+    }
+
+    const element = fullscreenRef.current
+    element.addEventListener('touchstart', handleTouchStart, { passive: false })
+    element.addEventListener('touchmove', handleTouchMove, { passive: false })
+    element.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      element.removeEventListener('touchstart', handleTouchStart)
+      element.removeEventListener('touchmove', handleTouchMove)
+      element.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [isFullscreen, scale])
+
+  // Handle keyboard navigation in fullscreen
+  useEffect(() => {
+    if (!isFullscreen) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          prevImage()
+          break
+        case 'ArrowRight':
+          nextImage()
+          break
+        case 'Escape':
+          setIsFullscreen(false)
+          break
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isFullscreen])
 
   // Enable swipe gestures on mobile
   useSwipeGestures(containerRef, {
@@ -66,19 +157,19 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
             </div>
           )}
           
-          {/* Navigation Arrows - Always visible on mobile, faster transitions */}
+          {/* Navigation Arrows - Always visible on mobile, fixed positioning */}
           {images.length > 1 && (
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-150 md:opacity-0 md:group-hover:opacity-100 min-h-[44px] min-w-[44px] flex items-center justify-center z-10"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center z-20"
                 aria-label="Previous image"
               >
                 <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-150 md:opacity-0 md:group-hover:opacity-100 min-h-[44px] min-w-[44px] flex items-center justify-center z-10"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center z-20"
                 aria-label="Next image"
               >
                 <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -86,18 +177,22 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
             </>
           )}
 
-          {/* Fullscreen Button - Always visible on mobile */}
-          <Dialog>
+          {/* Tap to Fullscreen - Click anywhere on image */}
+          <Dialog open={isFullscreen} onOpenChange={setIsFullscreen}>
             <DialogTrigger asChild>
-              <button className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10">
-                <ZoomIn className="h-4 w-4 sm:h-5 sm:w-5" />
+              <button className="absolute inset-0 w-full h-full bg-transparent z-10" aria-label="Open fullscreen view">
+                <span className="sr-only">Click to view fullscreen</span>
               </button>
             </DialogTrigger>
             <DialogContent 
-              className="max-w-[95vw] w-full h-[90vh] sm:max-w-4xl sm:h-[80vh] p-0"
+              className="max-w-[100vw] w-full h-[100vh] p-0 border-0 bg-black"
               aria-describedby="fullscreen-image-dialog"
             >
-              <div id="fullscreen-image-dialog" className="relative h-full w-full">
+              <div 
+                id="fullscreen-image-dialog" 
+                className="relative h-full w-full overflow-hidden"
+                ref={fullscreenRef}
+              >
                 {images[currentIndex] ? (
                   <div className="relative h-full w-full">
                     <Image
@@ -107,30 +202,54 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
                       className="object-contain"
                       sizes="100vw"
                       priority={true}
+                      style={{
+                        transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                        transition: scale === 1 ? 'transform 0.2s ease-out' : 'none'
+                      }}
                     />
+                    
                     {/* Navigation in fullscreen */}
                     {images.length > 1 && (
                       <>
                         <button
                           onClick={prevImage}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center"
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30"
                           aria-label="Previous image"
                         >
                           <ChevronLeft className="h-6 w-6" />
                         </button>
                         <button
                           onClick={nextImage}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30"
                           aria-label="Next image"
                         >
                           <ChevronRight className="h-6 w-6" />
                         </button>
                       </>
                     )}
+                    
+                    {/* Close button */}
+                    <button
+                      onClick={() => setIsFullscreen(false)}
+                      className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center z-30"
+                      aria-label="Close fullscreen"
+                    >
+                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                    
                     {/* Image counter in fullscreen */}
-                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm z-30">
                       {currentIndex + 1} / {images.length}
                     </div>
+                    
+                    {/* Zoom instructions */}
+                    {scale === 1 && (
+                      <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm z-30">
+                        Pinch to zoom • Swipe to navigate
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
@@ -144,7 +263,7 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
           </Dialog>
 
           {/* Image Counter */}
-          <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black/70 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
+          <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black/70 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm z-20">
             {currentIndex + 1} / {images.length}
           </div>
         </div>

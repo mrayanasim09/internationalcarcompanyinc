@@ -353,6 +353,12 @@
 
 /* Mobile-specific optimizations */
 @media (max-width: 768px) {
+  /* Prevent horizontal scroll */
+  body, html {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
   /* Ensure minimum touch targets */
   button, [role="button"], a {
     min-height: 48px;
@@ -377,6 +383,7 @@
   /* Optimize carousel for mobile */
   .carousel-container {
     touch-action: pan-y pinch-zoom;
+    overflow-x: hidden;
   }
   
   /* Improve filter panel spacing */
@@ -389,6 +396,11 @@
   .mobile-button-group {
     gap: 12px;
     padding: 16px;
+  }
+  
+  /* Prevent horizontal scroll on all containers */
+  .container, .max-w-7xl, .max-w-6xl, .max-w-4xl, .max-w-3xl, .max-w-2xl {
+    overflow-x: hidden;
   }
 }
 

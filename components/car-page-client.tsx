@@ -106,8 +106,8 @@ export function CarPageClient({ carId }: CarPageClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section with Main Image - Reduced height on mobile */}
-      <div className="relative w-full h-48 sm:h-64 md:h-[500px] lg:h-[600px] bg-gradient-to-b from-gray-900 to-gray-800">
+      {/* Hero Section with Main Image - No space from navbar, bigger photo */}
+      <div className="relative w-full h-80 sm:h-96 md:h-[500px] lg:h-[600px] bg-gradient-to-b from-gray-900 to-gray-800">
         <CarImageCarousel images={car.images || []} title={car.title} />
         
         {/* Hero Content Overlay - Improved mobile layout */}
@@ -130,8 +130,8 @@ export function CarPageClient({ carId }: CarPageClientProps) {
         </div>
       </div>
 
-      {/* Main Content - Improved mobile layout */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-6 lg:py-8">
+      {/* Main Content - Improved mobile layout, no horizontal scroll */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-6 lg:py-8 overflow-x-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
           {/* Main Content - 2/3 width on large screens */}
           <div className="lg:col-span-2 space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8">
