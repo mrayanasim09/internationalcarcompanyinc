@@ -111,8 +111,8 @@ export function CarPageClient({ carId }: CarPageClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section with Main Image - Optimized for both mobile and desktop */}
-      <div className="relative w-full h-80 sm:h-96 md:h-[500px] lg:h-[600px] xl:h-[700px] bg-gradient-to-b from-gray-900 to-gray-800">
+      {/* Hero Section with Main Image - Full height, starts from top */}
+      <div className="relative w-full h-screen bg-gradient-to-b from-gray-900 to-gray-800">
         <CarImageCarousel 
           images={car.images || []} 
           title={car.title} 
@@ -121,7 +121,7 @@ export function CarPageClient({ carId }: CarPageClientProps) {
         
         {/* Hero Content Overlay - Hidden when in fullscreen */}
         {!isFullscreen && (
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 sm:p-4 md:p-6 lg:p-8">
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 sm:p-4 md:p-6 lg:p-8 z-20">
             <div className="max-w-7xl mx-auto">
               <h1 className="text-lg sm:text-xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2 leading-tight">
                 {car.title}

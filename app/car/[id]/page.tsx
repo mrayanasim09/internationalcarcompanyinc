@@ -17,7 +17,7 @@ export default function CarPage({ params }: CarPageProps) {
   return (
     <div className="icc-theme min-h-screen bg-background">
       <Navbar />
-      <main className="pt-20 md:pt-28">
+      <main>
         <CarPageClient carId={params.id} />
       </main>
     </div>

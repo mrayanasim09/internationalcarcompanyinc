@@ -156,11 +156,13 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isFullscreen])
 
-  // Enable swipe gestures on mobile
+  // Enable swipe gestures on mobile - disable during button interactions
+  const [swipeEnabled, setSwipeEnabled] = useState(true)
+  
   useSwipeGestures(containerRef, {
-    onSwipeLeft: nextImage,
-    onSwipeRight: prevImage,
-  }, { minSwipeDistance: 30 })
+    onSwipeLeft: swipeEnabled ? nextImage : () => {},
+    onSwipeRight: swipeEnabled ? prevImage : () => {},
+  }, { minSwipeDistance: 50 })
 
   return (
     <div className="w-full h-full carousel-container overflow-hidden">
@@ -190,26 +192,55 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
           {images.length > 1 && (
             <>
               <button
-                onClick={prevImage}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-20 touch-manipulation"
+                onTouchStart={(e) => {
+                  e.stopPropagation()
+                  setSwipeEnabled(false)
+                }}
+                onTouchEnd={() => {
+                  setTimeout(() => setSwipeEnabled(true), 100)
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  prevImage()
+                }}
+                className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[56px] min-w-[56px] flex items-center justify-center z-40 touch-manipulation shadow-lg"
                 aria-label="Previous image"
               >
-                <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7" />
               </button>
               <button
-                onClick={nextImage}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-20 touch-manipulation"
+                onTouchStart={(e) => {
+                  e.stopPropagation()
+                  setSwipeEnabled(false)
+                }}
+                onTouchEnd={() => {
+                  setTimeout(() => setSwipeEnabled(true), 100)
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  nextImage()
+                }}
+                className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[56px] min-w-[56px] flex items-center justify-center z-40 touch-manipulation shadow-lg"
                 aria-label="Next image"
               >
-                <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+                <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7" />
               </button>
             </>
           )}
 
-          {/* Tap to Fullscreen - Click anywhere on image */}
+          {/* Tap to Fullscreen - Center area only */}
           <Dialog open={isFullscreen} onOpenChange={handleFullscreenChange}>
             <DialogTrigger asChild>
-              <button className="absolute inset-0 w-full h-full bg-transparent z-10 touch-manipulation" aria-label="Open fullscreen view">
+              <button 
+                className="absolute top-0 left-16 right-16 bottom-0 bg-transparent z-20 touch-manipulation"
+                aria-label="Open fullscreen view"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                }}
+              >
                 <span className="sr-only">Click to view fullscreen</span>
               </button>
             </DialogTrigger>
@@ -268,26 +299,41 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                     {images.length > 1 && (
                       <>
                         <button
-                          onClick={prevImage}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30 touch-manipulation"
+                          onTouchStart={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            prevImage()
+                          }}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white p-4 rounded-full transition-all duration-150 min-h-[56px] min-w-[56px] flex items-center justify-center z-50 touch-manipulation shadow-lg"
                           aria-label="Previous image"
                         >
-                          <ChevronLeft className="h-6 w-6" />
+                          <ChevronLeft className="h-7 w-7" />
                         </button>
                         <button
-                          onClick={nextImage}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30 touch-manipulation"
+                          onTouchStart={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            nextImage()
+                          }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white p-4 rounded-full transition-all duration-150 min-h-[56px] min-w-[56px] flex items-center justify-center z-50 touch-manipulation shadow-lg"
                           aria-label="Next image"
                         >
-                          <ChevronRight className="h-6 w-6" />
+                          <ChevronRight className="h-7 w-7" />
                         </button>
                       </>
                     )}
                     
                     {/* Close button */}
                     <button
-                      onClick={() => handleFullscreenChange(false)}
-                      className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center z-30 touch-manipulation"
+                      onTouchStart={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleFullscreenChange(false)
+                      }}
+                      className="absolute top-4 right-4 bg-black/80 hover:bg-black text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-50 touch-manipulation shadow-lg"
                       aria-label="Close fullscreen"
                     >
                       <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
