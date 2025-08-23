@@ -31,13 +31,13 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
       if (!loadedImages.has(nextIndex)) {
         const img = new window.Image()
         img.src = images[nextIndex]
-        img.onload = () => setLoadedImages(prev => new Set([...prev, nextIndex]))
+        img.onload = () => setLoadedImages(prev => new Set(Array.from(prev).concat(nextIndex)))
       }
       
       if (!loadedImages.has(prevIndex)) {
         const img = new window.Image()
         img.src = images[prevIndex]
-        img.onload = () => setLoadedImages(prev => new Set([...prev, prevIndex]))
+        img.onload = () => setLoadedImages(prev => new Set(Array.from(prev).concat(prevIndex)))
       }
     }
 
@@ -237,7 +237,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
               src={images[currentIndex]}
               alt={`${carTitle} - Image ${currentIndex + 1}`}
               fill
-              className="object-cover transition-transform duration-200 group-hover:scale-105"
+              className="object-contain sm:object-cover transition-transform duration-200 group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 800px, 1000px"
               onError={handleImageError}
               onLoad={() => setImageError(false)}
@@ -297,9 +297,9 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
             </>
           )}
 
-          {/* Fullscreen Button - Primary trigger */}
+          {/* Fullscreen Button - Always visible and prominent */}
           <button 
-            className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-black/70 hover:bg-black/90 text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center z-30 touch-manipulation"
+            className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-black/80 hover:bg-black/90 text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30 touch-manipulation shadow-lg"
             aria-label="Open fullscreen"
             onClick={(e) => {
               e.preventDefault()
@@ -307,13 +307,13 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
               handleFullscreenChange(true)
             }}
           >
-            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
             </svg>
           </button>
 
           {/* Image Counter */}
-          <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black/70 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm z-20">
+          <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 bg-black/70 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm z-20">
             {currentIndex + 1} / {images.length}
           </div>
 
@@ -373,7 +373,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                       }}
                     />
                     
-                    {/* Zoom Controls */}
+                    {/* Zoom Controls - Always visible in fullscreen */}
                     <div className="absolute top-4 left-4 flex gap-2 z-30">
                       <button
                         onTouchStart={(e) => {
@@ -381,10 +381,10 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                           e.preventDefault()
                         }}
                         onClick={handleZoomIn}
-                        className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
+                        className="bg-black/80 hover:bg-black text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center touch-manipulation shadow-lg"
                         aria-label="Zoom in"
                       >
-                        <ZoomIn className="h-4 w-4" />
+                        <ZoomIn className="h-5 w-5" />
                       </button>
                       <button
                         onTouchStart={(e) => {
@@ -392,10 +392,10 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                           e.preventDefault()
                         }}
                         onClick={handleZoomOut}
-                        className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
+                        className="bg-black/80 hover:bg-black text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center touch-manipulation shadow-lg"
                         aria-label="Zoom out"
                       >
-                        <ZoomOut className="h-4 w-4" />
+                        <ZoomOut className="h-5 w-5" />
                       </button>
                       {scale !== 1 && (
                         <button
@@ -404,7 +404,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                             e.preventDefault()
                           }}
                           onClick={resetZoom}
-                          className="bg-black/60 hover:bg-black/80 text-white px-3 py-2 rounded-full transition-all duration-150 min-h-[40px] flex items-center justify-center touch-manipulation text-sm"
+                          className="bg-black/80 hover:bg-black text-white px-4 py-3 rounded-full transition-all duration-150 min-h-[48px] flex items-center justify-center touch-manipulation text-sm shadow-lg"
                           aria-label="Reset zoom"
                         >
                           Reset

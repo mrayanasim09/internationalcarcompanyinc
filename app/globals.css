@@ -551,6 +551,55 @@ button, [role="button"], a, input, textarea, select {
   }
 }
 
+/* Car image display improvements */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-container img {
+  object-fit: contain;
+}
+
+/* Mobile-specific car image adjustments */
+@media (max-width: 768px) {
+  .carousel-container img {
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  /* Ensure fullscreen button is always visible on mobile */
+  .carousel-container button[aria-label="Open fullscreen"] {
+    z-index: 40 !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Desktop-specific car image adjustments */
+@media (min-width: 769px) {
+  .carousel-container img {
+    object-fit: contain;
+    object-position: center;
+    /* Add some padding to show image from further away */
+    padding: 2rem;
+  }
+}
+
+/* Fullscreen zoom controls improvements */
+.fullscreen-image {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Ensure zoom controls are always visible in fullscreen */
+.fullscreen-image + div[class*="absolute top-4 left-4"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 /* Logo sizing improvements */
 .navbar-logo {
   min-width: 80px;

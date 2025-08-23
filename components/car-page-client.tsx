@@ -111,8 +111,8 @@ export function CarPageClient({ carId }: CarPageClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section with Main Image - Full height, starts from top */}
-      <div className="relative w-full h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+      {/* Hero Section with Main Image - Adjusted positioning to avoid navbar overlap */}
+      <div className="relative w-full h-[calc(100vh-80px)] sm:h-[calc(100vh-96px)] lg:h-[calc(100vh-112px)] bg-gradient-to-b from-gray-900 to-gray-800 mt-20 sm:mt-24 lg:mt-28">
         <CarImageCarousel 
           images={car.images || []} 
           title={car.title} 

@@ -338,24 +338,45 @@ export function SessionManagement() {
 
 export function UserManagement() {
   const createAdmin = async (form: FormData) => {
+    // Get CSRF token from cookie
+    const csrfToken = document.cookie.match(/(?:^|; )csrf_token=([^;]*)/)?.[1]
+    
+    if (!csrfToken) {
+      alert('CSRF token not found. Please refresh the page to get a new token.')
+      return
+    }
+
     const email = String(form.get('email') || '').trim().toLowerCase()
     const password = String(form.get('password') || '')
     const role = String(form.get('role') || 'viewer')
+    
     if (!email || !password) {
       alert('Email and password are required')
       return
     }
-    const res = await fetch('/api/admin/users/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, role })
-    })
-    const data = await res.json()
-    if (!res.ok) {
-      alert(data?.error || 'Failed to create admin')
-    } else {
-      alert('Admin created')
-      ;(document.getElementById('create-admin-form') as HTMLFormElement)?.reset()
+
+    try {
+      const res = await fetch('/api/admin/users/create', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-csrf-token': csrfToken
+        },
+        body: JSON.stringify({ email, password, role })
+      })
+      
+      const data = await res.json()
+      if (!res.ok) {
+        alert(data?.error || 'Failed to create admin')
+      } else {
+        alert('Admin created successfully')
+        ;(document.getElementById('create-admin-form') as HTMLFormElement)?.reset()
+        // Refresh the admin list by calling the loadUsers function
+        // We'll need to pass this function down or use a different approach
+      }
+    } catch (error) {
+      console.error('Error creating admin:', error)
+      alert('Failed to create admin. Please try again.')
     }
   }
 
@@ -424,31 +445,47 @@ function AdminList() {
   }, [])
 
   const updateUser = async (id: string, payload: Partial<{ role: string; isActive: boolean; password: string }>) => {
-    const res = await fetch('/api/admin/users/update', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, ...payload })
-    })
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}))
-      alert(data?.error || 'Update failed')
-    } else {
-      await loadUsers()
+    try {
+      const res = await fetch('/api/admin/users/update', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-csrf-token': (document.cookie.match(/(?:^|; )csrf_token=([^;]*)/)?.[1] ?? '')
+        },
+        body: JSON.stringify({ id, ...payload })
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        alert(data?.error || 'Update failed')
+      } else {
+        await loadUsers()
+      }
+    } catch (error) {
+      console.error('Error updating user:', error)
+      alert('Failed to update user. Please try again.')
     }
   }
 
   const deleteUser = async (id: string) => {
     if (!confirm('Delete this admin?')) return
-    const res = await fetch('/api/admin/users/delete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id })
-    })
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}))
-      alert(data?.error || 'Delete failed')
-    } else {
-      await loadUsers()
+    try {
+      const res = await fetch('/api/admin/users/delete', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-csrf-token': (document.cookie.match(/(?:^|; )csrf_token=([^;]*)/)?.[1] ?? '')
+        },
+        body: JSON.stringify({ id })
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        alert(data?.error || 'Delete failed')
+      } else {
+        await loadUsers()
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error)
+      alert('Failed to delete user. Please try again.')
     }
   }
 

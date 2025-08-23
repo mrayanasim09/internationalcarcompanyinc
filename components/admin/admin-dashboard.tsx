@@ -30,6 +30,21 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Generate CSRF token on component mount
+  useEffect(() => {
+    const generateCSRFToken = async () => {
+      try {
+        const response = await fetch('/api/csrf-debug', { method: 'GET' })
+        if (response.ok) {
+          console.log('CSRF token generated successfully')
+        }
+      } catch (error) {
+        console.warn('Failed to generate CSRF token:', error)
+      }
+    }
+    generateCSRFToken()
+  }, [])
+
   useEffect(() => {
     const fetchData = async () => {
       try {

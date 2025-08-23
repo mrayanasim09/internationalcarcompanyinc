@@ -9,11 +9,23 @@ export async function GET() {
     // Generate a new CSRF token
     const token = csrf.issue()
     
-    return NextResponse.json({ 
+    // Create response with CSRF token
+    const response = NextResponse.json({ 
       success: true, 
       message: 'CSRF token generated successfully',
       token: token 
     })
+    
+    // Set CSRF token as a cookie
+    response.cookies.set('csrf_token', token, {
+      httpOnly: false, // Allow JavaScript access
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60, // 1 hour
+      path: '/'
+    })
+    
+    return response
   } catch (error) {
     console.error('CSRF token generation failed:', error)
     return NextResponse.json({ 
