@@ -230,24 +230,56 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
             </>
           )}
 
-          {/* Tap to Fullscreen - Center area only */}
-          <Dialog open={isFullscreen} onOpenChange={handleFullscreenChange}>
-            <DialogTrigger asChild>
-              <button 
-                className="absolute top-0 left-16 right-16 bottom-0 bg-transparent z-20 touch-manipulation"
-                aria-label="Open fullscreen view"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                }}
-              >
-                <span className="sr-only">Click to view fullscreen</span>
-              </button>
-            </DialogTrigger>
-            <DialogContent 
-              className="fixed inset-0 w-screen h-screen max-w-none p-0 border-0 bg-black z-[9999] flex items-center justify-center"
-              aria-describedby="fullscreen-image-dialog"
-            >
+          {/* Fullscreen Button - Primary trigger */}
+          <button 
+            className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-black/70 hover:bg-black/90 text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center z-30 touch-manipulation"
+            aria-label="Open fullscreen"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              handleFullscreenChange(true)
+            }}
+          >
+            <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+          </button>
+
+          {/* Image Counter */}
+          <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black/70 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm z-20">
+            {currentIndex + 1} / {images.length}
+          </div>
+
+          {/* Tap anywhere to fullscreen - Lower z-index, excludes buttons */}
+          <div 
+            className="absolute inset-0 w-full h-full z-10 cursor-pointer"
+            onClick={(e) => {
+              // Only trigger if not clicking on navigation buttons or fullscreen button
+              const target = e.target as HTMLElement
+              const clickedButton = target.closest('button')
+              if (clickedButton) {
+                return // Let the button handle its own click
+              }
+              handleFullscreenChange(true)
+            }}
+            onTouchStart={(e) => {
+              // Prevent interference on mobile
+              const target = e.target as HTMLElement
+              const touchedButton = target.closest('button')
+              if (touchedButton) {
+                e.stopPropagation()
+              }
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Fullscreen Modal - Single instance */}
+      <Dialog open={isFullscreen} onOpenChange={handleFullscreenChange}>
+        <DialogContent 
+          className="fixed inset-0 w-screen h-screen max-w-none p-0 border-0 bg-black z-[9999] flex items-center justify-center"
+          aria-describedby="fullscreen-image-dialog"
+        >
               <div 
                 id="fullscreen-image-dialog" 
                 className="relative h-full w-full overflow-hidden flex items-center justify-center"
@@ -361,15 +393,8 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                   </div>
                 )}
               </div>
-            </DialogContent>
-          </Dialog>
-
-          {/* Image Counter */}
-          <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black/70 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm z-20">
-            {currentIndex + 1} / {images.length}
-          </div>
-        </div>
-      </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Thumbnail Navigation - Improved for mobile */}
       {images.length > 1 && (
