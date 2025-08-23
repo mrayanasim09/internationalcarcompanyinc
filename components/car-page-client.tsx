@@ -111,8 +111,8 @@ export function CarPageClient({ carId }: CarPageClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section with Main Image - Fixed mobile spacing and navbar overlap */}
-      <div className="relative w-full h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] md:h-[calc(100vh-96px)] lg:h-[calc(100vh-112px)] bg-gradient-to-b from-gray-900 to-gray-800 mt-16 sm:mt-20 md:mt-24 lg:mt-28">
+      {/* Hero Section with Main Image - Fixed to eliminate duplicate navbar appearance */}
+      <div className="relative w-full h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] md:h-[calc(100vh-96px)] lg:h-[calc(100vh-112px)] bg-gradient-to-b from-gray-900 to-gray-800 mt-0">
         <CarImageCarousel 
           images={car.images || []} 
           title={car.title} 

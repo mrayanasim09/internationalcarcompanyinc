@@ -10,7 +10,6 @@ import type { Car } from '@/lib/types';
 import Script from 'next/script';
 import { useCSPNonce } from '@/hooks/use-csp-nonce';
 import { DynamicFilterPanel } from '@/components/dynamic-imports';
-import { Navbar } from '@/components/navbar';
 
 const getSupabaseClient = () => {
   // Lazy load supabase client to reduce initial bundle size
@@ -23,7 +22,6 @@ const getSupabaseClient = () => {
 function InventoryLoading() {
   return (
     <div className="icc-theme min-h-screen bg-background">
-      <Navbar />
       <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
