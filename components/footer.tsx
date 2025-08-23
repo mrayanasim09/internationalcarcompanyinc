@@ -29,10 +29,10 @@ export function Footer() {
                 <div className="text-lg font-bold text-foreground">
                   International Car Company Inc
                 </div>
-                 <div className="text-xs text-muted-foreground">Professional vehicles. Modern experience.</div>
+                 <div className="text-xs text-foreground/70 dark:text-foreground/90">Professional vehicles. Modern experience.</div>
               </div>
             </Link>
-            <p className="text-sm text-muted-foreground">Professional car sales with transparent pricing and a modern experience.</p>
+            <p className="text-sm text-foreground/70 dark:text-foreground/90">Professional car sales with transparent pricing and a modern experience.</p>
           </div>
 
           {/* Contact & Address */}
@@ -41,7 +41,7 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <MapPin className="h-4 w-4 text-primary mt-1" aria-hidden="true" />
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-foreground/70 dark:text-foreground/90">
                   <div className="font-medium text-foreground">Our Location</div>
                   <div><BrandNameUser className="inline" /></div>
                   <div>24328 S Vermont Ave Suite #215</div>
@@ -50,7 +50,7 @@ export function Footer() {
               </div>
               <div className="flex items-start gap-3">
                 <Mail className="h-4 w-4 text-primary mt-1 flex-shrink-0" aria-hidden="true" />
-                <a className="text-sm text-muted-foreground hover:text-primary leading-relaxed break-words" href="mailto:info@internationalcarcompanyinc.com">info@internationalcarcompanyinc.com</a>
+                <a className="text-sm text-foreground/70 dark:text-foreground/90 hover:text-primary leading-relaxed break-words" href="mailto:info@internationalcarcompanyinc.com">info@internationalcarcompanyinc.com</a>
               </div>
               {/* Both phone numbers displayed horizontally */}
               <div className="pt-2 space-y-3">
@@ -110,17 +110,17 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="text-foreground/80 hover:text-primary">Home</Link></li>
-              <li><Link href="/about" className="text-foreground/80 hover:text-primary">About Us</Link></li>
-              <li><Link href="/inventory" className="text-foreground/80 hover:text-primary">Inventory</Link></li>
-              <li><Link href="/contact" className="text-foreground/80 hover:text-primary">Contact</Link></li>
+              <li><Link href="/" className="text-foreground/70 dark:text-foreground/90 hover:text-primary">Home</Link></li>
+              <li><Link href="/about" className="text-foreground/70 dark:text-foreground/90 hover:text-primary">About Us</Link></li>
+              <li><Link href="/inventory" className="text-foreground/70 dark:text-foreground/90 hover:text-primary">Inventory</Link></li>
+              <li><Link href="/contact" className="text-foreground/70 dark:text-foreground/90 hover:text-primary">Contact</Link></li>
             </ul>
           </div>
 
           {/* Business Hours */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Business Hours</h3>
-            <div className="text-sm text-muted-foreground space-y-2">
+            <div className="text-sm text-foreground/70 dark:text-foreground/90 space-y-2">
               <div className="flex items-center justify-between"><span className="font-medium text-foreground">Monday</span><span>9:00 AM - 5:00 PM</span></div>
               <div className="flex items-center justify-between"><span className="font-medium text-foreground">Tuesday</span><span>9:00 AM - 5:00 PM</span></div>
               <div className="flex items-center justify-between"><span className="font-medium text-foreground">Wednesday</span><span>9:00 AM - 5:00 PM</span></div>
@@ -135,12 +135,12 @@ export function Footer() {
         {/* Bottom */}
         <div className="border-t border-border mt-6 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">© 2025 <BrandNameUser className="inline" /> All rights reserved.</p>
+            <p className="text-sm text-foreground/70 dark:text-foreground/90">© 2025 <BrandNameUser className="inline" /> All rights reserved.</p>
             <div className="flex gap-6 text-sm items-center">
               <CookiePreferences />
-              <Link href="/privacy" className="text-muted-foreground hover:text-primary">Privacy Policy</Link>
-              <Link href="/terms" className="text-muted-foreground hover:text-primary">Terms & Conditions</Link>
-              <Link href="/sitemap.xml" className="text-muted-foreground hover:text-primary">Sitemap</Link>
+              <Link href="/privacy" className="text-foreground/70 dark:text-foreground/90 hover:text-primary">Privacy Policy</Link>
+              <Link href="/terms" className="text-foreground/70 dark:text-foreground/90 hover:text-primary">Terms & Conditions</Link>
+              <Link href="/sitemap.xml" className="text-foreground/70 dark:text-foreground/90 hover:text-primary">Sitemap</Link>
             </div>
           </div>
         </div>
