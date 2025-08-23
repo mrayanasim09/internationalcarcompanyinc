@@ -15,6 +15,7 @@ interface LazyImageProps {
   priority?: boolean
   sizes?: string
   quality?: number
+  blurDataURL?: string
 }
 
 export function LazyImage({
@@ -27,7 +28,8 @@ export function LazyImage({
   placeholder = "/placeholder.jpg",
   priority = false,
   sizes = "100vw",
-  quality = 75
+  quality = 75,
+  blurDataURL
 }: LazyImageProps) {
   const imgRef = useRef<HTMLImageElement>(null)
   const [isInView, setIsInView] = useState(false)
@@ -45,6 +47,7 @@ export function LazyImage({
   useEffect(() => {
     if (!imgRef.current) return
 
+    // Mobile-optimized intersection observer
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -55,8 +58,9 @@ export function LazyImage({
         })
       },
       {
-        rootMargin: '100px',
-        threshold: 0.1
+        // Larger root margin for mobile to start loading earlier
+        rootMargin: '200px',
+        threshold: 0.01
       }
     )
 
@@ -85,6 +89,7 @@ export function LazyImage({
           height={fill ? undefined : height}
           className="opacity-0"
           sizes={sizes}
+          quality={20}
         />
       </div>
     )
@@ -125,6 +130,8 @@ export function LazyImage({
       onLoad={handleLoad}
       onError={handleError}
       loading={priority ? "eager" : "lazy"}
+      placeholder={blurDataURL ? "blur" : "empty"}
+      blurDataURL={blurDataURL}
     />
   )
 }
@@ -147,8 +154,9 @@ export function useLazyLoad<T extends HTMLElement>() {
         })
       },
       {
-        rootMargin: '100px',
-        threshold: 0.1
+        // Mobile-optimized settings
+        rootMargin: '200px',
+        threshold: 0.01
       }
     )
 

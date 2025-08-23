@@ -10,7 +10,6 @@ import { useEffect as useEffectReact } from 'react'
 // CSS animation utilities are used to avoid client boundary issues
 
 import { CarLoader } from "@/components/ui/car-loader"
-import { FloatingCompareButton } from "@/components/floating-compare-button"
 import type { Car } from "@/lib/types"
 
 export type ListingsFilters = {
@@ -153,7 +152,10 @@ export function ListingsContent({ initialCars, filters: controlledFilters, onFil
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 content-visibility-auto" role="list" aria-label="Car listings">
                   {currentCars.map((car, idx) => (
                     <div key={car.id} role="listitem" className={`animate-slide-up animate-delay-${idx * 50}`}>
-                      <CarCard car={car} showCompareButton={true} />
+                      <CarCard 
+                        car={car} 
+                        priority={idx < 6} // Priority loading for first 6 cars
+                      />
                     </div>
                   ))}
                 </div>
@@ -209,8 +211,7 @@ export function ListingsContent({ initialCars, filters: controlledFilters, onFil
         </div>
       </div>
 
-      {/* Floating Compare Button */}
-      <FloatingCompareButton />
+
     </div>
   )
 }

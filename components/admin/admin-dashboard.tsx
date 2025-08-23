@@ -7,11 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import dynamic from 'next/dynamic'
 const CarManagement = dynamic(() => import("@/components/admin/car-management").then(m => m.CarManagement), { ssr: false, loading: () => <div /> })
 const ReviewManagement = dynamic(() => import("@/components/admin/review-management").then(m => m.ReviewManagement), { ssr: false, loading: () => <div /> })
-const DebugPanel = dynamic(() => import("@/components/debug-panel").then(m => m.DebugPanel), { ssr: false, loading: () => <div /> })
 import { useAuth } from "@/lib/auth-context"
 import { useRouter } from "next/navigation"
 import type { Car, Review } from "@/lib/types"
-// Data fetched via API routes instead of direct server client in browser
 import { LogOut, CarIcon, MessageSquare, BarChart3, Settings, Users as UsersIcon } from "lucide-react"
 import { CarLoader } from "@/components/ui/car-loader"
 const UserManagement = dynamic(() => import("@/components/admin/session-management").then(m => m.UserManagement), { ssr: false })
@@ -32,19 +30,9 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Only log in development
-  if (process.env.NODE_ENV === 'development') {
-    console.log('DEBUG: AdminDashboard rendering, user:', user)
-    console.log('DEBUG: AdminDashboard loading:', loading)
-    console.log('DEBUG: AdminDashboard error:', error)
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('DEBUG: Dashboard fetching data...')
-        }
         setError(null)
         
         const [carsRes, reviewsRes] = await Promise.all([
@@ -52,23 +40,18 @@ export function AdminDashboard() {
           fetch('/api/reviews', { cache: 'no-store' })
         ])
         
-        if (process.env.NODE_ENV === 'development') {
-          console.log('DEBUG: Cars response status:', carsRes.status)
-          console.log('DEBUG: Reviews response status:', reviewsRes.status)
-        }
-        
         if (!carsRes.ok) {
           const carsError = await carsRes.text()
           console.error('Cars API error:', carsRes.status, carsError)
           setError(`Failed to fetch cars: ${carsRes.status}`)
-          return // Don't continue if cars failed
+          return
         }
         
         if (!reviewsRes.ok) {
           const reviewsError = await reviewsRes.text()
           console.error('Reviews API error:', reviewsRes.status, reviewsError)
           setError(`Failed to fetch reviews: ${reviewsRes.status}`)
-          return // Don't continue if reviews failed
+          return
         }
         
         const carsJson = await carsRes.json().catch((e) => {
@@ -80,16 +63,10 @@ export function AdminDashboard() {
           return { reviews: [] }
         })
         
-        console.log('Cars data received:', carsJson)
-        console.log('Reviews data received:', reviewsJson)
-        console.log('Setting loading to false...')
-        
-        // Types kept minimal; mapping happens at usage
         setCars(((carsJson?.cars || []) as unknown as Car[]))
-        // Types kept minimal; mapping happens at usage
         setReviews(((reviewsJson?.reviews || []) as unknown as Review[]))
       } catch (error) {
-        console.error("DEBUG: Dashboard fetch error:", error)
+        console.error("Dashboard fetch error:", error)
         setError(`Fetch error: ${error instanceof Error ? error.message : 'Unknown error'}`)
       } finally {
         setLoading(false)
@@ -101,7 +78,6 @@ export function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      // Stateless logout handled by API; just navigate
       router.push("/")
     } catch (error) {
       console.error("Error signing out:", error)
@@ -127,7 +103,6 @@ export function AdminDashboard() {
     )
   }
 
-  // Show loading state while user data is being fetched
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -160,10 +135,13 @@ export function AdminDashboard() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-card shadow-sm border-b border-border hidden lg:block">
-        <div className="container mx-auto px-4 py-4">
+      <div className="bg-card shadow-sm border-b border-border">
+        <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
+              <p className="text-muted-foreground mt-1">Manage your vehicle inventory and reviews</p>
+            </div>
             <div className="flex items-center space-x-4">
               <span className="text-muted-foreground">Welcome, {user?.email || "Admin"}</span>
               <Button onClick={handleLogout} variant="outline" size="sm">
@@ -176,100 +154,103 @@ export function AdminDashboard() {
       </div>
 
       <div className="px-4 lg:px-6 py-8 pb-24 max-w-7xl mx-auto">
-        {/* Status section removed (Firebase references deleted) */}
-
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Cars</CardTitle>
-              <CarIcon className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Total Vehicles</CardTitle>
+              <CarIcon className="h-5 w-5 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalCars}</div>
-              <p className="text-xs text-muted-foreground">Admin data</p>
+              <div className="text-3xl font-bold">{stats.totalCars}</div>
+              <p className="text-xs text-muted-foreground">In inventory</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Approved Cars</CardTitle>
-              <BarChart3 className="h-4 w-4 text-green-600" />
+              <CardTitle className="text-sm font-medium">Approved</CardTitle>
+              <BarChart3 className="h-5 w-5 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.approvedCars}</div>
-              <p className="text-xs text-muted-foreground">Ready for display</p>
+              <div className="text-3xl font-bold text-green-600">{stats.approvedCars}</div>
+              <p className="text-xs text-muted-foreground">Live on site</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending Approval</CardTitle>
-              <BarChart3 className="h-4 w-4 text-yellow-600" />
+              <CardTitle className="text-sm font-medium">Pending</CardTitle>
+              <BarChart3 className="h-5 w-5 text-yellow-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-yellow-600">{stats.pendingCars}</div>
+              <div className="text-3xl font-bold text-yellow-600">{stats.pendingCars}</div>
               <p className="text-xs text-muted-foreground">Awaiting review</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Reviews</CardTitle>
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Reviews</CardTitle>
+              <MessageSquare className="h-5 w-5 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalReviews}</div>
+              <div className="text-3xl font-bold">{stats.totalReviews}</div>
               <p className="text-xs text-muted-foreground">Customer feedback</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Main Content */}
-        <Tabs defaultValue="cars" className="space-y-4">
+        <Tabs defaultValue="cars" className="space-y-6">
           <TabsList className="w-full overflow-x-auto whitespace-nowrap -mx-4 px-4 lg:mx-0 lg:px-0 sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-            <TabsTrigger className="min-w-[9rem]" value="cars">Car Management</TabsTrigger>
-            <TabsTrigger className="min-w-[9rem]" value="reviews">Reviews</TabsTrigger>
-            <TabsTrigger className="min-w-[9rem]" value="sessions">Sessions</TabsTrigger>
-            <TabsTrigger className="min-w-[9rem]" value="debug">Debug</TabsTrigger>
+            <TabsTrigger className="min-w-[10rem] text-base" value="cars">
+              <CarIcon className="h-4 w-4 mr-2" />
+              Vehicle Management
+            </TabsTrigger>
+            <TabsTrigger className="min-w-[10rem] text-base" value="reviews">
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Reviews
+            </TabsTrigger>
+            <TabsTrigger className="min-w-[10rem] text-base" value="sessions">
+              <Settings className="h-4 w-4 mr-2" />
+              Sessions
+            </TabsTrigger>
             {user?.role === 'super_admin' && (
-              <TabsTrigger className="min-w-[9rem]" value="users">
-                <div className="flex items-center gap-1"><UsersIcon className="h-4 w-4" /> Users</div>
+              <TabsTrigger className="min-w-[10rem] text-base" value="users">
+                <UsersIcon className="h-4 w-4 mr-2" />
+                User Management
               </TabsTrigger>
             )}
           </TabsList>
 
-          <TabsContent value="cars">
-            <CarManagement cars={cars} setCars={setCars} />
-          </TabsContent>
-
-          <TabsContent value="reviews">
-            <ReviewManagement reviews={reviews} />
-          </TabsContent>
-
-          <TabsContent value="sessions">
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="h-5 w-5" />
-                    Session Management
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <SessionManagement />
-                </CardContent>
-              </Card>
+          <TabsContent value="cars" className="space-y-6">
+            <div className="bg-card rounded-lg border border-border p-6">
+              <h2 className="text-xl font-semibold mb-4">Vehicle Inventory Management</h2>
+              <CarManagement cars={cars} setCars={setCars} />
             </div>
           </TabsContent>
 
-          <TabsContent value="debug">
-            <DebugPanel />
+          <TabsContent value="reviews" className="space-y-6">
+            <div className="bg-card rounded-lg border border-border p-6">
+              <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
+              <ReviewManagement reviews={reviews} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="sessions" className="space-y-6">
+            <div className="bg-card rounded-lg border border-border p-6">
+              <h2 className="text-xl font-semibold mb-4">Session Management</h2>
+              <SessionManagement />
+            </div>
           </TabsContent>
 
           {user?.role === 'super_admin' && (
-            <TabsContent value="users">
-              <UserManagement />
+            <TabsContent value="users" className="space-y-6">
+              <div className="bg-card rounded-lg border border-border p-6">
+                <h2 className="text-xl font-semibold mb-4">User Management</h2>
+                <UserManagement />
+              </div>
             </TabsContent>
           )}
         </Tabs>

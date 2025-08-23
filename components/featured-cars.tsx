@@ -63,9 +63,12 @@ export function FeaturedCars() {
       {/* Heading and description are handled by page section */}
       {cars.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6" role="list">
-          {cars.map((car) => (
+          {cars.map((car, index) => (
             <div key={car.id} role="listitem">
-              <CarCard car={car} />
+              <CarCard 
+                car={car} 
+                priority={index < 3} // Priority loading for first 3 featured cars
+              />
             </div>
           ))}
         </div>

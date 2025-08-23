@@ -8,22 +8,18 @@ import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import { LazyImage } from '@/components/lazy-image'
 import { 
-  Share2, 
   Car as CarIcon, 
   MapPin, 
   Calendar
 } from 'lucide-react'
 import type { Car } from "@/lib/types"
-import { useComparison } from "@/lib/comparison-context"
 
 interface CarCardProps {
   car: Car
-  showCompareButton?: boolean
+  priority?: boolean
 }
 
-export const CarCard = memo(function CarCard({ car, showCompareButton = false }: CarCardProps) {
-  const { addToComparison, removeFromComparison, isInComparison } = useComparison()
-  
+export const CarCard = memo(function CarCard({ car, priority = false }: CarCardProps) {
   // Memoize car ID to prevent unnecessary re-renders
   const carId = useMemo(() => car?.id, [car?.id])
   
@@ -58,15 +54,6 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
     }
   }, [carId, userRating])
 
-  const handleCompareToggle = useCallback(() => {
-    if (!carId || !car) return
-    if (isInComparison(carId)) {
-      removeFromComparison(carId)
-    } else {
-      addToComparison(car)
-    }
-  }, [carId, car, isInComparison, removeFromComparison, addToComparison])
-
   const formatPrice = useCallback((price: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -95,6 +82,10 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              priority={priority}
+              quality={75}
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
             />
           ) : (
             <LazyImage
@@ -103,6 +94,8 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              priority={priority}
+              quality={75}
             />
           )}
 
@@ -156,35 +149,13 @@ export const CarCard = memo(function CarCard({ car, showCompareButton = false }:
             <span>{car.make || 'N/A'} {car.model || 'N/A'}</span>
             <span>{car.year || 'N/A'}</span>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 mobile-button-group">
-            {showCompareButton === true && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCompareToggle}
-                className={`flex-1 text-xs py-3 min-h-[48px] touch-manipulation ${
-                  isInComparison(carId) 
-                    ? 'bg-blue-50 border-blue-200 text-blue-700' 
-                    : ''
-                }`}
-                aria-label={isInComparison(carId) ? `Remove ${carTitle} from comparison` : `Add ${carTitle} to comparison`}
-                aria-pressed={isInComparison(carId)}
-              >
-                <Share2 className="h-4 w-4 mr-1" aria-hidden="true" />
-                <span className="hidden sm:inline">
-                  {isInComparison(carId) ? 'Remove' : 'Compare'}
-                </span>
-                <span className="sm:hidden">
-                  {isInComparison(carId) ? 'Remove' : 'Compare'}
-                </span>
-              </Button>
-            )}
-            <Link href={`/car/${carId}`} className="flex-1">
-              <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-xs py-3 min-h-[48px] touch-manipulation" aria-label={`See full details for ${carTitle}`}>
-                See Full Details
-              </Button>
-            </Link>
-          </div>
+          
+          {/* Single button for full details */}
+          <Link href={`/car/${carId}`} className="block">
+            <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm py-3 min-h-[48px] touch-manipulation" aria-label={`See full details for ${carTitle}`}>
+              See Full Details
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </div>

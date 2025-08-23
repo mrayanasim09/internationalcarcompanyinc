@@ -45,7 +45,7 @@ export function Navbar() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-24 md:h-32 lg:h-36">
             {/* Brand - Made bigger and more clickable */}
-            <div className="flex items-center gap-2 md:gap-3 shrink-0">
+            <div className="flex items-center gap-2 md:gap-3 shrink-0 mr-4 md:mr-0">
               <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
                 {/* Logo Image - Made bigger on all screens */}
                 <div className="relative w-20 h-20 md:w-32 md:h-32 lg:w-36 lg:h-36 navbar-logo">
@@ -92,7 +92,7 @@ export function Navbar() {
             </div>
 
             {/* Mobile: show Theme Toggle + Menu with proper spacing */}
-            <div className="md:hidden flex items-center gap-3 shrink-0">
+            <div className="md:hidden flex items-center gap-4 shrink-0">
               <ThemeToggle />
               <Button
                 variant="ghost"

@@ -18,8 +18,33 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [scale, setScale] = useState(1)
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set([0]))
   const containerRef = useRef<HTMLDivElement>(null)
   const fullscreenRef = useRef<HTMLDivElement>(null)
+
+  // Preload next and previous images for better mobile performance
+  useEffect(() => {
+    const preloadImages = () => {
+      const nextIndex = (currentIndex + 1) % images.length
+      const prevIndex = (currentIndex - 1 + images.length) % images.length
+      
+      if (!loadedImages.has(nextIndex)) {
+        const img = new window.Image()
+        img.src = images[nextIndex]
+        img.onload = () => setLoadedImages(prev => new Set([...prev, nextIndex]))
+      }
+      
+      if (!loadedImages.has(prevIndex)) {
+        const img = new window.Image()
+        img.src = images[prevIndex]
+        img.onload = () => setLoadedImages(prev => new Set([...prev, prevIndex]))
+      }
+    }
+
+    if (typeof window !== 'undefined') {
+      preloadImages()
+    }
+  }, [currentIndex, images, loadedImages])
 
   const nextImage = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
@@ -74,6 +99,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     let lastTouchTime = 0
     let touchCount = 0
     let isZooming = false
+    let isPanning = false
 
     const handleTouchStart = (e: TouchEvent) => {
       touchCount = e.touches.length
@@ -91,6 +117,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         // Single finger touch - pan gesture
         if (scale > 1) {
           e.preventDefault()
+          isPanning = true
           initialPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }
         }
         lastTouchTime = Date.now()
@@ -107,7 +134,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         )
         const newScale = Math.max(0.5, Math.min(3, (distance / initialDistance) * initialScale))
         setScale(newScale)
-      } else if (e.touches.length === 1 && scale > 1) {
+      } else if (e.touches.length === 1 && scale > 1 && isPanning) {
         // Handle pan when zoomed in
         e.preventDefault()
         const deltaX = e.touches[0].clientX - initialPosition.x
@@ -123,7 +150,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     const handleTouchEnd = (e: TouchEvent) => {
       if (e.touches.length === 0) {
         // All touches ended
-        if (touchCount === 1 && scale <= 1 && !isZooming) {
+        if (touchCount === 1 && scale <= 1 && !isZooming && !isPanning) {
           // Single tap - check for double tap
           const now = Date.now()
           if (now - lastTouchTime < 300) {
@@ -144,6 +171,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         
         touchCount = 0
         isZooming = false
+        isPanning = false
       }
     }
 
@@ -210,10 +238,13 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
               alt={`${carTitle} - Image ${currentIndex + 1}`}
               fill
               className="object-cover transition-transform duration-200 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 1000px"
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 800px, 1000px"
               onError={handleImageError}
               onLoad={() => setImageError(false)}
               priority={currentIndex === 0}
+              quality={85}
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxAAPwCdABmX/9k="
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
@@ -332,6 +363,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                       className="object-contain select-none fullscreen-image"
                       sizes="100vw"
                       priority={true}
+                      quality={90}
                       onError={() => setImageError(true)}
                       onLoad={() => setImageError(false)}
                       style={{
@@ -344,7 +376,10 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                     {/* Zoom Controls */}
                     <div className="absolute top-4 left-4 flex gap-2 z-30">
                       <button
-                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => {
+                          e.stopPropagation()
+                          e.preventDefault()
+                        }}
                         onClick={handleZoomIn}
                         className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
                         aria-label="Zoom in"
@@ -352,7 +387,10 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                         <ZoomIn className="h-4 w-4" />
                       </button>
                       <button
-                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => {
+                          e.stopPropagation()
+                          e.preventDefault()
+                        }}
                         onClick={handleZoomOut}
                         className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
                         aria-label="Zoom out"
@@ -361,7 +399,10 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                       </button>
                       {scale !== 1 && (
                         <button
-                          onTouchStart={(e) => e.stopPropagation()}
+                          onTouchStart={(e) => {
+                            e.stopPropagation()
+                            e.preventDefault()
+                          }}
                           onClick={resetZoom}
                           className="bg-black/60 hover:bg-black/80 text-white px-3 py-2 rounded-full transition-all duration-150 min-h-[40px] flex items-center justify-center touch-manipulation text-sm"
                           aria-label="Reset zoom"
@@ -459,6 +500,8 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                 width={80}
                 height={64}
                 className="w-full h-full object-cover"
+                loading={index < 3 ? "eager" : "lazy"}
+                quality={60}
               />
             </button>
           ))}
