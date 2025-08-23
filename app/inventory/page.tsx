@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { ListingsContent, type ListingsFilters } from '@/components/listings-content';
 import { CarLoader, CarGridSkeleton } from '@/components/ui/car-loader';
 import { ErrorDisplay } from '@/components/ui/error-display';
@@ -12,13 +12,31 @@ import { useCSPNonce } from '@/hooks/use-csp-nonce';
 import { DynamicFilterPanel } from '@/components/dynamic-imports';
 import { Navbar } from '@/components/navbar';
 
-
 const getSupabaseClient = () => {
   // Lazy load supabase client to reduce initial bundle size
   if (typeof window === 'undefined') return null;
   
   return import('@/lib/supabase/client').then(mod => mod.supabasePublic);
 };
+
+// Separate loading component for better mobile performance
+function InventoryLoading() {
+  return (
+    <div className="icc-theme min-h-screen bg-background">
+      <Navbar />
+      <div className="container mx-auto px-4 py-6 md:py-8">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-gray-200 rounded-lg h-64"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function InventoryPage() {
   const nonce = useCSPNonce();
@@ -43,7 +61,7 @@ export default function InventoryPage() {
     bodyStyle: ''
   });
 
-  // Pull-to-refresh functionality
+  // Optimized pull-to-refresh functionality
   useEffect(() => {
     let startY = 0;
     let currentY = 0;
@@ -70,8 +88,8 @@ export default function InventoryPage() {
       }
     };
 
-    document.addEventListener('touchstart', handleTouchStart);
-    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
 
     return () => {
       document.removeEventListener('touchstart', handleTouchStart);
@@ -80,12 +98,19 @@ export default function InventoryPage() {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
+    
     async function fetchCars() {
       try {
+        setLoading(true);
+        setError(null);
+        
         const supabasePublic = await getSupabaseClient();
         if (!supabasePublic) {
-          setError("Client-side only");
-          setLoading(false);
+          if (isMounted) {
+            setError("Client-side only");
+            setLoading(false);
+          }
           return;
         }
 
@@ -94,56 +119,60 @@ export default function InventoryPage() {
           .select('*')
           .eq('approved', true)
           .eq('is_inventory', true)
-          .order('listed_at', { ascending: false });
+          .order('listed_at', { ascending: false })
+          .limit(50); // Limit initial load for better mobile performance
 
         if (error) {
           console.error('Supabase error:', error);
-          setError('Failed to load inventory. Please try again later.');
-          setLoading(false);
+          if (isMounted) {
+            setError('Failed to load inventory. Please try again later.');
+            setLoading(false);
+          }
           return;
         }
 
-        const fetchedCars: Car[] = (data || []).map((row: any) => ({
-          id: row.id,
-          title: row.title || `${row.year} ${row.make} ${row.model}`,
-          make: row.make,
-          model: row.model,
-          year: row.year,
-          mileage: row.mileage,
-          price: row.price,
-          location: row.location,
-          images: row.images || [],
-          approved: row.approved,
-          isFeatured: Boolean(row.is_featured),
-          isInventory: Boolean(row.is_inventory),
-          listedAt: row.listed_at ? new Date(row.listed_at) : new Date(),
-          description: row.description || '',
-          contact: { phone: row.contact_phone || '', whatsapp: row.contact_whatsapp || '' },
-          rating: row.rating || 0,
-          reviews: row.reviews || []
-        }));
+        if (isMounted) {
+          const fetchedCars: Car[] = (data || []).map((row: any) => ({
+            id: row.id,
+            title: row.title || `${row.year} ${row.make} ${row.model}`,
+            make: row.make,
+            model: row.model,
+            year: row.year,
+            mileage: row.mileage,
+            price: row.price,
+            location: row.location,
+            images: row.images || [],
+            approved: row.approved,
+            isFeatured: Boolean(row.is_featured),
+            isInventory: Boolean(row.is_inventory),
+            listedAt: row.listed_at ? new Date(row.listed_at) : new Date(),
+            description: row.description || '',
+            contact: { phone: row.contact_phone || '', whatsapp: row.contact_whatsapp || '' },
+            rating: row.rating || 0,
+            reviews: row.reviews || []
+          }));
 
-        setCars(fetchedCars);
+          setCars(fetchedCars);
+          setLoading(false);
+        }
       } catch (err) {
         console.error('Error fetching cars:', err);
-        setError('Failed to load inventory. Please try again later.');
-      } finally {
-        setLoading(false);
+        if (isMounted) {
+          setError('Failed to load inventory. Please try again later.');
+          setLoading(false);
+        }
       }
     }
 
     fetchCars();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (loading) {
-    return (
-      <div className="icc-theme min-h-screen bg-background">
-        <Navbar />
-        <div className="container mx-auto px-4 py-6 md:py-8">
-          <CarGridSkeleton count={6} />
-        </div>
-      </div>
-    );
+    return <InventoryLoading />;
   }
 
   return (
@@ -210,7 +239,7 @@ export default function InventoryPage() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col lg:flex-row gap-6 md:gap-8 content-visibility-auto">
+          <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
             <aside className="lg:w-1/4 lg:sticky lg:top-24 self-start">
               {/* Filter chips for quick access */}
               <div className="mb-4 flex flex-wrap gap-2">
@@ -236,18 +265,22 @@ export default function InventoryPage() {
                 )}
               </div>
               
-              <DynamicFilterPanel
-                initialFilters={filters}
-                onFilter={setFilters}
-              />
+              <Suspense fallback={<div className="animate-pulse h-64 bg-gray-200 rounded"></div>}>
+                <DynamicFilterPanel
+                  initialFilters={filters}
+                  onFilter={setFilters}
+                />
+              </Suspense>
             </aside>
             
             <div className="lg:w-3/4">
-              <ListingsContent
-                initialCars={cars}
-                filters={filters}
-                onFiltersChange={setFilters}
-              />
+              <Suspense fallback={<CarGridSkeleton count={6} />}>
+                <ListingsContent
+                  initialCars={cars}
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                />
+              </Suspense>
             </div>
           </div>
         )}

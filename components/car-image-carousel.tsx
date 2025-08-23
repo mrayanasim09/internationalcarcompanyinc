@@ -73,13 +73,15 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     let initialPosition = { x: 0, y: 0 }
     let lastTouchTime = 0
     let touchCount = 0
+    let isZooming = false
 
     const handleTouchStart = (e: TouchEvent) => {
-      e.preventDefault()
       touchCount = e.touches.length
       
       if (e.touches.length === 2) {
         // Two finger touch - pinch gesture
+        e.preventDefault()
+        isZooming = true
         initialDistance = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
@@ -87,16 +89,18 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         initialScale = scale
       } else if (e.touches.length === 1) {
         // Single finger touch - pan gesture
-        initialPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+        if (scale > 1) {
+          e.preventDefault()
+          initialPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+        }
         lastTouchTime = Date.now()
       }
     }
 
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault()
-      
       if (e.touches.length === 2) {
         // Handle pinch to zoom
+        e.preventDefault()
         const distance = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
@@ -105,6 +109,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         setScale(newScale)
       } else if (e.touches.length === 1 && scale > 1) {
         // Handle pan when zoomed in
+        e.preventDefault()
         const deltaX = e.touches[0].clientX - initialPosition.x
         const deltaY = e.touches[0].clientY - initialPosition.y
         setPosition(prev => ({
@@ -116,11 +121,9 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     }
 
     const handleTouchEnd = (e: TouchEvent) => {
-      e.preventDefault()
-      
       if (e.touches.length === 0) {
         // All touches ended
-        if (touchCount === 1 && scale <= 1) {
+        if (touchCount === 1 && scale <= 1 && !isZooming) {
           // Single tap - check for double tap
           const now = Date.now()
           if (now - lastTouchTime < 300) {
@@ -140,6 +143,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         }
         
         touchCount = 0
+        isZooming = false
       }
     }
 
@@ -340,6 +344,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                     {/* Zoom Controls */}
                     <div className="absolute top-4 left-4 flex gap-2 z-30">
                       <button
+                        onTouchStart={(e) => e.stopPropagation()}
                         onClick={handleZoomIn}
                         className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
                         aria-label="Zoom in"
@@ -347,6 +352,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                         <ZoomIn className="h-4 w-4" />
                       </button>
                       <button
+                        onTouchStart={(e) => e.stopPropagation()}
                         onClick={handleZoomOut}
                         className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
                         aria-label="Zoom out"
@@ -355,6 +361,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
                       </button>
                       {scale !== 1 && (
                         <button
+                          onTouchStart={(e) => e.stopPropagation()}
                           onClick={resetZoom}
                           className="bg-black/60 hover:bg-black/80 text-white px-3 py-2 rounded-full transition-all duration-150 min-h-[40px] flex items-center justify-center touch-manipulation text-sm"
                           aria-label="Reset zoom"

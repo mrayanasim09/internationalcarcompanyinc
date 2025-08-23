@@ -503,3 +503,30 @@ button, [role="button"], a, input, textarea, select {
   }
 }
 
+/* Logo sizing improvements */
+.navbar-logo {
+  min-width: 80px;
+  min-height: 80px;
+}
+
+@media (max-width: 640px) {
+  .navbar-logo {
+    min-width: 64px;
+    min-height: 64px;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-logo {
+    min-width: 128px;
+    min-height: 128px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-logo {
+    min-width: 144px;
+    min-height: 144px;
+  }
+}
+

@@ -43,27 +43,27 @@ export function Navbar() {
         aria-label="Primary"
       >
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-20 md:h-28">
+          <div className="flex items-center justify-between h-24 md:h-32 lg:h-36">
             {/* Brand - Made bigger and more clickable */}
             <div className="flex items-center gap-2 md:gap-3 shrink-0">
               <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
                 {/* Logo Image - Made bigger on all screens */}
-                <div className="relative w-16 h-16 md:w-28 md:h-28">
+                <div className="relative w-20 h-20 md:w-32 md:h-32 lg:w-36 lg:h-36 navbar-logo">
                   <Image 
                     src="/International Car Company Inc. Logo.png" 
                     alt="International Car Company Inc Logo" 
                     fill 
                     className="object-contain transition-transform group-hover:scale-105" 
                     priority 
-                    sizes="(max-width:768px) 64px, 112px" 
+                    sizes="(max-width:768px) 80px, (max-width:1024px) 128px, 144px" 
                   />
                 </div>
                 {/* Brand text - Always visible on mobile, smaller font size */}
                 <div className="block leading-tight">
-                  <div className="text-xs md:text-sm font-bold text-foreground tracking-tight">
+                  <div className="text-sm md:text-base lg:text-lg font-bold text-foreground tracking-tight">
                     <BrandNameUser />
                   </div>
-                  <div className="hidden sm:block text-[8px] md:text-xs text-muted-foreground">
+                  <div className="hidden sm:block text-xs md:text-sm lg:text-base text-muted-foreground">
                     Professional vehicles. Modern experience.
                   </div>
                 </div>
