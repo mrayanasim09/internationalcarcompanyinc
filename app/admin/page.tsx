@@ -53,9 +53,9 @@ export default function AdminPage() {
         {Fallback}
         <div className="min-h-screen flex items-center justify-center">
           <div className="relative w-24 h-24 md:w-32 md:h-32 animate-pulse">
-            <Image 
-              src="/International Car Company Inc. Logo.png" 
-              alt="International Car Company Inc Logo" 
+                    <Image
+          src="/prestige-auto-sales-logo.png"
+          alt="Prestige Auto Sales LLC Logo" 
               fill 
               className="object-contain" 
               priority 

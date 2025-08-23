@@ -4,9 +4,9 @@ export function LoadingSpinner() {
   return (
     <div className="flex justify-center items-center py-12">
       <div className="relative w-20 h-20 md:w-24 md:h-24 animate-pulse">
-        <Image 
-          src="/International Car Company Inc. Logo.png" 
-          alt="International Car Company Inc Logo" 
+              <Image
+        src="/prestige-auto-sales-logo.png"
+        alt="Prestige Auto Sales LLC Logo" 
           fill 
           className="object-contain" 
           priority 

@@ -325,9 +325,9 @@ export function EmailAdminLogin() {
           {/* Logo Image */}
           <div className="flex justify-center mb-4">
             <div className="relative w-16 h-12">
-              <Image
-                src="/International Car Company Inc. Logo.png"
-                alt="International Car Company Inc Logo"
+                      <Image
+          src="/prestige-auto-sales-logo.png"
+          alt="Prestige Auto Sales LLC Logo"
                 fill
                 sizes="64px"
                 priority

@@ -193,9 +193,9 @@ export function AdminMessages() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="relative w-16 h-16 md:w-20 md:h-20 animate-pulse">
-          <Image 
-            src="/International Car Company Inc. Logo.png" 
-            alt="International Car Company Inc Logo" 
+                  <Image
+          src="/prestige-auto-sales-logo.png"
+          alt="Prestige Auto Sales LLC Logo" 
             fill 
             className="object-contain" 
             priority 

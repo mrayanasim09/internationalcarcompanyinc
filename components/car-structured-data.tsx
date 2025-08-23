@@ -123,7 +123,7 @@ export function OrganizationStructuredData() {
     name: 'International Car Company Inc',
     description: 'Premium used car dealership in Harbor City, CA offering quality pre-owned vehicles with competitive financing.',
     url: 'https://internationalcarcompanyinc.com',
-    logo: 'https://internationalcarcompanyinc.com/International%20Car%20Company%20Inc.%20Logo.png',
+    logo: 'https://internationalcarcompanyinc.com/prestige-auto-sales-logo.png',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '24328 S Vermont Ave Suite #215',

@@ -33,7 +33,7 @@ export function SEOHead({
 }: SEOHeadProps) {
   const siteName = 'International Car Company Inc.'
   const siteUrl = 'https://internationalcarcompanyinc.com'
-  const defaultImage = `${siteUrl}/International%20Car%20Company%20Inc.%20Logo.png`
+  const defaultImage = `${siteUrl}/prestige-auto-sales-logo.png`
   
   const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl

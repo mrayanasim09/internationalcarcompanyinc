@@ -62,10 +62,10 @@ export const metadata: Metadata = {
     siteName: 'International Car Company Inc',
     images: [
       {
-        url: '/International Car Company Inc. Logo.png',
+        url: '/prestige-auto-sales-logo.png',
         width: 1200,
         height: 630,
-        alt: 'International Car Company Inc Logo',
+        alt: 'Prestige Auto Sales LLC Logo',
       },
     ],
   },
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'International Car Company Inc - Premium Used Cars in Harbor City, CA',
     description: 'Find quality pre-owned vehicles at International Car Company Inc in Harbor City, CA. Competitive financing, expert service, and a wide selection of used cars, trucks, and SUVs.',
-    images: ['/International Car Company Inc. Logo.png'],
+    images: ['/prestige-auto-sales-logo.png'],
   },
   robots: {
     index: true,
@@ -246,7 +246,7 @@ export default function RootLayout({
           `}
         </Script>
         {/* Preload critical resources */}
-        <link rel="preload" href="/International Car Company Inc. Logo.png" as="image" />
+        <link rel="preload" href="/prestige-auto-sales-logo.png" as="image" />
         
         {/* DNS prefetch for external domains */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />

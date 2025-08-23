@@ -16,7 +16,7 @@ const STATIC_ASSETS = [
   '/privacy',
   '/terms',
   '/security',
-  '/International Car Company Inc. Logo.png',
+  '/prestige-auto-sales-logo.png',
   '/optimized/placeholder.webp',
   '/optimized/am-tycoons-logo.webp',
   '/optimized/bmw-3-series-black.webp',
@@ -256,8 +256,8 @@ self.addEventListener('push', (event) => {
     const data = event.data.json();
     const options = {
       body: data.body,
-      icon: '/International Car Company Inc. Logo.png',
-      badge: '/International Car Company Inc. Logo.png',
+      icon: '/prestige-auto-sales-logo.png',
+      badge: '/prestige-auto-sales-logo.png',
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
@@ -267,12 +267,12 @@ self.addEventListener('push', (event) => {
         {
           action: 'explore',
           title: 'View Details',
-          icon: '/International Car Company Inc. Logo.png'
+          icon: '/prestige-auto-sales-logo.png'
         },
         {
           action: 'close',
           title: 'Close',
-          icon: '/International Car Company Inc. Logo.png'
+          icon: '/prestige-auto-sales-logo.png'
         }
       ]
     };

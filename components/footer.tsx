@@ -22,8 +22,8 @@ export function Footer() {
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-3 group" aria-label="International Car Company Inc Home">
               {/* Logo Image */}
-              <div className="relative w-20 h-20">
-                <Image src="/International Car Company Inc. Logo.png" alt="International Car Company Inc Logo" fill className="object-contain" priority sizes="80px" />
+              <div className="relative w-24 h-24">
+                <Image src="/prestige-auto-sales-logo.png" alt="Prestige Auto Sales LLC Logo" fill className="object-contain" priority sizes="96px" />
               </div>
               <div>
                 <div className="text-lg font-bold text-foreground">

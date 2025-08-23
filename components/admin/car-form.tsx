@@ -858,9 +858,9 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
               ) : (
                 <div className="flex items-center justify-center h-32">
                   <div className="relative w-12 h-12 md:w-16 md:h-16 animate-pulse">
-                    <Image 
-                      src="/International Car Company Inc. Logo.png" 
-                      alt="International Car Company Inc Logo" 
+                            <Image
+          src="/prestige-auto-sales-logo.png"
+          alt="Prestige Auto Sales LLC Logo" 
                       fill 
                       className="object-contain" 
                       priority 

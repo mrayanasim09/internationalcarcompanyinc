@@ -78,7 +78,7 @@ export function ServiceWorkerRegister() {
         '/inventory',
         '/about',
         '/contact',
-        '/International Car Company Inc. Logo.png'
+        '/prestige-auto-sales-logo.png'
       ]
 
       try {

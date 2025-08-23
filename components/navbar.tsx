@@ -48,14 +48,14 @@ export function Navbar() {
             <div className="flex items-center gap-2 md:gap-3 shrink-0 mr-4 md:mr-0">
               <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
                 {/* Logo Image - Made bigger on all screens */}
-                <div className="relative w-20 h-20 md:w-32 md:h-32 lg:w-36 lg:h-36 navbar-logo">
+                <div className="relative w-24 h-24 md:w-36 md:h-36 lg:w-40 lg:h-40 navbar-logo">
                   <Image 
-                    src="/International Car Company Inc. Logo.png" 
-                    alt="International Car Company Inc Logo" 
+                    src="/prestige-auto-sales-logo.png" 
+                    alt="Prestige Auto Sales LLC Logo" 
                     fill 
                     className="object-contain transition-transform group-hover:scale-105" 
                     priority 
-                    sizes="(max-width:768px) 80px, (max-width:1024px) 128px, 144px" 
+                    sizes="(max-width:768px) 96px, (max-width:1024px) 144px, 160px" 
                   />
                 </div>
                 {/* Brand text - Always visible on mobile, smaller font size */}

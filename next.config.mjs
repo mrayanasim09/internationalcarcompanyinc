@@ -139,7 +139,7 @@ const nextConfig = {
         ],
       },
       {
-        source: '/International Car Company Inc. Logo.png',
+        source: '/prestige-auto-sales-logo.png',
         headers: [
           {
             key: 'Cache-Control',

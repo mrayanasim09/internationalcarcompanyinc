@@ -21,8 +21,8 @@ export function LoadingSpinner({ size = 'md', className, text }: LoadingSpinnerP
     <div className={cn('flex flex-col items-center justify-center gap-2', className)}>
       <div className={cn('relative animate-pulse', sizeClasses[size])}>
         <Image 
-          src="/International Car Company Inc. Logo.png" 
-          alt="International Car Company Inc Logo" 
+          src="/prestige-auto-sales-logo.png" 
+          alt="Prestige Auto Sales LLC Logo" 
           fill 
           className="object-contain" 
           priority 
@@ -42,8 +42,8 @@ export function FullPageSpinner({ text = 'Loading...' }: { text?: string }) {
     <div className="min-h-screen flex flex-col items-center justify-center gap-4">
       <div className="relative w-24 h-24 md:w-32 md:h-32 animate-pulse">
         <Image 
-          src="/International Car Company Inc. Logo.png" 
-          alt="International Car Company Inc Logo" 
+          src="/prestige-auto-sales-logo.png" 
+          alt="Prestige Auto Sales LLC Logo" 
           fill 
           className="object-contain" 
           priority 
@@ -68,8 +68,8 @@ export function InlineSpinner({ size = 'sm', className }: Omit<LoadingSpinnerPro
   return (
     <div className={cn('relative animate-pulse', sizeClasses[size], className)}>
       <Image 
-        src="/International Car Company Inc. Logo.png" 
-        alt="International Car Company Inc Logo" 
+        src="/prestige-auto-sales-logo.png" 
+        alt="Prestige Auto Sales LLC Logo" 
         fill 
         className="object-contain" 
         priority 
@@ -90,8 +90,8 @@ export function ButtonSpinner({ size = 'sm' }: { size?: 'sm' | 'md' | 'lg' }) {
   return (
     <div className={cn('relative animate-pulse', sizeClasses[size])}>
       <Image 
-        src="/International Car Company Inc. Logo.png" 
-        alt="International Car Company Inc Logo" 
+        src="/prestige-auto-sales-logo.png" 
+        alt="Prestige Auto Sales LLC Logo" 
         fill 
         className="object-contain" 
         priority 

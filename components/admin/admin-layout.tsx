@@ -59,7 +59,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           <div className="flex items-center justify-between p-6 border-b border-border">
             <div className="flex items-center space-x-3">
               <div className="relative w-12 h-10">
-                <Image src="/International Car Company Inc. Logo.png" alt="Logo" fill className="object-contain" priority sizes="48px" />
+                <Image src="/prestige-auto-sales-logo.png" alt="Logo" fill className="object-contain" priority sizes="48px" />
               </div>
               <div>
                 <div className="text-lg font-bold text-foreground"><BrandName /></div>
@@ -103,7 +103,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           <div className="flex items-center px-8 py-6 border-b border-border">
             <div className="flex items-center gap-4">
               <div className="relative w-12 h-10">
-                <Image src="/International Car Company Inc. Logo.png" alt="Logo" fill className="object-contain" priority sizes="48px" />
+                <Image src="/prestige-auto-sales-logo.png" alt="Logo" fill className="object-contain" priority sizes="48px" />
               </div>
               <div>
                 <div className="text-xl font-bold text-foreground">

@@ -171,9 +171,9 @@ export function SessionManagement() {
         <CardContent className="p-6">
           <div className="flex items-center justify-center">
             <div className="relative w-8 h-8 md:w-10 md:h-10 animate-pulse">
-              <Image 
-                src="/International Car Company Inc. Logo.png" 
-                alt="International Car Company Inc Logo" 
+                      <Image
+          src="/prestige-auto-sales-logo.png"
+          alt="Prestige Auto Sales LLC Logo" 
                 fill 
                 className="object-contain" 
                 priority 
