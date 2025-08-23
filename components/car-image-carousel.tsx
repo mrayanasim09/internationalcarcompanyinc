@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react"
 import Image from "next/image"
 import { useSwipeGestures } from '@/hooks/use-mobile-gestures'
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
@@ -9,9 +9,10 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 interface CarImageCarouselProps {
   images: string[]
   carTitle: string
+  onFullscreenChange?: (isFullscreen: boolean) => void
 }
 
-export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
+export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [imageError, setImageError] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -43,6 +44,24 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
 
   const handleImageError = () => {
     setImageError(true)
+  }
+
+  const handleZoomIn = () => {
+    setScale(prev => Math.min(3, prev + 0.5))
+  }
+
+  const handleZoomOut = () => {
+    setScale(prev => Math.max(0.5, prev - 0.5))
+  }
+
+  const resetZoom = () => {
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }
+
+  const handleFullscreenChange = (open: boolean) => {
+    setIsFullscreen(open)
+    onFullscreenChange?.(open)
   }
 
   // Handle pinch to zoom in fullscreen
@@ -118,7 +137,17 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
           nextImage()
           break
         case 'Escape':
-          setIsFullscreen(false)
+          handleFullscreenChange(false)
+          break
+        case '+':
+        case '=':
+          handleZoomIn()
+          break
+        case '-':
+          handleZoomOut()
+          break
+        case '0':
+          resetZoom()
           break
       }
     }
@@ -134,7 +163,7 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
   }, { minSwipeDistance: 30 })
 
   return (
-    <div className="w-full h-full carousel-container">
+    <div className="w-full h-full carousel-container overflow-hidden">
       {/* Main Image */}
       <div className="relative group w-full h-full" ref={containerRef}>
         <div className="relative w-full h-full overflow-hidden bg-gray-100 dark:bg-gray-800">
@@ -157,19 +186,19 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
             </div>
           )}
           
-          {/* Navigation Arrows - Always visible on mobile, fixed positioning */}
+          {/* Navigation Arrows - Always visible, improved touch targets */}
           {images.length > 1 && (
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center z-20"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-20 touch-manipulation"
                 aria-label="Previous image"
               >
                 <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center z-20"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 sm:p-4 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-20 touch-manipulation"
                 aria-label="Next image"
               >
                 <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -178,23 +207,23 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
           )}
 
           {/* Tap to Fullscreen - Click anywhere on image */}
-          <Dialog open={isFullscreen} onOpenChange={setIsFullscreen}>
+          <Dialog open={isFullscreen} onOpenChange={handleFullscreenChange}>
             <DialogTrigger asChild>
-              <button className="absolute inset-0 w-full h-full bg-transparent z-10" aria-label="Open fullscreen view">
+              <button className="absolute inset-0 w-full h-full bg-transparent z-10 touch-manipulation" aria-label="Open fullscreen view">
                 <span className="sr-only">Click to view fullscreen</span>
               </button>
             </DialogTrigger>
             <DialogContent 
-              className="max-w-[100vw] w-full h-[100vh] p-0 border-0 bg-black"
+              className="fixed inset-0 w-screen h-screen max-w-none p-0 border-0 bg-black z-[9999] flex items-center justify-center"
               aria-describedby="fullscreen-image-dialog"
             >
               <div 
                 id="fullscreen-image-dialog" 
-                className="relative h-full w-full overflow-hidden"
+                className="relative h-full w-full overflow-hidden flex items-center justify-center"
                 ref={fullscreenRef}
               >
                 {images[currentIndex] ? (
-                  <div className="relative h-full w-full">
+                  <div className="relative h-full w-full flex items-center justify-center">
                     <Image
                       src={images[currentIndex]}
                       alt={`${carTitle} - Image ${currentIndex + 1}`}
@@ -208,19 +237,46 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
                       }}
                     />
                     
+                    {/* Zoom Controls */}
+                    <div className="absolute top-4 left-4 flex gap-2 z-30">
+                      <button
+                        onClick={handleZoomIn}
+                        className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
+                        aria-label="Zoom in"
+                      >
+                        <ZoomIn className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={handleZoomOut}
+                        className="bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[40px] min-w-[40px] flex items-center justify-center touch-manipulation"
+                        aria-label="Zoom out"
+                      >
+                        <ZoomOut className="h-4 w-4" />
+                      </button>
+                      {scale !== 1 && (
+                        <button
+                          onClick={resetZoom}
+                          className="bg-black/60 hover:bg-black/80 text-white px-3 py-2 rounded-full transition-all duration-150 min-h-[40px] flex items-center justify-center touch-manipulation text-sm"
+                          aria-label="Reset zoom"
+                        >
+                          Reset
+                        </button>
+                      )}
+                    </div>
+                    
                     {/* Navigation in fullscreen */}
                     {images.length > 1 && (
                       <>
                         <button
                           onClick={prevImage}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30"
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30 touch-manipulation"
                           aria-label="Previous image"
                         >
                           <ChevronLeft className="h-6 w-6" />
                         </button>
                         <button
                           onClick={nextImage}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-3 rounded-full transition-all duration-150 min-h-[48px] min-w-[48px] flex items-center justify-center z-30 touch-manipulation"
                           aria-label="Next image"
                         >
                           <ChevronRight className="h-6 w-6" />
@@ -230,8 +286,8 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
                     
                     {/* Close button */}
                     <button
-                      onClick={() => setIsFullscreen(false)}
-                      className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center z-30"
+                      onClick={() => handleFullscreenChange(false)}
+                      className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center z-30 touch-manipulation"
                       aria-label="Close fullscreen"
                     >
                       <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -247,7 +303,7 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
                     {/* Zoom instructions */}
                     {scale === 1 && (
                       <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm z-30">
-                        Pinch to zoom • Swipe to navigate
+                        Pinch to zoom • Swipe to navigate • Use +/- keys
                       </div>
                     )}
                   </div>
@@ -271,12 +327,12 @@ export function CarImageCarousel({ images, carTitle }: CarImageCarouselProps) {
 
       {/* Thumbnail Navigation - Improved for mobile */}
       {images.length > 1 && (
-        <div className="flex space-x-2 overflow-x-auto pb-2 mt-2 px-2">
+        <div className="flex space-x-2 overflow-x-auto pb-2 mt-2 px-2 scrollbar-hide">
           {images.map((image, index) => (
             <button
               key={index}
               onClick={() => goToImage(index)}
-              className={`flex-shrink-0 w-16 h-12 sm:w-20 sm:h-16 rounded-lg overflow-hidden border-2 transition-all duration-150 ${
+              className={`flex-shrink-0 w-16 h-12 sm:w-20 sm:h-16 rounded-lg overflow-hidden border-2 transition-all duration-150 touch-manipulation ${
                 index === currentIndex
                   ? 'border-primary ring-2 ring-primary/30'
                   : 'border-gray-300 dark:border-gray-600 hover:border-primary/50'
