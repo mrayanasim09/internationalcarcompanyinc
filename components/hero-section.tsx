@@ -29,8 +29,8 @@ export function HeroSection() {
         <div className="max-w-3xl mx-auto bg-card/70 backdrop-blur-xl rounded-3xl border border-border p-5 md:p-8 shadow-xl">
           {/* Logo Image */}
           <div className="flex justify-center mb-6">
-            <div className="relative w-56 h-48 md:w-48 md:h-40 hero-logo">
-              <Image src="/prestige-auto-sales-logo.png" alt="Prestige Auto Sales LLC Logo" fill className="object-contain" priority sizes="(max-width: 768px) 224px, (max-width: 1024px) 192px, 160px" />
+            <div className="relative w-80 h-72 md:w-64 md:h-56 hero-logo">
+              <Image src="/prestige-auto-sales-logo.png" alt="Prestige Auto Sales LLC Logo" fill className="object-contain" priority sizes="(max-width: 768px) 320px, (max-width: 1024px) 256px, 160px" />
             </div>
           </div>
           
