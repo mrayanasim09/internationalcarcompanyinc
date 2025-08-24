@@ -45,8 +45,8 @@ export function Navbar() {
         <div className="container mx-auto px-0 md:px-4">
           <div className="flex items-center justify-between h-24 md:h-32 lg:h-36">
             {/* Brand - Made bigger and more clickable */}
-            <div className="flex items-center gap-2 md:gap-3 shrink-0 mr-4 md:mr-0">
-              <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
+            <div className="flex items-center gap-1 md:gap-3 shrink-0 mr-2 md:mr-0">
+              <Link href="/" className="flex items-center gap-1 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
                 {/* Logo Image - Made bigger on all screens */}
                 <div className="relative w-28 h-28 md:w-32 md:h-32 lg:w-40 lg:h-40 navbar-logo">
                   <Image 
@@ -60,7 +60,7 @@ export function Navbar() {
                 </div>
                 {/* Brand text - Always visible on mobile, smaller font size */}
                 <div className="block leading-tight">
-                  <div className="text-sm md:text-base lg:text-lg font-bold text-foreground tracking-tight">
+                  <div className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-foreground tracking-tight">
                     <BrandNameUser />
                   </div>
                   <div className="hidden sm:block text-xs md:text-sm lg:text-base text-muted-foreground">
@@ -92,7 +92,7 @@ export function Navbar() {
             </div>
 
             {/* Mobile: show Theme Toggle + Menu with proper spacing */}
-            <div className="md:hidden flex items-center gap-4 shrink-0">
+            <div className="md:hidden flex items-center gap-2 shrink-0">
               <ThemeToggle />
               <Button
                 variant="ghost"
@@ -101,10 +101,10 @@ export function Navbar() {
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                 aria-controls="mobile-nav"
                 aria-expanded={isMenuOpen}
-                className="p-3 text-foreground hover:text-primary touch-button min-w-[48px] min-h-[48px] border border-border/20 hover:border-border/40"
+                className="p-2 text-foreground hover:text-primary touch-button min-w-[40px] min-h-[40px]"
                 type="button"
               >
-                {isMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
+                {isMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
               </Button>
             </div>
           </div>

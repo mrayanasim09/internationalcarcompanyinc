@@ -718,6 +718,18 @@ button, [role="button"], a, input, textarea, select {
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
+    z-index: 100 !important;
+  }
+  
+  /* Reduce brand text size on mobile for more space */
+  .navbar-logo + div div:first-child {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+  }
+  
+  /* Ensure proper spacing on mobile */
+  .flex.items-center.justify-between {
+    gap: 0.5rem !important;
   }
 }
 
