@@ -42,7 +42,7 @@ export function Navbar() {
         }`}
         aria-label="Primary"
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-0 md:px-4">
           <div className="flex items-center justify-between h-24 md:h-32 lg:h-36">
             {/* Brand - Made bigger and more clickable */}
             <div className="flex items-center gap-2 md:gap-3 shrink-0 mr-4 md:mr-0">
@@ -71,7 +71,7 @@ export function Navbar() {
             </div>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-6 flex-1 justify-end overflow-x-auto">
+            <div className="hidden md:flex items-center gap-8 lg:gap-10 flex-1 justify-end overflow-x-auto">
               <Link href="/" className="text-foreground/80 hover:text-primary transition-colors font-medium">
                 Home
               </Link>

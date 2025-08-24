@@ -25,12 +25,12 @@ export function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 text-center">
+      <div className="relative z-10 container mx-auto px-2 md:px-4 text-center">
         <div className="max-w-3xl mx-auto bg-card/70 backdrop-blur-xl rounded-3xl border border-border p-5 md:p-8 shadow-xl">
           {/* Logo Image */}
           <div className="flex justify-center mb-6">
-            <div className="relative w-32 h-28 md:w-32 md:h-28 hero-logo">
-              <Image src="/prestige-auto-sales-logo.png" alt="Prestige Auto Sales LLC Logo" fill className="object-contain" priority sizes="(max-width: 768px) 128px, 128px" />
+            <div className="relative w-40 h-36 md:w-48 md:h-40 hero-logo">
+              <Image src="/prestige-auto-sales-logo.png" alt="Prestige Auto Sales LLC Logo" fill className="object-contain" priority sizes="(max-width: 768px) 160px, (max-width: 1024px) 192px, 160px" />
             </div>
           </div>
           
