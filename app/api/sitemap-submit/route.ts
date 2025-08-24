@@ -11,6 +11,11 @@ export async function POST(request: NextRequest) {
       console.warn('Sitemap submission request without authorization header')
     }
 
+    // Check search engine status first
+    console.log('Checking search engine status before submission...')
+    const status = await sitemapSubmitter.checkSearchEngineStatus()
+    console.log('Search engine status:', status)
+
     // Submit sitemap to search engines
     const results = await sitemapSubmitter.submitToAll()
     
@@ -20,11 +25,30 @@ export async function POST(request: NextRequest) {
     // Log the submission
     console.log(`Sitemap submission API called: ${successCount}/${totalCount} successful`)
 
+    // Check if we have any retry information
+    const retryInfo = results
+      .filter(r => r.retryAfter)
+      .map(r => ({
+        engine: r.message.includes('Google') ? 'Google' : 'Bing',
+        retryAfter: r.retryAfter,
+        method: r.method
+      }))
+
     return NextResponse.json({
-      success: true,
-      message: `Sitemap submitted to ${successCount}/${totalCount} search engines`,
+      success: successCount > 0,
+      message: successCount > 0 
+        ? `Sitemap submitted to ${successCount}/${totalCount} search engines`
+        : `Sitemap submission failed for all search engines`,
       results,
-      timestamp: new Date().toISOString()
+      searchEngineStatus: status,
+      retryInfo,
+      timestamp: new Date().toISOString(),
+      recommendations: successCount === 0 ? [
+        'Search engines may be temporarily unavailable',
+        'Try again in a few minutes',
+        'Check if your server IP is rate limited',
+        'Consider using Google Search Console directly'
+      ] : []
     })
 
   } catch (error) {
@@ -34,20 +58,35 @@ export async function POST(request: NextRequest) {
       success: false,
       message: 'Failed to submit sitemap',
       error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      recommendations: [
+        'Check server logs for detailed error information',
+        'Verify search engine endpoints are accessible',
+        'Check network connectivity and firewall settings'
+      ]
     }, { status: 500 })
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Return sitemap submission status
     const status = sitemapSubmitter.getStatus()
     
+    // Also check current search engine status
+    const searchEngineStatus = await sitemapSubmitter.checkSearchEngineStatus()
+    
     return NextResponse.json({
       success: true,
       status,
-      timestamp: new Date().toISOString()
+      searchEngineStatus,
+      timestamp: new Date().toISOString(),
+      health: {
+        canSubmit: status.canSubmit,
+        searchEnginesAccessible: searchEngineStatus.google.accessible || searchEngineStatus.bing.accessible,
+        lastSubmission: status.lastSubmission,
+        nextSubmissionTime: status.nextSubmissionTime
+      }
     })
 
   } catch (error) {

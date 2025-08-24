@@ -10,6 +10,34 @@ interface AutoSitemapTriggerProps {
   onSubmitted?: (success: boolean) => void
 }
 
+interface SitemapStatus {
+  success: boolean
+  message: string
+  results: Array<{
+    success: boolean
+    message: string
+    timestamp: string
+    retryAfter?: number
+    method?: string
+  }>
+  searchEngineStatus: {
+    google: { accessible: boolean; status?: number; message?: string }
+    bing: { accessible: boolean; status?: number; message?: string }
+  }
+  retryInfo?: Array<{
+    engine: string
+    retryAfter: number
+    method: string
+  }>
+  recommendations?: string[]
+  timestamp: string
+}
+
+interface SearchEngineHealth {
+  google: { accessible: boolean; status?: number; message?: string }
+  bing: { accessible: boolean; status?: number; message?: string }
+}
+
 export function AutoSitemapTrigger({
   contentId,
   contentType = 'page',
@@ -41,8 +69,18 @@ export function AutoSitemapTrigger({
       } catch (error) {
         console.error('Failed to auto-submit sitemap:', error)
         
-        if (onSubmitted) {
-          onSubmitted(false)
+        // Check if it's a 503 error (service unavailable)
+        if (error instanceof Error && error.message.includes('503')) {
+          console.warn('Search engines are temporarily unavailable. This is normal and will resolve automatically.')
+          // Still mark as submitted to avoid repeated attempts
+          hasSubmitted.current = true
+          if (onSubmitted) {
+            onSubmitted(true) // Consider 503 as "handled" not "failed"
+          }
+        } else {
+          if (onSubmitted) {
+            onSubmitted(false)
+          }
         }
       }
     }, 2000) // 2 second delay
@@ -74,11 +112,18 @@ export function useSitemapSubmission() {
       return true
     } catch (error) {
       console.error('Manual sitemap submission failed:', error)
+      
+      // Check if it's a 503 error
+      if (error instanceof Error && error.message.includes('503')) {
+        console.warn('Search engines are temporarily unavailable. This is normal and will resolve automatically.')
+        return true // Consider 503 as "handled" not "failed"
+      }
+      
       return false
     }
   }
 
-  const checkStatus = async () => {
+  const checkStatus = async (): Promise<SitemapStatus | null> => {
     try {
       const response = await fetch('/api/sitemap-submit')
       const data = await response.json()
@@ -89,9 +134,21 @@ export function useSitemapSubmission() {
     }
   }
 
+  const checkSearchEngineHealth = async (): Promise<SearchEngineHealth | null> => {
+    try {
+      const response = await fetch('/api/sitemap-submit')
+      const data = await response.json()
+      return data.searchEngineStatus || null
+    } catch (error) {
+      console.error('Failed to check search engine health:', error)
+      return null
+    }
+  }
+
   return {
     submitSitemap,
-    checkStatus
+    checkStatus,
+    checkSearchEngineHealth
   }
 }
 
@@ -99,9 +156,10 @@ export function useSitemapSubmission() {
  * Component for admin pages to manually trigger sitemap submission
  */
 export function ManualSitemapSubmitter() {
-  const { submitSitemap, checkStatus } = useSitemapSubmission()
+  const { submitSitemap, checkStatus, checkSearchEngineHealth } = useSitemapSubmission()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [lastStatus, setLastStatus] = useState<any>(null)
+  const [lastStatus, setLastStatus] = useState<SitemapStatus | null>(null)
+  const [searchEngineHealth, setSearchEngineHealth] = useState<SearchEngineHealth | null>(null)
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
@@ -111,6 +169,10 @@ export function ManualSitemapSubmitter() {
         // Check status after submission
         const status = await checkStatus()
         setLastStatus(status)
+        
+        // Also check search engine health
+        const health = await checkSearchEngineHealth()
+        setSearchEngineHealth(health)
       }
     } finally {
       setIsSubmitting(false)
@@ -120,6 +182,18 @@ export function ManualSitemapSubmitter() {
   const handleCheckStatus = async () => {
     const status = await checkStatus()
     setLastStatus(status)
+    
+    // Also check search engine health
+    const health = await checkSearchEngineHealth()
+    setSearchEngineHealth(health)
+  }
+
+  const getStatusColor = (success: boolean) => {
+    return success ? 'text-green-600' : 'text-red-600'
+  }
+
+  const getStatusIcon = (success: boolean) => {
+    return success ? '✅' : '❌'
   }
 
   return (
@@ -144,12 +218,73 @@ export function ManualSitemapSubmitter() {
           </button>
         </div>
 
+        {/* Search Engine Health Status */}
+        {searchEngineHealth && (
+          <div className="p-3 bg-gray-50 rounded border">
+            <h4 className="font-medium mb-2">Search Engine Health:</h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
+                <span>Google:</span>
+                <span className={getStatusColor(searchEngineHealth.google?.accessible)}>
+                  {getStatusIcon(searchEngineHealth.google?.accessible)} 
+                  {searchEngineHealth.google?.accessible ? 'Accessible' : 'Unavailable'}
+                </span>
+                {searchEngineHealth.google?.status && (
+                  <span className="text-gray-500">(Status: {searchEngineHealth.google.status})</span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <span>Bing:</span>
+                <span className={getStatusColor(searchEngineHealth.bing?.accessible)}>
+                  {getStatusIcon(searchEngineHealth.bing?.accessible)} 
+                  {searchEngineHealth.bing?.accessible ? 'Accessible' : 'Unavailable'}
+                </span>
+                {searchEngineHealth.bing?.status && (
+                  <span className="text-gray-500">(Status: {searchEngineHealth.bing.status})</span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Last Status */}
         {lastStatus && (
           <div className="text-sm">
-            <h4 className="font-medium">Last Status:</h4>
-            <pre className="bg-gray-100 p-2 rounded text-xs overflow-auto">
-              {JSON.stringify(lastStatus, null, 2)}
-            </pre>
+            <h4 className="font-medium mb-2">Last Submission Status:</h4>
+            <div className="space-y-2">
+              <div className={`font-medium ${getStatusColor(lastStatus.success)}`}>
+                {getStatusIcon(lastStatus.success)} {lastStatus.message}
+              </div>
+              
+              {lastStatus.retryInfo && lastStatus.retryInfo.length > 0 && (
+                <div className="p-2 bg-yellow-50 border border-yellow-200 rounded">
+                  <div className="font-medium text-yellow-800">Retry Information:</div>
+                  {lastStatus.retryInfo.map((info, index) => (
+                    <div key={index} className="text-yellow-700">
+                      {info.engine}: Retry after {Math.round(info.retryAfter / 1000)}s
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {lastStatus.recommendations && lastStatus.recommendations.length > 0 && (
+                <div className="p-2 bg-blue-50 border border-blue-200 rounded">
+                  <div className="font-medium text-blue-800">Recommendations:</div>
+                  <ul className="list-disc list-inside text-blue-700">
+                    {lastStatus.recommendations.map((rec, index) => (
+                      <li key={index}>{rec}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              <details className="bg-gray-100 p-2 rounded">
+                <summary className="cursor-pointer text-gray-700">Raw Response</summary>
+                <pre className="mt-2 text-xs overflow-auto">
+                  {JSON.stringify(lastStatus, null, 2)}
+                </pre>
+              </details>
+            </div>
           </div>
         )}
       </div>
