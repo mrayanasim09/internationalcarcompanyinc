@@ -175,7 +175,6 @@ export default function InventoryPage() {
 
   return (
     <div className="icc-theme min-h-screen bg-background">
-      <Navbar />
       <div className="container mx-auto px-4 py-6 md:py-8">
         <Script
           id="listings-jsonld"
