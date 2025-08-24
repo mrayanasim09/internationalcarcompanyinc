@@ -13,7 +13,7 @@ Disallow: /debug-connections/
 Disallow: /_next/
 Disallow: /static/
 
-# Allow important pages
+# Allow important pages with enhanced crawling
 Allow: /inventory/
 Allow: /browse/
 Allow: /listings/
@@ -25,16 +25,17 @@ Allow: /privacy/
 Allow: /terms/
 Allow: /security/
 
-# Sitemap location
+# Sitemap location - Google will automatically discover new pages from here
 Sitemap: https://internationalcarcompanyinc.com/sitemap.xml
 
-# Crawl delay (optional, be respectful to server)
+# Crawl delay (optimized for better indexing)
 Crawl-delay: 1
 
-# Specific rules for major search engines
+# Specific rules for major search engines with enhanced indexing
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
+# Google will automatically index new pages from sitemap
 
 User-agent: Bingbot
 Allow: /
@@ -43,6 +44,29 @@ Crawl-delay: 1
 User-agent: Slurp
 Allow: /
 Crawl-delay: 1
+
+# Enhanced Google bot instructions for better indexing
+User-agent: Googlebot-Image
+Allow: /
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.png$
+Allow: /*.webp$
+# Google will automatically index new images
+
+User-agent: Googlebot-Mobile
+Allow: /
+# Mobile pages will be automatically indexed
+
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: APIS-Google
+Allow: /
 
 # Block AI training bots
 User-agent: GPTBot
@@ -98,23 +122,9 @@ Disallow: /
 User-agent: Screaming Frog SEO Spider
 Disallow: /
 
-# Allow legitimate SEO tools
-User-agent: Googlebot-Image
-Allow: /
-Allow: /*.jpg$
-Allow: /*.jpeg$
-Allow: /*.gif$
-Allow: /*.png$
-Allow: /*.webp$
-
-User-agent: Googlebot-Mobile
-Allow: /
-
-User-agent: Mediapartners-Google
-Allow: /
-
-User-agent: AdsBot-Google
-Allow: /
-
-User-agent: APIS-Google
-Allow: /
+# Additional instructions for better Google indexing
+# Google will automatically discover and index new pages from:
+# 1. Sitemap updates
+# 2. Internal linking
+# 3. Page content quality
+# 4. Site structure

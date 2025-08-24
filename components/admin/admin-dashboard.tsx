@@ -10,9 +10,10 @@ const ReviewManagement = dynamic(() => import("@/components/admin/review-managem
 import { useAuth } from "@/lib/auth-context"
 import { useRouter } from "next/navigation"
 import type { Car, Review } from "@/lib/types"
-import { LogOut, CarIcon, MessageSquare, BarChart3, Settings, Users as UsersIcon } from "lucide-react"
+import { LogOut, CarIcon, MessageSquare, BarChart3, Settings, Users as UsersIcon, Globe } from "lucide-react"
 import { CarLoader } from "@/components/ui/car-loader"
 const UserManagement = dynamic(() => import("@/components/admin/session-management").then(m => m.UserManagement), { ssr: false })
+const ManualSitemapSubmitter = dynamic(() => import("@/components/auto-sitemap-trigger").then(m => m.ManualSitemapSubmitter), { ssr: false })
 import { SessionManagement } from "./session-management"
 
 interface DashboardStats {
@@ -231,6 +232,10 @@ export function AdminDashboard() {
               <Settings className="h-4 w-4 mr-2" />
               Sessions
             </TabsTrigger>
+            <TabsTrigger className="min-w-[10rem] text-base" value="seo">
+              <Globe className="h-4 w-4 mr-2" />
+              SEO & Sitemap
+            </TabsTrigger>
             {user?.role === 'super_admin' && (
               <TabsTrigger className="min-w-[10rem] text-base" value="users">
                 <UsersIcon className="h-4 w-4 mr-2" />
@@ -257,6 +262,89 @@ export function AdminDashboard() {
             <div className="bg-card rounded-lg border border-border p-6">
               <h2 className="text-xl font-semibold mb-4">Session Management</h2>
               <SessionManagement />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="seo" className="space-y-6">
+            <div className="bg-card rounded-lg border border-border p-6">
+              <h2 className="text-xl font-semibold mb-4">SEO & Sitemap Management</h2>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Globe className="h-5 w-5" />
+                        Sitemap Management
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ManualSitemapSubmitter />
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <BarChart3 className="h-5 w-5" />
+                        SEO Status
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Sitemap URL:</span>
+                          <a 
+                            href="https://internationalcarcompanyinc.com/sitemap.xml" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline text-sm"
+                          >
+                            View Sitemap
+                          </a>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Robots.txt:</span>
+                          <a 
+                            href="https://internationalcarcompanyinc.com/robots.txt" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline text-sm"
+                          >
+                            View Robots
+                          </a>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Google Search Console:</span>
+                          <a 
+                            href="https://search.google.com/search-console" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline text-sm"
+                          >
+                            Open Console
+                          </a>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>SEO Best Practices</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3 text-sm text-muted-foreground">
+                      <p>✅ <strong>Automatic Indexing:</strong> New pages are automatically added to sitemap</p>
+                      <p>✅ <strong>Sitemap Submission:</strong> Automatically submitted to Google every 24 hours</p>
+                      <p>✅ <strong>Structured Data:</strong> JSON-LD schema markup for better search results</p>
+                      <p>✅ <strong>Meta Tags:</strong> Automatic title, description, and Open Graph tags</p>
+                      <p>✅ <strong>Mobile Optimization:</strong> Responsive design for mobile-first indexing</p>
+                      <p>✅ <strong>Performance:</strong> Fast loading times for better SEO ranking</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabsContent>
 

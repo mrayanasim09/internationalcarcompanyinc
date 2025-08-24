@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://internationalcarcompanyinc.com'
   
-  // Static pages
+  // Static pages with enhanced metadata for better indexing
   const staticPages = [
     {
       url: baseUrl,
@@ -68,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Dynamic car pages from database
+  // Dynamic car pages from database with enhanced indexing
   let carPages: MetadataRoute.Sitemap = []
   
   try {
@@ -78,12 +78,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         process.env.SUPABASE_SERVICE_ROLE_KEY
       )
       
+      // Get all approved cars with enhanced metadata
       const { data: cars, error } = await supabase
         .from('cars')
-        .select('id, title, updated_at')
+        .select('id, title, updated_at, created_at, make, model, year, price')
         .eq('approved', true)
         .order('updated_at', { ascending: false })
-        .limit(1000) // Limit to prevent sitemap from becoming too large
+        .limit(2000) // Increased limit for better coverage
       
       if (!error && cars) {
         carPages = cars.map(car => ({
@@ -107,7 +108,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]
   }
 
-  // Admin pages (lower priority, noindex in production)
+  // Admin pages (lower priority, but still indexed for Google)
   const adminPages = [
     {
       url: `${baseUrl}/admin`,
@@ -123,5 +124,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  return [...staticPages, ...carPages, ...adminPages]
+  // Additional utility pages for better site coverage
+  const utilityPages = [
+    {
+      url: `${baseUrl}/sitemap.xml`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.1,
+    },
+    {
+      url: `${baseUrl}/robots.txt`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.1,
+    },
+  ]
+
+  const allPages = [...staticPages, ...carPages, ...adminPages, ...utilityPages]
+  
+  // Log sitemap generation for monitoring
+  console.log(`Generated sitemap with ${allPages.length} pages:`, {
+    static: staticPages.length,
+    cars: carPages.length,
+    admin: adminPages.length,
+    utility: utilityPages.length,
+    total: allPages.length
+  })
+
+  return allPages
 }
