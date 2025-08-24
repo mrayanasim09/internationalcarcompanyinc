@@ -687,3 +687,37 @@ button, [role="button"], a, input, textarea, select {
   padding: 4px;
 }
 
+/* iPad navigation spacing improvements */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .navbar-logo {
+    min-width: 120px;
+    min-height: 120px;
+  }
+  
+  /* Ensure navigation links have proper spacing on iPad */
+  .navbar-logo + div + div a {
+    margin: 0 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  
+  .navbar-logo + div + div a:hover {
+    background-color: rgba(var(--primary), 0.1);
+  }
+}
+
+/* Mobile menu button visibility */
+@media (max-width: 767px) {
+  .md\\:hidden {
+    display: flex !important;
+  }
+  
+  /* Ensure mobile menu button is always visible */
+  .md\\:hidden button[aria-label*="menu"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+

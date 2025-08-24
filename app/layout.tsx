@@ -89,6 +89,14 @@ export const metadata: Metadata = {
   verification: {
     google: 'G-SV90G9ZG56',
   },
+  icons: {
+    icon: [
+      { url: '/favicon-light.ico', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon.ico', media: '(prefers-color-scheme: dark)' }
+    ],
+    shortcut: '/favicon-light.ico',
+    apple: '/favicon-light.ico',
+  },
 }
 
 export default function RootLayout({

@@ -48,14 +48,14 @@ export function Navbar() {
             <div className="flex items-center gap-2 md:gap-3 shrink-0 mr-4 md:mr-0">
               <Link href="/" className="flex items-center gap-2 md:gap-3 group" aria-label="International Car Company Inc Home" onClick={closeMenu}>
                 {/* Logo Image - Made bigger on all screens */}
-                <div className="relative w-28 h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 navbar-logo">
+                <div className="relative w-28 h-28 md:w-32 md:h-32 lg:w-40 lg:h-40 navbar-logo">
                   <Image 
                     src="/prestige-auto-sales-logo.png" 
                     alt="Prestige Auto Sales LLC Logo" 
                     fill 
                     className="object-contain transition-transform group-hover:scale-105" 
                     priority 
-                    sizes="(max-width:768px) 112px, (max-width:1024px) 144px, 160px" 
+                    sizes="(max-width:768px) 112px, (max-width:1024px) 128px, 160px" 
                   />
                 </div>
                 {/* Brand text - Always visible on mobile, smaller font size */}
@@ -71,17 +71,17 @@ export function Navbar() {
             </div>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-8 lg:gap-10 flex-1 justify-end overflow-x-auto">
-              <Link href="/" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+            <div className="hidden md:flex items-center gap-10 lg:gap-12 flex-1 justify-end overflow-x-auto">
+              <Link href="/" className="text-foreground/80 hover:text-primary transition-colors font-medium px-2 py-1">
                 Home
               </Link>
-              <Link href="/inventory" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+              <Link href="/inventory" className="text-foreground/80 hover:text-primary transition-colors font-medium px-2 py-1">
                 Inventory
               </Link>
-              <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+              <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors font-medium px-2 py-1">
                 About
               </Link>
-              <Link href="/contact" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+              <Link href="/contact" className="text-foreground/80 hover:text-primary transition-colors font-medium px-2 py-1">
                 Contact
               </Link>
             </div>
@@ -101,10 +101,10 @@ export function Navbar() {
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                 aria-controls="mobile-nav"
                 aria-expanded={isMenuOpen}
-                className="p-2 text-foreground hover:text-primary touch-button min-w-[44px] min-h-[44px]"
+                className="p-3 text-foreground hover:text-primary touch-button min-w-[48px] min-h-[48px] border border-border/20 hover:border-border/40"
                 type="button"
               >
-                {isMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+                {isMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
               </Button>
             </div>
           </div>
