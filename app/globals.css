@@ -644,14 +644,14 @@ button, [role="button"], a, input, textarea, select {
 
 /* Logo sizing improvements */
 .navbar-logo {
-  min-width: 96px;
-  min-height: 96px;
+  min-width: 120px;
+  min-height: 120px;
 }
 
 @media (max-width: 640px) {
   .navbar-logo {
-    min-width: 80px;
-    min-height: 80px;
+    min-width: 100px;
+    min-height: 100px;
   }
 }
 
