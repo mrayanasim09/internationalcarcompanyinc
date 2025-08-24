@@ -669,3 +669,21 @@ button, [role="button"], a, input, textarea, select {
   }
 }
 
+/* Logo background for dark mode */
+.dark .navbar-logo img,
+.dark .footer-logo img,
+.dark .hero-logo img,
+.dark .admin-logo img,
+.dark .loading-logo img {
+  background-color: white;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+/* Logo background for dark mode - alternative approach */
+.dark img[src*="prestige-auto-sales-logo"] {
+  background-color: white;
+  border-radius: 8px;
+  padding: 4px;
+}
+

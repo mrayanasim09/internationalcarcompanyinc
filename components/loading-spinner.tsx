@@ -3,7 +3,7 @@ import Image from "next/image"
 export function LoadingSpinner() {
   return (
     <div className="flex justify-center items-center py-12">
-      <div className="relative w-20 h-20 md:w-24 md:h-24 animate-pulse">
+      <div className="relative w-20 h-20 md:w-24 md:h-24 animate-pulse loading-logo">
               <Image
         src="/prestige-auto-sales-logo.png"
         alt="Prestige Auto Sales LLC Logo" 

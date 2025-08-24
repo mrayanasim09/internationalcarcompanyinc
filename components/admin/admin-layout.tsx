@@ -58,7 +58,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <div className="fixed inset-y-0 left-0 w-72 bg-card/95 backdrop-blur shadow-xl border-r border-border">
           <div className="flex items-center justify-between p-6 border-b border-border">
             <div className="flex items-center space-x-3">
-              <div className="relative w-12 h-10">
+              <div className="relative w-12 h-10 admin-logo">
                 <Image src="/prestige-auto-sales-logo.png" alt="Logo" fill className="object-contain" priority sizes="48px" />
               </div>
               <div>
@@ -102,7 +102,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <div className="flex flex-col h-full bg-card/95 backdrop-blur text-foreground shadow-xl border-r border-border">
           <div className="flex items-center px-8 py-6 border-b border-border">
             <div className="flex items-center gap-4">
-              <div className="relative w-12 h-10">
+              <div className="relative w-12 h-10 admin-logo">
                 <Image src="/prestige-auto-sales-logo.png" alt="Logo" fill className="object-contain" priority sizes="48px" />
               </div>
               <div>
