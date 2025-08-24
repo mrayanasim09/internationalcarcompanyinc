@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/navbar"
+
 
 import { AboutContent } from "@/components/about-content"
 
@@ -26,7 +26,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="icc-theme min-h-screen bg-background text-foreground">
-      <Navbar />
       <AboutContent />
     </div>
   )

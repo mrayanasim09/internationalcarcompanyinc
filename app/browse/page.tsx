@@ -4,7 +4,7 @@
 export const dynamic = 'force-dynamic' // This must be AFTER "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Navbar } from "@/components/navbar"
+
 
 import { CarCard } from "@/components/car-card"
 import { SmartSearch } from "@/components/smart-search"
@@ -81,7 +81,6 @@ export default function BrowsePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <div className="container mx-auto px-4 py-6 md:py-8">
         <Script
           id="browse-jsonld"

@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
-import { Navbar } from '@/components/navbar'
+
 
 import { ListingsContent, type ListingsFilters } from '@/components/listings-content'
 import { FilterPanel } from '@/components/filter-panel'
@@ -144,7 +144,6 @@ export default function ListingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8 animate-fade-in">
             <h1 className="text-3xl font-bold text-foreground mb-4">Our Complete Inventory</h1>
@@ -158,8 +157,6 @@ export default function ListingsPage() {
 
   return (
     <div className="icc-theme min-h-screen bg-background">
-      <Navbar />
-
       <div className="container mx-auto px-4 py-6 md:py-8">
         <Script
           id="listings-jsonld"

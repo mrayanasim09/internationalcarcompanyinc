@@ -1,5 +1,4 @@
 import React from "react"
-import { Navbar } from "@/components/navbar"
 
 
 const faqs = [
@@ -43,9 +42,7 @@ const faqs = [
 
 export default function FAQPage() {
   return (
-    <>
-      <Navbar />
-      <main className="min-h-screen bg-background py-12">
+    <main className="min-h-screen bg-background py-12">
         <div className="container mx-auto px-4 max-w-3xl">
           <h1 className="text-4xl font-bold text-center mb-8">Frequently Asked Questions</h1>
           <div className="space-y-6">
@@ -58,6 +55,5 @@ export default function FAQPage() {
           </div>
         </div>
       </main>
-    </>
   )
 }
