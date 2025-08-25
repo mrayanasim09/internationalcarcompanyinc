@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -260,15 +260,13 @@
 <a name='L195'></a><a href='#L195'>195</a>
 <a name='L196'></a><a href='#L196'>196</a>
 <a name='L197'></a><a href='#L197'>197</a>
-<a name='L198'></a><a href='#L198'>198</a>
-<a name='L199'></a><a href='#L199'>199</a>
-<a name='L200'></a><a href='#L200'>200</a>
-<a name='L201'></a><a href='#L201'>201</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L198'></a><a href='#L198'>198</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -372,12 +370,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -465,10 +459,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use client"
 import { Card, CardContent } from <span class="cstat-no" title="statement not covered" >"@/components/ui/card"</span>
-import { BrandName } from <span class="cstat-no" title="statement not covered" >"@/components/brand-name"</span>
+import { BrandNameUser } from <span class="cstat-no" title="statement not covered" >"@/components/brand-name-user"</span>
 import { Badge } from <span class="cstat-no" title="statement not covered" >"@/components/ui/badge"</span>
 import { Users, Award, Shield, Heart, Star, CheckCircle, MapPin, Phone, Mail } from <span class="cstat-no" title="statement not covered" >"lucide-react"</span>
 // Subtle CSS animations are used for performance and to avoid client boundary issues
+import { cn } from <span class="cstat-no" title="statement not covered" >"@/lib/utils"</span>
 &nbsp;
 export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >AboutContent() {</span></span>
   const stats = <span class="cstat-no" title="statement not covered" >[</span>
@@ -507,12 +502,12 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
       &lt;section className="relative bg-background py-10 md:py-16"&gt;
         &lt;div className="container mx-auto px-4 text-center"&gt;
           &lt;h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 text-foreground animate-fade-in"&gt;
-            About &lt;BrandName className="inline" /&gt;
+            About &lt;BrandNameUser className="inline" /&gt;
           &lt;/h1&gt;
-          &lt;p className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-muted-foreground max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '80ms' }}&gt;
-            Your trusted partner in finding quality pre-owned vehicles since 2009
+          &lt;p className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-muted-foreground max-w-3xl mx-auto animate-fade-in animate-delay-80"&gt;
+            We are committed to providing exceptional service and quality vehicles to our customers.
           &lt;/p&gt;
-          &lt;div className="animate-fade-in" style={{ animationDelay: '140ms' }}&gt;
+          &lt;div className="animate-fade-in animate-delay-140"&gt;
             &lt;Badge className="bg-primary text-primary-foreground px-4 md:px-6 py-2 text-base md:text-lg"&gt;15+ Years of Excellence&lt;/Badge&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -525,7 +520,15 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             {stats.map(<span class="fstat-no" title="function not covered" >(s</span>tat, index) =&gt; {
               const IconComponent = <span class="cstat-no" title="statement not covered" >stat.icon</span>
 <span class="cstat-no" title="statement not covered" >              return (</span>
-                &lt;div key={index} className="animate-slide-up" style={{ animationDelay: `${index * 60}ms` }}&gt;
+                &lt;div key={index} className={cn(
+                  "animate-slide-up",
+                  index === 0 &amp;&amp; "animate-delay-0",
+                  index === 1 &amp;&amp; "animate-delay-60",
+                  index === 2 &amp;&amp; "animate-delay-120",
+                  index === 3 &amp;&amp; "animate-delay-180",
+                  index === 4 &amp;&amp; "animate-delay-240",
+                  index === 5 &amp;&amp; "animate-delay-300"
+                )}&gt;
                 &lt;Card className="text-center bg-card border-border"&gt;
                   &lt;CardContent className="p-4 md:p-6"&gt;
                     &lt;IconComponent className="h-6 w-6 md:h-8 md:w-8 text-primary mx-auto mb-3 md:mb-4" /&gt;
@@ -546,19 +549,8 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
           &lt;div className="max-w-4xl mx-auto text-center"&gt;
             &lt;h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-6"&gt;Our Story&lt;/h2&gt;
             &lt;div className="space-y-4 md:space-y-6 text-muted-foreground text-base md:text-lg leading-relaxed"&gt;
-              &lt;p&gt;
-                Founded in 2009 by automotive enthusiast &lt;BrandName className="inline" /&gt; began as a small family business
-                with a simple mission: to provide quality pre-owned vehicles with honest, transparent service.
-              &lt;/p&gt;
-              &lt;p&gt;
-                What started in a modest lot with just 20 vehicles has grown into one of Los Angeles&amp;apos; most trusted
-                used car dealerships, serving thousands of satisfied customers throughout Southern California.
-              &lt;/p&gt;
-              &lt;p&gt;
-                Today, we continue to uphold the same values that built our reputation: integrity, quality, and
-                putting our customers first. Every vehicle on our lot is carefully selected and thoroughly inspected
-                to ensure you&amp;apos;re getting the best value for your investment.
-              &lt;/p&gt;
+              &lt;p&gt;&lt;BrandNameUser className="inline" /&gt; has been committed to a showroom-quality experience with corporate-level service standards, ensuring every customer feels confident and informed.&lt;/p&gt;
+              &lt;p&gt;We combine transparent pricing with rigorous multi-point inspections and a curated inventory, so our customers spend less time searching and more time driving.&lt;/p&gt;
             &lt;/div&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -596,41 +588,40 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
           &lt;div className="text-center mb-8 md:mb-12"&gt;
             &lt;h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 md:mb-4"&gt;Visit Our Office&lt;/h2&gt;
             &lt;p className="text-muted-foreground max-w-2xl mx-auto font-medium"&gt;
-              Come see us in person and experience the &lt;BrandName className="inline" /&gt; difference.
+              Come see us in person and experience the &lt;BrandNameUser className="inline" /&gt; difference.
             &lt;/p&gt;
           &lt;/div&gt;
           &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto"&gt;
-            &lt;Card className="text-center bg-card border-border"&gt;
+            &lt;Card className="text-center bg-card/70 backdrop-blur border border-border rounded-2xl"&gt;
               &lt;CardContent className="p-4 md:p-6"&gt;
                 &lt;MapPin className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" /&gt;
                 &lt;h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3"&gt;Our Location&lt;/h3&gt;
                 &lt;p className="text-sm md:text-base text-muted-foreground"&gt;
-                  12440 Firestone Blvd, Suite 3025D&lt;br /&gt;
-                  Norwalk, CA 90650
+                  24328 S Vermont Ave Suite #215&lt;br/&gt;Harbor City, CA 90710
                 &lt;/p&gt;
               &lt;/CardContent&gt;
             &lt;/Card&gt;
             
-            &lt;Card className="text-center bg-card border-border"&gt;
+            &lt;Card className="text-center bg-card/70 backdrop-blur border border-border rounded-2xl"&gt;
               &lt;CardContent className="p-4 md:p-6"&gt;
                 &lt;Phone className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" /&gt;
                 &lt;h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3"&gt;Call Us&lt;/h3&gt;
-                &lt;div className="space-y-1 text-sm md:text-base text-muted-foreground"&gt;
-                  &lt;p&gt;+1 424-303-0386&lt;/p&gt;
-                  &lt;p&gt;+1 310-350-7709&lt;/p&gt;
-                  &lt;p&gt;+1 310-972-0341&lt;/p&gt;
-                  &lt;p&gt;+1 310-904-8377&lt;/p&gt;
+                &lt;div className="space-y-2 text-sm md:text-base text-muted-foreground"&gt;
+                  &lt;p className="font-medium"&gt;Mobile: +1 310-350-7709&lt;/p&gt;
+                  &lt;p className="font-medium"&gt;Landline: +1 424-250-9663&lt;/p&gt;
                 &lt;/div&gt;
               &lt;/CardContent&gt;
             &lt;/Card&gt;
             
-            &lt;Card className="text-center bg-card border-border"&gt;
+            &lt;Card className="text-center bg-card/70 backdrop-blur border border-border rounded-2xl"&gt;
               &lt;CardContent className="p-4 md:p-6"&gt;
-                &lt;Mail className="h-10 w-10 md:h-12 md:w-12 text-primary mx-auto mb-3 md:mb-4" /&gt;
-                &lt;h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3"&gt;Email Us&lt;/h3&gt;
-                &lt;p className="text-sm md:text-base text-muted-foreground"&gt;
-                  info@amtycoonsinc.com&lt;br /&gt;               
-                &lt;/p&gt;
+                &lt;div className="flex flex-col items-center"&gt;
+                  &lt;Mail className="h-10 w-10 md:h-12 md:w-12 text-primary mb-3 md:mb-4" /&gt;
+                  &lt;h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 md:mb-3"&gt;Email Us&lt;/h3&gt;
+                  &lt;p className="text-sm md:text-base text-muted-foreground text-center break-all"&gt;
+                    info@internationalcarcompanyinc.com
+                  &lt;/p&gt;
+                &lt;/div&gt;
               &lt;/CardContent&gt;
             &lt;/Card&gt;
           &lt;/div&gt;
@@ -642,18 +633,18 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
         &lt;div className="container mx-auto px-4 text-center"&gt;
           &lt;h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4"&gt;Ready to Find Your Perfect Car?&lt;/h2&gt;
           &lt;p className="text-lg md:text-xl mb-6 md:mb-8"&gt;
-            Browse our inventory or visit our showroom to experience the &lt;BrandName className="inline" /&gt; difference.
+            Browse our inventory or visit our showroom to experience the &lt;BrandNameUser className="inline" /&gt; difference.
           &lt;/p&gt;
           &lt;div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center"&gt;
-            &lt;a
-              href="/listings"
-              className="bg-white text-red-600 px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm md:text-base"
+              &lt;a
+              href="/inventory"
+              className="bg-white text-primary px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm md:text-base"
             &gt;
               Browse Inventory
             &lt;/a&gt;
-            &lt;a
+              &lt;a
               href="/contact"
-              className="border-2 border-white text-white px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-white hover:text-red-600 transition-colors text-sm md:text-base"
+              className="border-2 border-white text-white px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors text-sm md:text-base"
             &gt;
               Contact Us
             &lt;/a&gt;
@@ -670,7 +661,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-12T02:09:21.748Z
+                at 2025-08-25T16:36:32.662Z
             </div>
         <script src="../prettify.js"></script>
         <script>

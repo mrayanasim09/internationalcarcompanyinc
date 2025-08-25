@@ -49,6 +49,77 @@ export interface Review {
   createdAt: Date
 }
 
+// Database types for Supabase operations
+export interface DatabaseCar {
+  id: string
+  title: string
+  make: string
+  model: string
+  year: number
+  mileage: number
+  price: number
+  description: string
+  location: string
+  vin?: string
+  engine?: string
+  transmission?: string
+  exterior_color?: string
+  interior_color?: string
+  drive_type?: string
+  fuel_type?: string
+  features?: string[]
+  documents?: { name: string; url: string }[]
+  images: string[]
+  contact: {
+    phone: string
+    whatsapp: string
+  }
+  rating: number
+  approved: boolean
+  listed_at: Date
+  created_at?: Date
+  updated_at?: Date
+  is_featured?: boolean
+  is_inventory?: boolean
+  created_by?: string
+}
+
+export interface DatabaseAdminUser {
+  id: string
+  email: string
+  password_hash: string
+  role: AdminRole
+  permissions: string[]
+  is_active: boolean
+  email_verified: boolean
+  created_at: string
+  updated_at: string
+  created_by?: string
+}
+
+export interface DatabaseContactMessage {
+  id: string
+  name: string
+  email: string
+  phone: string
+  subject: string
+  message: string
+  status: string
+  created_at: string
+  updated_at: string
+}
+
+export interface DatabaseReview {
+  id: string
+  car_id: string
+  name: string
+  comment: string
+  stars: number
+  approved: boolean
+  created_at: string
+  updated_at: string
+}
+
 // Admin role types and permissions
 export type AdminRole = 'super_admin' | 'admin' | 'editor' | 'viewer'
 

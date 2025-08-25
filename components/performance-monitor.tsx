@@ -9,6 +9,15 @@ interface PerformanceMetrics {
   fid: number | null
   ttfb: number | null
   bundleSize: number | null
+  domSize: number | null
+  resourceCount: number | null
+}
+
+interface PerformanceLog {
+  timestamp: string
+  metrics: PerformanceMetrics
+  url: string
+  userAgent: string
 }
 
 export function PerformanceMonitor() {
@@ -19,12 +28,49 @@ export function PerformanceMonitor() {
     fid: null,
     ttfb: null,
     bundleSize: null,
+    domSize: null,
+    resourceCount: null,
   })
   const [isVisible, setIsVisible] = useState(false)
+  const [logs, setLogs] = useState<PerformanceLog[]>([])
   const observersRef = useRef<PerformanceObserver[]>([])
 
   const updateMetric = useCallback((key: keyof PerformanceMetrics, value: number) => {
     setMetrics(prev => ({ ...prev, [key]: value }))
+  }, [])
+
+  const logPerformance = useCallback((metrics: PerformanceMetrics) => {
+    const log: PerformanceLog = {
+      timestamp: new Date().toISOString(),
+      metrics,
+      url: window.location.href,
+      userAgent: navigator.userAgent,
+    }
+    
+    setLogs(prev => [...prev.slice(-9), log]) // Keep last 10 logs
+    
+    // Send to analytics if available
+    if (window.gtag) {
+      window.gtag('event', 'performance_metrics', {
+        event_category: 'Performance',
+        event_label: window.location.pathname,
+        value: Math.round(metrics.lcp || 0),
+        custom_parameters: {
+          fcp: metrics.fcp,
+          cls: metrics.cls,
+          fid: metrics.fid,
+          ttfb: metrics.ttfb,
+          bundle_size: metrics.bundleSize,
+          dom_size: metrics.domSize,
+          resource_count: metrics.resourceCount,
+        }
+      })
+    }
+    
+    // Log to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Performance Metrics:', log)
+    }
   }, [])
 
   const calculateBundleSize = useCallback(() => {
@@ -33,16 +79,38 @@ export function PerformanceMonitor() {
       
       const resources = performance.getEntriesByType('resource')
       let totalSize = 0
+      let resourceCount = resources.length
       
       for (const resource of resources) {
-        if (resource.transferSize) {
+        if ('transferSize' in resource && resource.transferSize) {
           totalSize += resource.transferSize
         }
       }
       
       updateMetric('bundleSize', Math.round(totalSize / 1024)) // Convert to KB
+      updateMetric('resourceCount', resourceCount)
     } catch (error) {
       console.warn('Failed to calculate bundle size:', error)
+    }
+  }, [updateMetric])
+
+  const calculateDOMSize = useCallback(() => {
+    try {
+      const domSize = document.documentElement.innerHTML.length
+      updateMetric('domSize', Math.round(domSize / 1024)) // Convert to KB
+    } catch (error) {
+      console.warn('Failed to calculate DOM size:', error)
+    }
+  }, [updateMetric])
+
+  const measureTTFB = useCallback(() => {
+    try {
+      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
+      if (navigation) {
+        updateMetric('ttfb', Math.round(navigation.responseStart - navigation.requestStart))
+      }
+    } catch (error) {
+      console.warn('Failed to measure TTFB:', error)
     }
   }, [updateMetric])
 
@@ -104,83 +172,65 @@ export function PerformanceMonitor() {
         })
         fidObserver.observe({ entryTypes: ['first-input'] })
         observersRef.current.push(fidObserver)
-
-        // Time to First Byte
-        const navigationObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === 'navigation') {
-              const navEntry = entry as PerformanceNavigationTiming
-              updateMetric('ttfb', Math.round(navEntry.responseStart - navEntry.requestStart))
-            }
-          }
-        })
-        navigationObserver.observe({ entryTypes: ['navigation'] })
-        observersRef.current.push(navigationObserver)
-
-        // Calculate initial bundle size
-        calculateBundleSize()
-
-        // Recalculate bundle size after a delay to ensure all resources are loaded
-        const timeoutId = setTimeout(calculateBundleSize, 2000)
-
-        return () => {
-          clearTimeout(timeoutId)
-          // Disconnect all observers
-          observersRef.current.forEach(observer => observer.disconnect())
-          observersRef.current = []
-        }
       } catch (error) {
-        console.warn('Failed to set up performance monitoring:', error)
+        console.warn('Failed to set up performance observers:', error)
       }
     }
-  }, [updateMetric, calculateBundleSize])
 
-  // Don't render anything if not visible
-  if (!isVisible) {
-    return null
-  }
+    // Calculate initial metrics
+    calculateBundleSize()
+    calculateDOMSize()
+    measureTTFB()
+
+    // Set up periodic monitoring
+    const interval = setInterval(() => {
+      calculateBundleSize()
+      calculateDOMSize()
+      measureTTFB()
+    }, 10000) // Every 10 seconds
+
+    return () => {
+      clearInterval(interval)
+      observersRef.current.forEach(observer => observer.disconnect())
+    }
+  }, [calculateBundleSize, calculateDOMSize, measureTTFB, updateMetric])
+
+  // Log performance when metrics change
+  useEffect(() => {
+    if (Object.values(metrics).some(metric => metric !== null)) {
+      logPerformance(metrics)
+    }
+  }, [metrics, logPerformance])
+
+  if (!isVisible) return null
 
   return (
-    <div className="fixed top-4 left-4 z-50 bg-background/90 backdrop-blur border border-border rounded-lg shadow-lg p-4 max-w-xs">
-      <h3 className="text-sm font-semibold text-foreground mb-3">Performance Metrics</h3>
-      <div className="space-y-2 text-xs">
-        {metrics.fcp && (
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">FCP:</span>
-            <span className="font-mono">{metrics.fcp}ms</span>
-          </div>
-        )}
-        {metrics.lcp && (
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">LCP:</span>
-            <span className="font-mono">{metrics.lcp}ms</span>
-          </div>
-        )}
-        {metrics.cls && (
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">CLS:</span>
-            <span className="font-mono">{metrics.cls}</span>
-          </div>
-        )}
-        {metrics.fid && (
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">FID:</span>
-            <span className="font-mono">{metrics.fid}ms</span>
-          </div>
-        )}
-        {metrics.ttfb && (
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">TTFB:</span>
-            <span className="font-mono">{metrics.ttfb}ms</span>
-          </div>
-        )}
-        {metrics.bundleSize && (
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Bundle:</span>
-            <span className="font-mono">{metrics.bundleSize}KB</span>
-          </div>
-        )}
+    <div className="fixed bottom-4 right-4 bg-background border border-border rounded-lg p-4 shadow-lg max-w-sm z-50">
+      <div className="text-sm font-semibold mb-2">Performance Monitor</div>
+      <div className="space-y-1 text-xs">
+        <div>FCP: {metrics.fcp ? `${metrics.fcp}ms` : 'N/A'}</div>
+        <div>LCP: {metrics.lcp ? `${metrics.lcp}ms` : 'N/A'}</div>
+        <div>CLS: {metrics.cls ? metrics.cls.toFixed(3) : 'N/A'}</div>
+        <div>FID: {metrics.fid ? `${metrics.fid}ms` : 'N/A'}</div>
+        <div>TTFB: {metrics.ttfb ? `${metrics.ttfb}ms` : 'N/A'}</div>
+        <div>Bundle: {metrics.bundleSize ? `${metrics.bundleSize}KB` : 'N/A'}</div>
+        <div>DOM: {metrics.domSize ? `${metrics.domSize}KB` : 'N/A'}</div>
+        <div>Resources: {metrics.resourceCount || 'N/A'}</div>
       </div>
+      
+      {logs.length > 0 && (
+        <details className="mt-2">
+          <summary className="cursor-pointer text-xs text-muted-foreground">Recent Logs</summary>
+          <div className="mt-2 max-h-32 overflow-y-auto text-xs">
+            {logs.map((log, index) => (
+              <div key={index} className="mb-1 p-1 bg-muted rounded">
+                <div className="font-mono">{log.timestamp}</div>
+                <div>LCP: {log.metrics.lcp}ms, CLS: {log.metrics.cls?.toFixed(3)}</div>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
     </div>
   )
 }

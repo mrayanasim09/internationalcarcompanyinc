@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -488,14 +488,14 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  static g</span>etInstance(): JWTManager {
-<span class="cstat-no" title="statement not covered" >    if (!JWTManager.instance) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!JWTManager.instance) {</span>
 <span class="cstat-no" title="statement not covered" >      JWTManager.instance = new JWTManager()</span>
     }
 <span class="cstat-no" title="statement not covered" >    return JWTManager.instance</span>
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  private async g</span>etStore() {
-<span class="cstat-no" title="statement not covered" >    if (!this.storePromise) <span class="cstat-no" title="statement not covered" >this.storePromise = createStore()</span></span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.storePromise) <span class="cstat-no" title="statement not covered" >this.storePromise = createStore()</span></span>
 <span class="cstat-no" title="statement not covered" >    return this.storePromise</span>
   }
 &nbsp;
@@ -504,7 +504,7 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
     const jti = <span class="cstat-no" title="statement not covered" >crypto.randomUUID()</span>
 <span class="cstat-no" title="statement not covered" >    return jwt.sign({ ...payload, jti }, this.secret, {</span>
       expiresIn: this.accessTokenExpiry,
-      issuer: 'am-tycoons-inc',
+      issuer: 'international-car-company-inc',
       audience: 'car-dealership-users'
     })
   }
@@ -514,7 +514,7 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
     const jti = <span class="cstat-no" title="statement not covered" >crypto.randomUUID()</span>
 <span class="cstat-no" title="statement not covered" >    return jwt.sign({ ...payload, jti }, this.refreshSecret, {</span>
       expiresIn: this.refreshTokenExpiry,
-      issuer: 'am-tycoons-inc',
+      issuer: 'international-car-company-inc',
       audience: 'car-dealership-refresh'
     })
   }
@@ -523,7 +523,7 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
 <span class="fstat-no" title="function not covered" >  verifyAccessToken(t</span>oken: string): TokenValidationResult {
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const payload = <span class="cstat-no" title="statement not covered" >jwt.verify(token, this.secret, {</span>
-        issuer: 'am-tycoons-inc',
+        issuer: 'international-car-company-inc',
         audience: 'car-dealership-users'
       }) as JWTPayload
 &nbsp;
@@ -543,7 +543,7 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
 <span class="fstat-no" title="function not covered" >  verifyRefreshToken(t</span>oken: string): TokenValidationResult {
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const payload = <span class="cstat-no" title="statement not covered" >jwt.verify(token, this.refreshSecret, {</span>
-        issuer: 'am-tycoons-inc',
+        issuer: 'international-car-company-inc',
         audience: 'car-dealership-refresh'
       }) as JWTPayload
 &nbsp;
@@ -563,7 +563,7 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
 <span class="fstat-no" title="function not covered" >  refreshAccessToken(r</span>efreshToken: string): { accessToken: string; newRefreshToken?: string } | null {
     const refreshResult = <span class="cstat-no" title="statement not covered" >this.verifyRefreshToken(refreshToken)</span>
     
-<span class="cstat-no" title="statement not covered" >    if (!refreshResult.isValid || !refreshResult.payload) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!refreshResult.isValid || !refreshResult.payload) {</span>
 <span class="cstat-no" title="statement not covered" >      return null</span>
     }
 &nbsp;
@@ -578,7 +578,7 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
     const timeUntilExpiry = <span class="cstat-no" title="statement not covered" >tokenExp - now</span>
     
     // If refresh token expires in less than 1 day, generate a new one
-<span class="cstat-no" title="statement not covered" >    if (timeUntilExpiry &lt; 86400) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (timeUntilExpiry &lt; 86400) {</span>
       const newRefreshToken = <span class="cstat-no" title="statement not covered" >this.generateRefreshToken(payload)</span>
 <span class="cstat-no" title="statement not covered" >      return { accessToken, newRefreshToken }</span>
     }
@@ -618,7 +618,7 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
 &nbsp;
   // Blacklist token (for logout)
 <span class="fstat-no" title="function not covered" >  blacklistToken(t</span>oken: string, expiry: number): void {
-<span class="cstat-no" title="statement not covered" >    if (process.env.NODE_ENV !== 'production') {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== 'production') {</span>
 <span class="cstat-no" title="statement not covered" >      console.log(`Token blacklisted until ${new Date(expiry * 1000)}`)</span>
     }
     // TODO: Wire this to Redis set with expiry when USE_REDIS=1
@@ -631,7 +631,7 @@ export class <span class="cstat-no" title="statement not covered" >JWTManager </
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  async i</span>sJtiBlacklisted(jti?: string): Promise&lt;boolean&gt; {
-<span class="cstat-no" title="statement not covered" >    if (!jti) <span class="cstat-no" title="statement not covered" >return false</span></span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!jti) <span class="cstat-no" title="statement not covered" >return false</span></span>
     const store = <span class="cstat-no" title="statement not covered" >await this.getStore()</span>
     const v = <span class="cstat-no" title="statement not covered" >await store.get&lt;boolean&gt;(`blacklist:${jti}`)</span>
 <span class="cstat-no" title="statement not covered" >    return Boolean(v)</span>
@@ -652,7 +652,7 @@ export const <span class="cstat-no" title="statement not covered" >jwtManager </
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-12T02:09:21.748Z
+                at 2025-08-25T16:36:32.662Z
             </div>
         <script src="../prettify.js"></script>
         <script>

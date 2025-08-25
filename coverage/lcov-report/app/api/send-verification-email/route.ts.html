@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/49</span>
+                <span class='fraction'>0/39</span>
             </div>
         
             
@@ -658,11 +658,11 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
     const rateLimit = <span class="cstat-no" title="statement not covered" >emailRateLimit.get(clientIP) || { count: 0, lastSent: 0 }</span>
     
     // Reset counter if window has passed
-<span class="cstat-no" title="statement not covered" >    if (now - rateLimit.lastSent &gt; RATE_LIMIT_WINDOW) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (now - rateLimit.lastSent &gt; RATE_LIMIT_WINDOW) {</span>
 <span class="cstat-no" title="statement not covered" >      rateLimit.count = 0</span>
     }
     
-<span class="cstat-no" title="statement not covered" >    if (rateLimit.count &gt;= MAX_EMAILS_PER_HOUR) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (rateLimit.count &gt;= MAX_EMAILS_PER_HOUR) {</span>
 <span class="cstat-no" title="statement not covered" >      return NextResponse.json({</span>
         success: false,
         error: 'Rate limit exceeded. Please try again later.'
@@ -672,7 +672,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
     const body = <span class="cstat-no" title="statement not covered" >await request.json()</span>
 &nbsp;
     const validationResult = <span class="cstat-no" title="statement not covered" >emailSchema.safeParse(body)</span>
-<span class="cstat-no" title="statement not covered" >    if (!validationResult.success) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!validationResult.success) {</span>
 <span class="cstat-no" title="statement not covered" >      return NextResponse.json(</span>
         { error: 'Invalid input data', details: validationResult.error.errors },
         { status: 400 }
@@ -737,7 +737,7 @@ async function <span class="fstat-no" title="function not covered" >sendEmail(e<
 async function <span class="fstat-no" title="function not covered" >sendWithResend(e</span>mail: string, code: string, type: string): Promise&lt;boolean&gt; {
 <span class="cstat-no" title="statement not covered" >  try {</span>
     const apiKey = <span class="cstat-no" title="statement not covered" >process.env.RESEND_API_KEY</span>
-<span class="cstat-no" title="statement not covered" >    if (!apiKey) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!apiKey) {</span>
 <span class="cstat-no" title="statement not covered" >      console.warn('⚠️  RESEND_API_KEY not set, falling back to console')</span>
 <span class="cstat-no" title="statement not covered" >      return await sendToConsole(email, code, type)</span>
     }
@@ -749,16 +749,16 @@ async function <span class="fstat-no" title="function not covered" >sendWithRese
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: process.env.FROM_EMAIL || 'noreply@amtycoonsinc.com',
+        from: process.env.FROM_EMAIL || 'info@internationalcarcompanyinc.com',
         to: email,
-        subject: `AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
+        subject: `International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
         html: generateEmailHTML(code, type),
         text: generateEmailText(code, type)
       })
     })
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (response.ok) {</span>
-<span class="cstat-no" title="statement not covered" >      if (process.env.NODE_ENV !== 'production') {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== 'production') {</span>
 <span class="cstat-no" title="statement not covered" >        console.log(`✅ Email sent via Resend to: ${email}`)</span>
       }
 <span class="cstat-no" title="statement not covered" >      return true</span>
@@ -777,7 +777,7 @@ async function <span class="fstat-no" title="function not covered" >sendWithRese
 async function <span class="fstat-no" title="function not covered" >sendWithSendGrid(e</span>mail: string, code: string, type: string): Promise&lt;boolean&gt; {
 <span class="cstat-no" title="statement not covered" >  try {</span>
     const apiKey = <span class="cstat-no" title="statement not covered" >process.env.SENDGRID_API_KEY</span>
-<span class="cstat-no" title="statement not covered" >    if (!apiKey) {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!apiKey) {</span>
 <span class="cstat-no" title="statement not covered" >      console.warn('⚠️  SENDGRID_API_KEY not set, falling back to console')</span>
 <span class="cstat-no" title="statement not covered" >      return await sendToConsole(email, code, type)</span>
     }
@@ -790,8 +790,8 @@ async function <span class="fstat-no" title="function not covered" >sendWithSend
       },
       body: JSON.stringify({
         personalizations: [{ to: [{ email }] }],
-        from: { email: process.env.FROM_EMAIL || 'noreply@amtycoonsinc.com' },
-        subject: `AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
+        from: { email: process.env.FROM_EMAIL || 'info@internationalcarcompanyinc.com' },
+        subject: `International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
         content: [
           { type: 'text/plain', value: generateEmailText(code, type) },
           { type: 'text/html', value: generateEmailHTML(code, type) }
@@ -799,8 +799,8 @@ async function <span class="fstat-no" title="function not covered" >sendWithSend
       })
     })
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (response.ok) {</span>
-<span class="cstat-no" title="statement not covered" >      if (process.env.NODE_ENV !== 'production') {</span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== 'production') {</span>
 <span class="cstat-no" title="statement not covered" >        console.log(`✅ Email sent via SendGrid to: ${email}`)</span>
       }
 <span class="cstat-no" title="statement not covered" >      return true</span>
@@ -831,7 +831,7 @@ async function <span class="fstat-no" title="function not covered" >sendWithNode
 // Console logging for development/testing
 async function <span class="fstat-no" title="function not covered" >sendToConsole(e</span>mail: string, code: string, type: string): Promise&lt;boolean&gt; {
   const emailContent = <span class="cstat-no" title="statement not covered" >`</span>
-📧 AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}
+📧 International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}
 &nbsp;
 🔐 Your verification code is: ${code}
 &nbsp;
@@ -840,10 +840,10 @@ async function <span class="fstat-no" title="function not covered" >sendToConsol
 ⚠️  If you didn't request this code, please ignore this email.
 &nbsp;
 Best regards,
-AM Tycoons Inc. Team
+International Car Company Inc Team
   `
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (process.env.NODE_ENV !== 'production') {</span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== 'production') {</span>
 <span class="cstat-no" title="statement not covered" >    console.log(`📧 Sending ${type} email to: ${email}`)</span>
 <span class="cstat-no" title="statement not covered" >    console.log(`📧 Email content:\n${emailContent}`)</span>
 <span class="cstat-no" title="statement not covered" >    console.log(`🔗 In production, this would be sent via email service`)</span>
@@ -860,7 +860,7 @@ function <span class="fstat-no" title="function not covered" >generateEmailHTML(
 &lt;head&gt;
   &lt;meta charset="utf-8"&gt;
   &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-  &lt;title&gt;AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}&lt;/title&gt;
+  &lt;title&gt;International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}&lt;/title&gt;
   &lt;style&gt;
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -873,7 +873,7 @@ function <span class="fstat-no" title="function not covered" >generateEmailHTML(
 &lt;body&gt;
   &lt;div class="container"&gt;
     &lt;div class="header"&gt;
-      &lt;h1&gt;AM Tycoons Inc.&lt;/h1&gt;
+      &lt;h1&gt;International Car Company Inc&lt;/h1&gt;
       &lt;h2&gt;${type === 'verification' ? 'Email Verification' : 'Password Reset'}&lt;/h2&gt;
     &lt;/div&gt;
     &lt;div class="content"&gt;
@@ -882,7 +882,7 @@ function <span class="fstat-no" title="function not covered" >generateEmailHTML(
       &lt;div class="code"&gt;${code}&lt;/div&gt;
       &lt;p&gt;This code will expire in 10 minutes.&lt;/p&gt;
       &lt;p&gt;If you didn't request this code, please ignore this email.&lt;/p&gt;
-      &lt;p&gt;Best regards,&lt;br&gt;AM Tycoons Inc. Team&lt;/p&gt;
+      &lt;p&gt;Best regards,&lt;br&gt;International Car Company Inc Team&lt;/p&gt;
     &lt;/div&gt;
     &lt;div class="footer"&gt;
       &lt;p&gt;This is an automated message. Please do not reply.&lt;/p&gt;
@@ -896,7 +896,7 @@ function <span class="fstat-no" title="function not covered" >generateEmailHTML(
 // Generate plain text email content
 function <span class="fstat-no" title="function not covered" >generateEmailText(c</span>ode: string, type: string): string {
 <span class="cstat-no" title="statement not covered" >  return `</span>
-AM Tycoons Inc. - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}
+International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}
 &nbsp;
 Your verification code is: ${code}
 &nbsp;
@@ -905,7 +905,7 @@ This code will expire in 10 minutes.
 If you didn't request this code, please ignore this email.
 &nbsp;
 Best regards,
-AM Tycoons Inc. Team
+International Car Company Inc Team
   `
 }
 &nbsp;
@@ -928,7 +928,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-12T02:09:21.748Z
+                at 2025-08-25T16:36:32.662Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

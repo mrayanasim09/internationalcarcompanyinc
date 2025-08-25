@@ -4,11 +4,11 @@ import bundleAnalyzer from '@next/bundle-analyzer'
 const nextConfig = {
   productionBrowserSourceMaps: false,
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false, // Enable ESLint during build
   },
   typescript: {
-    // Disable type checking during build to prevent failures
-    ignoreBuildErrors: true,
+    // Enable type checking during build
+    ignoreBuildErrors: false,
   },
   env: {
     SKIP_ENV_VALIDATION: 'true',

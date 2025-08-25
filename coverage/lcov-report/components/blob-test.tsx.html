@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/25</span>
+                <span class='fraction'>0/21</span>
             </div>
         
             
@@ -511,7 +511,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
 &nbsp;
   const handleFileUpload = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async (e</span>vent: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {</span>
     const file = <span class="cstat-no" title="statement not covered" >event.target.files?.[0]</span>
-<span class="cstat-no" title="statement not covered" >    if (!file) <span class="cstat-no" title="statement not covered" >return</span></span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!file) <span class="cstat-no" title="statement not covered" >return</span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    setUploading(true)</span>
 <span class="cstat-no" title="statement not covered" >    setTestResults({ upload: null, display: null, delete: null })</span>
@@ -526,7 +526,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
         body: formData,
       })
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (!response.ok) {</span>
         const error = <span class="cstat-no" title="statement not covered" >await response.json()</span>
 <span class="cstat-no" title="statement not covered" >        throw new Error(error.error || 'Upload failed')</span>
       }
@@ -558,7 +558,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
   }
 &nbsp;
   const handleDelete = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async () =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >    if (!uploadedUrl) <span class="cstat-no" title="statement not covered" >return</span></span>
+<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (!uploadedUrl) <span class="cstat-no" title="statement not covered" >return</span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const response = <span class="cstat-no" title="statement not covered" >await fetch('/api/blob/delete', {</span>
@@ -569,7 +569,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
         body: JSON.stringify({ imageUrl: uploadedUrl }),
       })
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >      <span class="missing-if-branch" title="if path not taken" >I</span>if (!response.ok) {</span>
         const error = <span class="cstat-no" title="statement not covered" >await response.json()</span>
 <span class="cstat-no" title="statement not covered" >        throw new Error(error.error || 'Delete failed')</span>
       }
@@ -587,7 +587,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
   const getStatusIcon = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(s</span>tatus: boolean | null) =&gt; {</span>
     if (status === null) return &lt;div className="w-4 h-4 bg-gray-300 rounded-full" /&gt;
     if (status) return &lt;CheckCircle className="w-4 h-4 text-green-500" /&gt;
-    return &lt;XCircle className="w-4 h-4 text-red-500" /&gt;
+    return &lt;XCircle className="w-4 h-4 text-blue-500" /&gt;
   }
 &nbsp;
   return (
@@ -595,7 +595,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
       &lt;CardHeader&gt;
         &lt;CardTitle className="flex items-center gap-2"&gt;
           &lt;ImageIcon className="w-5 h-5" /&gt;
-          Vercel Blob Integration Test
+          Storage Integration Test
         &lt;/CardTitle&gt;
         &lt;CardDescription&gt;
           Test the image upload, display, and delete functionality
@@ -664,19 +664,19 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
                 &lt;span&gt;Upload:&lt;/span&gt;
                 {getStatusIcon(testResults.upload)}
                 {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.upload === true &amp;&amp; &lt;</span>span className="text-green-600"&gt;Success&lt;/span&gt;}
-                {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.upload === false &amp;&amp; &lt;</span>span className="text-red-600"&gt;Failed&lt;/span&gt;}
+                {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.upload === false &amp;&amp; &lt;</span>span className="text-blue-600"&gt;Failed&lt;/span&gt;}
               &lt;/div&gt;
               &lt;div className="flex items-center gap-2"&gt;
                 &lt;span&gt;Display:&lt;/span&gt;
                 {getStatusIcon(testResults.display)}
                 {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.display === true &amp;&amp; &lt;</span>span className="text-green-600"&gt;Success&lt;/span&gt;}
-                {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.display === false &amp;&amp; &lt;</span>span className="text-red-600"&gt;Failed&lt;/span&gt;}
+                {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.display === false &amp;&amp; &lt;</span>span className="text-blue-600"&gt;Failed&lt;/span&gt;}
               &lt;/div&gt;
               &lt;div className="flex items-center gap-2"&gt;
                 &lt;span&gt;Delete:&lt;/span&gt;
                 {getStatusIcon(testResults.delete)}
                 {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.delete === true &amp;&amp; &lt;</span>span className="text-green-600"&gt;Success&lt;/span&gt;}
-                {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.delete === false &amp;&amp; &lt;</span>span className="text-red-600"&gt;Failed&lt;/span&gt;}
+                {<span class="branch-0 cbranch-no" title="branch not covered" >testResults.delete === false &amp;&amp; &lt;</span>span className="text-blue-600"&gt;Failed&lt;/span&gt;}
               &lt;/div&gt;
             &lt;/div&gt;
           &lt;/div&gt;
@@ -703,7 +703,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-12T02:09:21.748Z
+                at 2025-08-25T16:36:32.662Z
             </div>
         <script src="../prettify.js"></script>
         <script>

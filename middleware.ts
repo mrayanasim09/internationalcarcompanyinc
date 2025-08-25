@@ -1,133 +1,117 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { jwtManager } from '@/lib/jwt-utils'
+import { jwtManagerEdge } from '@/lib/jwt-utils-edge'
+import { logger } from '@/lib/config/debug'
 
-// Ultra-permissive CSP Configuration - Allow everything to prevent any blocking
+// Secure CSP Configuration - Balanced security and functionality
 const cspConfig = {
-  // Default source - allow everything
-  defaultSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "data:", "blob:", "https:", "http:", "wss:", "ws:", "*"],
+  // Default source - restrict to same origin and trusted sources
+  defaultSrc: ["'self'"],
   
-  // Script sources - allow everything
+  // Script sources - allow same origin, inline scripts, and trusted CDNs
   scriptSrc: [
     "'self'",
     "'unsafe-inline'",
-    "'unsafe-eval'",
     "'nonce-{NONCE}'",
-    "https:",
-    "http:",
-    "wss:",
-    "ws:",
-    "data:",
-    "blob:",
-    "*"
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://www.gstatic.com",
+    "https://unpkg.com"
   ],
   
-  // Script source elements - allow everything
+  // Script source elements - same as script-src
   scriptSrcElem: [
     "'self'",
     "'unsafe-inline'",
-    "'unsafe-eval'",
     "'nonce-{NONCE}'",
-    "https:",
-    "http:",
-    "wss:",
-    "ws:",
-    "data:",
-    "blob:",
-    "*"
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://www.gstatic.com",
+    "https://unpkg.com"
   ],
   
-  // Script source attributes - allow everything
-  scriptSrcAttr: ["'self'", "'unsafe-inline'", "*"],
+  // Script source attributes - restrict to same origin only
+  scriptSrcAttr: ["'self'"],
   
-  // Style sources - allow everything
+  // Style sources - allow same origin, inline styles, and trusted CDNs
   styleSrc: [
     "'self'",
     "'unsafe-inline'",
-    "https:",
-    "http:",
-    "data:",
-    "blob:",
-    "*"
+    "https://fonts.googleapis.com",
+    "https://unpkg.com"
   ],
   
-  // Style source elements - allow everything
+  // Style source elements - same as style-src
   styleSrcElem: [
     "'self'",
     "'unsafe-inline'",
-    "https:",
-    "http:",
-    "data:",
-    "blob:",
-    "*"
+    "https://fonts.googleapis.com",
+    "https://unpkg.com"
   ],
   
-  // Style attributes - allow everything
-  styleSrcAttr: ["'self'", "'unsafe-inline'", "*"],
+  // Style attributes - allow inline styles
+  styleSrcAttr: ["'self'", "'unsafe-inline'"],
 
-  // Font sources - allow everything
+  // Font sources - allow same origin and trusted CDNs
   fontSrc: [
     "'self'",
-    "https:",
-    "http:",
-    "data:",
-    "blob:",
-    "*"
+    "https://fonts.gstatic.com",
+    "https://unpkg.com"
   ],
   
-  // Image sources - allow everything
+  // Image sources - allow same origin, data URIs, and trusted sources
   imgSrc: [
     "'self'",
     "data:",
     "blob:",
-    "https:",
-    "http:",
-    "wss:",
-    "ws:",
-    "*"
+    "https://*.supabase.co",
+    "https://www.google-analytics.com",
+    "https://region1.google-analytics.com",
+    "https://maps.gstatic.com",
+    "https://*.googleusercontent.com",
+    "https://www.google.com"
   ],
   
-  // Media sources - allow everything
-  mediaSrc: ["'self'", "https:", "http:", "data:", "blob:", "*"],
+  // Media sources - allow same origin and data URIs
+  mediaSrc: ["'self'", "data:", "blob:"],
   
-  // Connect sources - allow everything to prevent connection errors
+  // Connect sources - allow same origin and trusted APIs
   connectSrc: [
     "'self'",
-    "https:",
-    "http:",
-    "wss:",
-    "ws:",
-    "data:",
-    "blob:",
-    "*"
+    "https://*.supabase.co",
+    "https://www.google-analytics.com",
+    "https://region1.google-analytics.com",
+    "https://www.google.com",
+    "https://maps.googleapis.com",
+    "https://www.googletagmanager.com"
   ],
   
-  // Object sources - allow everything
-  objectSrc: ["'self'", "https:", "http:", "data:", "blob:", "*"],
+  // Object sources - block all for security
+  objectSrc: ["'none'"],
   
-  // Base URI - allow everything
-  baseUri: ["'self'", "https:", "http:", "data:", "*"],
+  // Base URI - restrict to same origin
+  baseUri: ["'self'"],
   
-  // Form actions - allow everything
-  formAction: ["'self'", "https:", "http:", "data:", "*"],
+  // Form actions - allow same origin
+  formAction: ["'self'"],
   
-  // Frame ancestors - allow everything
-  frameAncestors: ["'self'", "https:", "http:", "*"],
+  // Frame ancestors - block all for security
+  frameAncestors: ["'none'"],
   
-  // Worker sources - allow everything
-  workerSrc: ["'self'", "https:", "http:", "data:", "blob:", "*"],
+  // Worker sources - allow same origin and data URIs
+  workerSrc: ["'self'", "data:", "blob:"],
   
-  // Manifest sources - allow everything
-  manifestSrc: ["'self'", "https:", "http:", "data:", "*"],
+  // Manifest sources - allow same origin
+  manifestSrc: ["'self'"],
   
-  // Prefetch sources - allow everything
-  prefetchSrc: ["'self'", "https:", "http:", "data:", "*"],
+  // Prefetch sources - allow same origin
+  prefetchSrc: ["'self'"],
   
-  // Don't upgrade insecure requests
-  upgradeInsecureRequests: false,
+  // Upgrade insecure requests
+  upgradeInsecureRequests: true,
   
-  // Don't block mixed content
-  blockAllMixedContent: false
+  // Block mixed content
+  blockAllMixedContent: true
 }
 
 // Generate cryptographically secure nonce
@@ -169,7 +153,7 @@ function generateCSPHeader(nonce: string): string {
 }
 
 // Secure middleware implementation
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const response = NextResponse.next()
   
   // Generate unique nonce for this request
@@ -183,7 +167,7 @@ export function middleware(request: NextRequest) {
   
   // Debug logging (disabled in production)
   if (process.env.NODE_ENV !== 'production') {
-    console.log('DEBUG: Middleware CSP Header:', {
+    logger.debug('Middleware CSP Header:', {
       pathname: request.nextUrl.pathname,
       nonce: nonce,
       cspHeader: cspHeader,
@@ -191,29 +175,26 @@ export function middleware(request: NextRequest) {
     })
   }
   
-  // TEMPORARILY DISABLE CSP TO FIX CONNECTION ISSUES
-  // response.headers.set('Content-Security-Policy', cspHeader)
+  // Re-enable CSP with secure but permissive configuration
+  response.headers.set('Content-Security-Policy', cspHeader)
   
-  // Set a minimal CSP that allows everything
-  response.headers.set('Content-Security-Policy', "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval' data: blob:; style-src * 'unsafe-inline' data: blob:; img-src * data: blob:; connect-src * data: blob:; font-src * data: blob:; object-src * data: blob:; media-src * data: blob:; frame-src *; frame-ancestors *;")
-  
-  // Set relaxed security headers to prevent connection issues
-  response.headers.set('Referrer-Policy', 'no-referrer-when-downgrade')
+  // Set secure security headers
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   response.headers.set('X-Frame-Options', 'SAMEORIGIN')
-  response.headers.set('Cross-Origin-Resource-Policy', 'cross-origin')
-  response.headers.set('Cross-Origin-Opener-Policy', 'unsafe-none')
-  response.headers.set('Permissions-Policy', 'camera=*, microphone=*, geolocation=*, payment=*')
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-origin')
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()')
   response.headers.set('X-DNS-Prefetch-Control', 'on')
-  response.headers.set('X-Permitted-Cross-Domain-Policies', 'all')
+  response.headers.set('X-Permitted-Cross-Domain-Policies', 'none')
   response.headers.set('X-Content-Type-Options', 'nosniff')
   // X-XSS-Protection is obsolete; do not set
   
-  // Set relaxed HSTS header
-  response.headers.set('Strict-Transport-Security', 'max-age=86400')
+  // Set secure HSTS header
+  response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
   
   // Debug: Log headers (disabled in production)
   if (process.env.NODE_ENV !== 'production') {
-    console.log('DEBUG: Middleware Headers Set:', {
+    logger.debug('Middleware Headers Set:', {
       pathname: request.nextUrl.pathname,
       nonce: nonce,
       csp: response.headers.get('Content-Security-Policy'),
@@ -234,41 +215,27 @@ export function middleware(request: NextRequest) {
       
       // Get admin token from cookies
       const adminToken = request.cookies.get('icc_admin_token')?.value
-      const verificationFlag = request.cookies.get('icc_admin_verified')?.value
       
-      console.log('DEBUG: Middleware checking admin route:', request.nextUrl.pathname)
-      console.log('DEBUG: Admin token present:', !!adminToken)
-      console.log('DEBUG: Admin token length:', adminToken?.length || 0)
-      console.log('DEBUG: Verification flag present:', !!verificationFlag)
-      
-      // If verification flag is present but no token, allow access temporarily
-      if (!adminToken && verificationFlag) {
-        console.log('DEBUG: Admin route access granted - verification flag present, token may be setting')
-        return response
-      }
+      logger.debug('Middleware checking admin route:', request.nextUrl.pathname)
+      logger.debug('Admin token present:', !!adminToken)
+      logger.debug('Admin token length:', adminToken?.length || 0)
       
       if (!adminToken) {
-        console.log('DEBUG: Admin route access denied - no token, redirecting to login')
+        logger.debug('Admin route access denied - no token, redirecting to login')
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
       
       // Validate JWT token
-      const tokenValidation = jwtManager.verifyAccessToken(adminToken)
+      const tokenValidation = jwtManagerEdge.verifyAccessToken(adminToken)
       
-      console.log('DEBUG: Token validation result:', {
+      logger.debug('Token validation result:', {
         isValid: tokenValidation.isValid,
         hasPayload: !!tokenValidation.payload,
         error: tokenValidation.error
       })
       
       if (!tokenValidation.isValid || !tokenValidation.payload) {
-        // If verification flag is present, allow access even with invalid token (temporary fix)
-        if (verificationFlag) {
-          console.log('DEBUG: Admin route access granted - verification flag present, allowing access despite invalid token')
-          return response
-        }
-        
-        console.log('DEBUG: Admin route access denied - invalid token, redirecting to login')
+        logger.debug('Admin route access denied - invalid token, redirecting to login')
         // Clear invalid cookies
         const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
         redirectResponse.cookies.delete('icc_admin_token')
@@ -278,8 +245,8 @@ export function middleware(request: NextRequest) {
       
       // Check if token is blacklisted
       const jti = (tokenValidation.payload as { jti?: string }).jti
-      if (jti && jwtManager.isJtiBlacklisted(jti)) {
-        console.log('DEBUG: Admin route access denied - blacklisted token, redirecting to login')
+      if (jti && await jwtManagerEdge.isJtiBlacklisted(jti)) {
+        logger.debug('Admin route access denied - blacklisted token, redirecting to login')
         const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
         redirectResponse.cookies.delete('icc_admin_token')
         redirectResponse.cookies.delete('icc_admin_session')
@@ -289,17 +256,17 @@ export function middleware(request: NextRequest) {
       // Check token expiration
       const exp = (tokenValidation.payload as { exp?: number }).exp
       if (exp && Date.now() >= exp * 1000) {
-        console.log('DEBUG: Admin route access denied - expired token, redirecting to login')
+        logger.debug('Admin route access denied - expired token, redirecting to login')
         const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
         redirectResponse.cookies.delete('icc_admin_token')
         redirectResponse.cookies.delete('icc_admin_session')
         return redirectResponse
       }
       
-      console.log('DEBUG: Admin route access granted for user:', (tokenValidation.payload as { email?: string }).email)
+      logger.debug('Admin route access granted for user:', (tokenValidation.payload as { email?: string }).email)
       
     } catch (error) {
-      console.error('DEBUG: Admin route protection error:', error)
+      logger.error('Admin route protection error:', error)
       // On any error, redirect to login for security
       const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
       redirectResponse.cookies.delete('icc_admin_token')

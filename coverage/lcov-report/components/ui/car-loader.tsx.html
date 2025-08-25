@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
@@ -90,20 +90,46 @@
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -119,26 +145,39 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use client"
 &nbsp;
-import Image from <span class="cstat-no" title="statement not covered" >"next/image"</span>
-import { cn } from <span class="cstat-no" title="statement not covered" >"@/lib/utils"</span>
+import { Skeleton } from <span class="cstat-no" title="statement not covered" >"@/components/ui/skeleton"</span>
 &nbsp;
-export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >CarLoader({</span></span> size = <span class="branch-0 cbranch-no" title="branch not covered" >96,</span> className }: { size?: number; className?: string }) {
+interface CarLoaderProps {
+  size?: number
+  className?: string
+}
+&nbsp;
+export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >CarLoader(</span></span>{ size = <span class="branch-0 cbranch-no" title="branch not covered" >200,</span> className }: CarLoaderProps) {
+  const sizeClass = <span class="cstat-no" title="statement not covered" >size &lt;= 100 ? 'w-24 h-24' : size &lt;= 200 ? 'w-48 h-48' : 'w-96 h-96'</span>
+  
   return (
-    &lt;div className={cn("flex flex-col items-center justify-center py-8", className)} role="status" aria-label="Loading"&gt;
-      &lt;div className="relative" style={{ width: size, height: size * 0.5 }}&gt;
-        &lt;Image
-          src="/optimized/AMTycons.webp"
-          alt="AM Tycoons Inc. car logo"
-          fill
-          className="object-contain animate-car-drive drop-shadow-md"
-          sizes={`${size}px`}
-          priority={false}
-        /&gt;
-        {/* Wheels */}
-        &lt;div className="absolute bottom-0 left-[20%] w-3 h-3 rounded-full bg-primary animate-wheel-spin" /&gt;
-        &lt;div className="absolute bottom-0 right-[20%] w-3 h-3 rounded-full bg-primary animate-wheel-spin" /&gt;
-      &lt;/div&gt;
-      &lt;p className="mt-3 text-sm text-muted-foreground"&gt;Loading inventory…&lt;/p&gt;
+    &lt;Skeleton className={sizeClass} /&gt;
+  )
+}
+&nbsp;
+interface CarGridSkeletonProps {
+  count?: number
+  className?: string
+}
+&nbsp;
+export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >CarGridSkeleton(</span></span>{ count = <span class="branch-0 cbranch-no" title="branch not covered" >6,</span> className }: CarGridSkeletonProps) {
+  return (
+    &lt;div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className || ''}`}&gt;
+      {Array.from({ length: count }).map(<span class="fstat-no" title="function not covered" >(_</span>, index) =&gt; (
+<span class="cstat-no" title="statement not covered" >        &lt;div key={index} c</span>lassName="space-y-3"&gt;
+          &lt;Skeleton className="w-full h-48 rounded-lg" /&gt;
+          &lt;div className="space-y-2"&gt;
+            &lt;Skeleton className="h-4 w-3/4" /&gt;
+            &lt;Skeleton className="h-4 w-1/2" /&gt;
+            &lt;Skeleton className="h-4 w-2/3" /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      ))}
     &lt;/div&gt;
   )
 }
@@ -151,7 +190,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-12T02:09:21.748Z
+                at 2025-08-25T16:36:32.662Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

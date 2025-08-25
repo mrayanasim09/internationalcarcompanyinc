@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/36</span>
+                <span class='fraction'>0/26</span>
             </div>
         
             
@@ -487,7 +487,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
 }
 &nbsp;
 export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >requirePermission(</span></span>admin: Admin, permission: keyof AdminPermissions): boolean {
-<span class="cstat-no" title="statement not covered" >  if (!hasPermission(admin, permission)) {</span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (!hasPermission(admin, permission)) {</span>
 <span class="cstat-no" title="statement not covered" >    throw new Error(`Insufficient permissions: ${permission} required`)</span>
   }
 <span class="cstat-no" title="statement not covered" >  return true</span>
@@ -495,10 +495,10 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
 &nbsp;
 export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >canManageRole(</span></span>currentAdmin: Admin, targetRole: AdminRole): boolean {
   // Super admins can manage anyone
-<span class="cstat-no" title="statement not covered" >  if (currentAdmin.role === 'super_admin') <span class="cstat-no" title="statement not covered" >return true</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (currentAdmin.role === 'super_admin') <span class="cstat-no" title="statement not covered" >return true</span></span>
   
   // Admins can only manage editors and viewers
-<span class="cstat-no" title="statement not covered" >  if (currentAdmin.role === 'admin' &amp;&amp; ['editor', 'viewer'].includes(targetRole)) <span class="cstat-no" title="statement not covered" >return true</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (currentAdmin.role === 'admin' &amp;&amp; ['editor', 'viewer'].includes(targetRole)) <span class="cstat-no" title="statement not covered" >return true</span></span>
   
   // Editors and viewers cannot manage anyone
 <span class="cstat-no" title="statement not covered" >  return false</span>
@@ -532,7 +532,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
     .select()
     .single()
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (error) <span class="cstat-no" title="statement not covered" >throw new Error(`Failed to create admin: ${error.message}`)</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (error) <span class="cstat-no" title="statement not covered" >throw new Error(`Failed to create admin: ${error.message}`)</span></span>
   
   const row = <span class="cstat-no" title="statement not covered" >data as unknown as AdminRow</span>
 <span class="cstat-no" title="statement not covered" >  return {</span>
@@ -564,7 +564,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
     .select()
     .single()
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (error) <span class="cstat-no" title="statement not covered" >throw new Error(`Failed to update admin role: ${error.message}`)</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (error) <span class="cstat-no" title="statement not covered" >throw new Error(`Failed to update admin role: ${error.message}`)</span></span>
   
   const row2 = <span class="cstat-no" title="statement not covered" >data as unknown as AdminRow</span>
 <span class="cstat-no" title="statement not covered" >  return {</span>
@@ -585,7 +585,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
     .delete()
     .eq('id', adminId)
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (error) <span class="cstat-no" title="statement not covered" >throw new Error(`Failed to delete admin: ${error.message}`)</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (error) <span class="cstat-no" title="statement not covered" >throw new Error(`Failed to delete admin: ${error.message}`)</span></span>
 }
 &nbsp;
 export async function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >getAdminById(</span></span>adminId: string): Promise&lt;Admin | null&gt; {
@@ -595,7 +595,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
     .eq('id', adminId)
     .single()
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (error) <span class="cstat-no" title="statement not covered" >return null</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (error) <span class="cstat-no" title="statement not covered" >return null</span></span>
   
   const row3 = <span class="cstat-no" title="statement not covered" >data as unknown as AdminRow</span>
 <span class="cstat-no" title="statement not covered" >  return {</span>
@@ -616,7 +616,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
     .select('*')
     .order('created_at', { ascending: false })
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (error) <span class="cstat-no" title="statement not covered" >throw new Error(`Failed to fetch admins: ${error.message}`)</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (error) <span class="cstat-no" title="statement not covered" >throw new Error(`Failed to fetch admins: ${error.message}`)</span></span>
   
   const rows = (<span class="cstat-no" title="statement not covered" >data as unknown as AdminRow[])</span>
 <span class="cstat-no" title="statement not covered" >  return rows.map(<span class="fstat-no" title="function not covered" >admin =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span></span>
@@ -639,10 +639,10 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
     .eq('email', email)
     .single()
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (error || !data) <span class="cstat-no" title="statement not covered" >return null</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (error || !data) <span class="cstat-no" title="statement not covered" >return null</span></span>
   
   const isValidPassword = <span class="cstat-no" title="statement not covered" >await bcrypt.compare(password, (data as unknown as AdminRow).password_hash)</span>
-<span class="cstat-no" title="statement not covered" >  if (!isValidPassword) <span class="cstat-no" title="statement not covered" >return null</span></span>
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (!isValidPassword) <span class="cstat-no" title="statement not covered" >return null</span></span>
   
   const row4 = <span class="cstat-no" title="statement not covered" >data as unknown as AdminRow</span>
 <span class="cstat-no" title="statement not covered" >  return {</span>
@@ -673,7 +673,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-12T02:09:21.748Z
+                at 2025-08-25T16:36:32.662Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -114,8 +114,21 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -133,9 +146,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -167,49 +191,61 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use client"
 &nbsp;
+import * as React from <span class="cstat-no" title="statement not covered" >"react"</span>
 import { cn } from <span class="cstat-no" title="statement not covered" >"@/lib/utils"</span>
 &nbsp;
 interface ProgressBarProps {
-  value: number
-  max?: number
+  percentage: number
   className?: string
   showLabel?: boolean
-  color?: "red" | "green" | "blue" | "gray"
+  size?: 'sm' | 'md' | 'lg'
+  variant?: 'default' | 'success' | 'warning' | 'danger'
 }
 &nbsp;
-export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >ProgressBar({</span></span>
-  value,
-  max = <span class="branch-0 cbranch-no" title="branch not covered" >100,</span>
-  className,
-  showLabel = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span>
-  color = <span class="branch-0 cbranch-no" title="branch not covered" >"red"</span>
+export function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >ProgressBar({ </span></span>
+  percentage, 
+  className, 
+  showLabel = <span class="branch-0 cbranch-no" title="branch not covered" >true, </span>
+  size = <span class="branch-0 cbranch-no" title="branch not covered" >'md',</span>
+  variant = <span class="branch-0 cbranch-no" title="branch not covered" >'default'</span>
 }: ProgressBarProps) {
-  const percentage = <span class="cstat-no" title="statement not covered" >Math.min((value / max) * 100, 100)</span>
+  // Calculate progress class based on percentage
+  const progressClass = <span class="cstat-no" title="statement not covered" >React.useMemo(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
+    const progress = <span class="cstat-no" title="statement not covered" >Math.round(percentage / 10) * 10</span>
+<span class="cstat-no" title="statement not covered" >    return `progress-${Math.min(progress, 100)}`</span>
+  }, [percentage])
 &nbsp;
-  const colorClasses = <span class="cstat-no" title="statement not covered" >{</span>
-    red: "bg-red-600",
-    green: "bg-green-600",
-    blue: "bg-blue-600",
-    gray: "bg-gray-600"
+  const sizeClasses = <span class="cstat-no" title="statement not covered" >{</span>
+    sm: 'h-2',
+    md: 'h-3',
+    lg: 'h-4'
+  }
+&nbsp;
+  const variantClasses = <span class="cstat-no" title="statement not covered" >{</span>
+    default: 'bg-primary',
+    success: 'bg-green-500',
+    warning: 'bg-yellow-500',
+    danger: 'bg-red-500'
   }
 &nbsp;
   return (
     &lt;div className={cn("w-full", className)}&gt;
-      &lt;div className="flex justify-between items-center mb-1"&gt;
-        {<span class="branch-0 cbranch-no" title="branch not covered" >showLabel &amp;&amp; (</span>
-          &lt;span className="text-sm font-medium text-gray-700"&gt;
-            {value}/{max}
-          &lt;/span&gt;
-        )}
-        &lt;span className="text-sm text-gray-500"&gt;{Math.round(percentage)}%&lt;/span&gt;
-      &lt;/div&gt;
-      &lt;div className="w-full bg-gray-200 rounded-full h-2"&gt;
-        &lt;div
+      {<span class="branch-0 cbranch-no" title="branch not covered" >showLabel &amp;&amp; (</span>
+        &lt;div className="flex justify-between text-sm text-muted-foreground mb-2"&gt;
+          &lt;span&gt;Progress&lt;/span&gt;
+          &lt;span&gt;{Math.round(percentage)}%&lt;/span&gt;
+        &lt;/div&gt;
+      )}
+      &lt;div className={cn(
+        "w-full bg-secondary rounded-full overflow-hidden",
+        sizeClasses[size]
+      )}&gt;
+        &lt;div 
           className={cn(
-            "h-2 rounded-full transition-all duration-300 ease-out",
-            colorClasses[color]
+            "h-full transition-all duration-300 ease-in-out rounded-full",
+            variantClasses[variant],
+            progressClass
           )}
-          style={{ width: `${percentage}%` }}
         /&gt;
       &lt;/div&gt;
     &lt;/div&gt;
@@ -223,7 +259,7 @@ export function <span class="cstat-no" title="statement not covered" ><span clas
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-12T02:09:21.748Z
+                at 2025-08-25T16:36:32.662Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
