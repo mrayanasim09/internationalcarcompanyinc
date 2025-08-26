@@ -45,6 +45,25 @@ export function EmailAdminLogin() {
     fetchCSRFToken()
   }, [])
 
+  // Function to refresh CSRF token
+  const refreshCSRFToken = async () => {
+    try {
+      const res = await fetch('/api/csrf-debug', {
+        method: 'GET',
+        credentials: 'include'
+      })
+      const data = await res.json()
+      if (data.success && data.token) {
+        setCsrfToken(data.token)
+        console.log('CSRF token refreshed')
+        return data.token
+      }
+    } catch (error) {
+      console.error('Failed to refresh CSRF token:', error)
+    }
+    return null
+  }
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -60,17 +79,69 @@ export function EmailAdminLogin() {
     setIsLoading(true)
 
     try {
+      // Refresh CSRF token before making the request
+      const freshToken = await refreshCSRFToken()
+      if (!freshToken) {
+        toast({
+          title: "Error",
+          description: "Failed to refresh security token. Please refresh the page.",
+          variant: "destructive",
+        })
+        return
+      }
+
       const controller = new AbortController()
       const timeout = setTimeout(() => controller.abort(), 8000)
 
       const start = await fetch('/api/admin/login-start', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrfToken },
+        headers: { 'Content-Type': 'application/json', 'x-csrf-token': freshToken },
         credentials: 'include',
         body: JSON.stringify({ email, password }),
         signal: controller.signal,
       })
       clearTimeout(timeout)
+      
+      if (start.status === 403) {
+        // CSRF token issue - try to refresh and retry once
+        const retryToken = await refreshCSRFToken()
+        if (retryToken) {
+          const retryStart = await fetch('/api/admin/login-start', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-csrf-token': retryToken },
+            credentials: 'include',
+            body: JSON.stringify({ email, password }),
+            signal: controller.signal,
+          })
+          const retryResult = await retryStart.json().catch(() => ({} as unknown)) as { success?: boolean; requiresEmailVerification?: boolean; trusted?: boolean; message?: string; error?: string; debugCode?: string | number }
+          
+          if (retryStart.ok && retryResult?.success) {
+            if (retryResult.trusted || retryResult.requiresEmailVerification) {
+              setCurrentEmail(email)
+              setStep('verification')
+              if (retryResult.debugCode && process.env.NODE_ENV !== 'production') {
+                // Autofill debug only when explicitly enabled on server AND not in production
+                setVerificationCode(String(retryResult.debugCode))
+              }
+              if (!retryResult.trusted) {
+                toast({ title: 'Verification Required', description: 'Please check your email for the verification code.', duration: 5000 })
+              }
+              return
+            }
+            // Fallback: treat as verification path
+            setCurrentEmail(email)
+            setStep('verification')
+            return
+          }
+        }
+        toast({
+          title: "Security Error",
+          description: "Security token expired. Please refresh the page and try again.",
+          variant: "destructive",
+        })
+        return
+      }
+
       const result = await start.json().catch(() => ({} as unknown)) as { success?: boolean; requiresEmailVerification?: boolean; trusted?: boolean; message?: string; error?: string; debugCode?: string | number }
 
       if (start.ok && result?.success) {
@@ -93,6 +164,7 @@ export function EmailAdminLogin() {
       }
       toast({ title: 'Login Failed', description: result?.error || result?.message || 'Invalid credentials or blocked by rate limit', variant: 'destructive' })
     } catch (err) {
+      console.error('Login error:', err)
       toast({
         title: "Error",
         description: (err instanceof Error && err.name === 'AbortError') ? 'Request timed out. Please try again.' : 'An unexpected error occurred. Please try again.',
@@ -108,15 +180,69 @@ export function EmailAdminLogin() {
     setIsLoading(true)
 
     try {
+      // Refresh CSRF token before making the request
+      const freshToken = await refreshCSRFToken()
+      if (!freshToken) {
+        toast({
+          title: "Error",
+          description: "Failed to refresh security token. Please refresh the page.",
+          variant: "destructive",
+        })
+        return
+      }
+
       const verify = await fetch('/api/admin/login-verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-csrf-token': csrfToken
+          'x-csrf-token': freshToken
         },
         credentials: 'include',
         body: JSON.stringify({ email: currentEmail, code: verificationCode })
       })
+      
+      if (verify.status === 403) {
+        // CSRF token issue - try to refresh and retry once
+        const retryToken = await refreshCSRFToken()
+        if (retryToken) {
+          const retryVerify = await fetch('/api/admin/login-verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-csrf-token': retryToken
+            },
+            credentials: 'include',
+            body: JSON.stringify({ email: currentEmail, code: verificationCode })
+          })
+          const retryResult = await retryVerify.json()
+          if (retryVerify.ok && retryResult.success) {
+            toast({
+              title: "Verification Successful",
+              description: "Welcome to the admin dashboard!",
+            })
+            
+            // Debug: Check what cookies are set after verification
+            if (process.env.NODE_ENV === 'development') {
+              console.log('DEBUG: Verification successful, checking cookies...')
+              console.log('DEBUG: All cookies:', document.cookie)
+              console.log('DEBUG: Has icc_admin_verified:', document.cookie.includes('icc_admin_verified=1'))
+            }
+            
+            // Simple redirect after successful verification
+            setTimeout(() => {
+              router.replace("/admin/dashboard")
+            }, 1000)
+            return
+          }
+        }
+        toast({
+          title: "Security Error",
+          description: "Security token expired. Please refresh the page and try again.",
+          variant: "destructive",
+        })
+        return
+      }
+
       const result = await verify.json().catch(() => ({} as unknown)) as { success?: boolean; error?: string }
 
       if (verify.ok && result.success) {
@@ -147,7 +273,8 @@ export function EmailAdminLogin() {
         }
         toast({ title: "Verification Failed", description: message, variant: "destructive" })
       }
-    } catch {
+    } catch (err) {
+      console.error('Verification error:', err)
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
@@ -183,12 +310,51 @@ export function EmailAdminLogin() {
   const handleResendCode = async () => {
     setIsLoading(true)
     try {
+      // Refresh CSRF token before making the request
+      const freshToken = await refreshCSRFToken()
+      if (!freshToken) {
+        toast({
+          title: "Error",
+          description: "Failed to refresh security token. Please refresh the page.",
+          variant: "destructive",
+        })
+        return
+      }
+
       const res = await fetch('/api/admin/login-resend', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrfToken },
+        headers: { 'Content-Type': 'application/json', 'x-csrf-token': freshToken },
         credentials: 'include',
         body: JSON.stringify({ email: currentEmail })
       })
+      
+      if (res.status === 403) {
+        // CSRF token issue - try to refresh and retry once
+        const retryToken = await refreshCSRFToken()
+        if (retryToken) {
+          const retryRes = await fetch('/api/admin/login-resend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-csrf-token': retryToken },
+            credentials: 'include',
+            body: JSON.stringify({ email: currentEmail })
+          })
+          const retryResult = await retryRes.json()
+          if (retryRes.ok && retryResult.success) {
+            toast({
+              title: "Code Resent",
+              description: "A new verification code has been sent to your email.",
+            })
+            return
+          }
+        }
+        toast({
+          title: "Security Error",
+          description: "Security token expired. Please refresh the page and try again.",
+          variant: "destructive",
+        })
+        return
+      }
+
       const result = await res.json()
       if (result.success) {
         toast({
@@ -198,14 +364,15 @@ export function EmailAdminLogin() {
       } else {
         toast({
           title: "Failed to Resend",
-          description: result.message,
+          description: result.message || result.error || "Failed to resend verification code.",
           variant: "destructive",
         })
       }
-    } catch {
+    } catch (error) {
+      console.error('Resend code error:', error)
       toast({
         title: "Error",
-        description: "Failed to resend verification code.",
+        description: "Failed to resend verification code. Please try again.",
         variant: "destructive",
       })
     } finally {
