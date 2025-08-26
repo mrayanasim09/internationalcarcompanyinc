@@ -198,6 +198,17 @@ export const csrf = {
         return true
       }
       
+      // Also try to verify as a signed token
+      try {
+        const verification = csrfProtection.verifyToken(csrfToken)
+        if (verification.valid) {
+          console.log('DEBUG: CSRF token verified as signed token')
+          return true
+        }
+      } catch (signedTokenError) {
+        console.log('DEBUG: Failed to verify as signed token:', signedTokenError)
+      }
+      
       console.log('DEBUG: CSRF token format is invalid')
       return false
     } catch (error) {
