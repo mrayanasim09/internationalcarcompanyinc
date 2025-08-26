@@ -1,0 +1,130 @@
+User-agent: *
+Allow: /
+
+# Allow all pages except admin and private areas
+Disallow: /admin/
+Disallow: /api/admin/
+Disallow: /test-admin/
+Disallow: /test-analytics/
+Disallow: /test-blob/
+Disallow: /test-connection/
+Disallow: /test-csp/
+Disallow: /debug-connections/
+Disallow: /_next/
+Disallow: /static/
+
+# Allow important pages with enhanced crawling
+Allow: /inventory/
+Allow: /browse/
+Allow: /listings/
+Allow: /car/
+Allow: /about/
+Allow: /contact/
+Allow: /faq/
+Allow: /privacy/
+Allow: /terms/
+Allow: /security/
+
+# Sitemap location - Google will automatically discover new pages from here
+Sitemap: https://internationalcarcompanyinc.com/sitemap.xml
+
+# Crawl delay (optimized for better indexing)
+Crawl-delay: 1
+
+# Specific rules for major search engines with enhanced indexing
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+# Google will automatically index new pages from sitemap
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Enhanced Google bot instructions for better indexing
+User-agent: Googlebot-Image
+Allow: /
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.png$
+Allow: /*.webp$
+# Google will automatically index new images
+
+User-agent: Googlebot-Mobile
+Allow: /
+# Mobile pages will be automatically indexed
+
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: APIS-Google
+Allow: /
+
+# Block AI training bots
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: TwitterBot
+Disallow: /
+
+User-agent: LinkedInBot
+Disallow: /
+
+# Block archive bots
+User-agent: ia_archiver
+Disallow: /
+
+User-agent: archive.org_bot
+Disallow: /
+
+# Block scraping bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: Screaming Frog SEO Spider
+Disallow: /
+
+# Additional instructions for better Google indexing
+# Google will automatically discover and index new pages from:
+# 1. Sitemap updates
+# 2. Internal linking
+# 3. Page content quality
+# 4. Site structure
