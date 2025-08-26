@@ -3,9 +3,11 @@ import { cookies } from 'next/headers'
 import { jwtManager } from './jwt-utils'
 
 interface AdminAuth {
+  userId: string
   email: string
   role: string
   permissions: string[]
+  sessionId: string
 }
 
 export async function getAdminAuthFromRequest(): Promise<AdminAuth | null> {
@@ -18,18 +20,20 @@ export async function getAdminAuthFromRequest(): Promise<AdminAuth | null> {
       return null
     }
 
-    const validation = jwtManager.verify(token)
+    const validation = jwtManager.verifyAccessToken(token)
     
-    if (!validation.valid || !validation.payload) {
+    if (!validation.isValid || !validation.payload) {
       return null
     }
 
-    const payload = validation.payload as { email?: string; role?: string; permissions?: string[] }
+    const payload = validation.payload
     
     return {
+      userId: payload.userId || '',
       email: payload.email || '',
       role: payload.role || 'viewer',
-      permissions: payload.permissions || [],
+      permissions: payload.permissions ? Object.entries(payload.permissions).map(([key, value]) => `${key}:${value}`) : [],
+      sessionId: payload.sessionId || '',
     }
   } catch {
     return null
@@ -53,7 +57,7 @@ export async function getAdminAuth(): Promise<AdminAuth | null> {
         userId: result.payload.userId,
         email: result.payload.email,
         role: result.payload.role,
-        permissions: result.payload.permissions,
+        permissions: result.payload.permissions ? Object.entries(result.payload.permissions).map(([key, value]) => `${key}:${value}`) : [],
         sessionId: result.payload.sessionId
       }
     }
@@ -87,7 +91,7 @@ export async function getAdminAuth(): Promise<AdminAuth | null> {
             userId: decodedToken.userId,
             email: decodedToken.email,
             role: decodedToken.role,
-            permissions: decodedToken.permissions,
+            permissions: decodedToken.permissions ? Object.entries(decodedToken.permissions).map(([key, value]) => `${key}:${value}`) : [],
             sessionId: decodedToken.sessionId
           }
         }

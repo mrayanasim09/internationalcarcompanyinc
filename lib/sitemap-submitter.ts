@@ -386,12 +386,12 @@ export class SitemapSubmitter {
    * Check if search engines are accessible
    */
   public async checkSearchEngineStatus(): Promise<{
-    google: { accessible: boolean; status?: number; message?: string }
-    bing: { accessible: boolean; status?: number; message?: string }
+    google: { accessible: boolean; status: number; message: string }
+    bing: { accessible: boolean; status: number; message: string }
   }> {
     const results = {
-      google: { accessible: false, status: undefined, message: undefined },
-      bing: { accessible: false, status: undefined, message: undefined }
+      google: { accessible: false, status: 0, message: 'Not checked' },
+      bing: { accessible: false, status: 0, message: 'Not checked' }
     }
 
     try {
@@ -408,6 +408,7 @@ export class SitemapSubmitter {
     } catch (error) {
       results.google = {
         accessible: false,
+        status: 0,
         message: error instanceof Error ? error.message : 'Unknown error'
       }
     }
@@ -426,6 +427,7 @@ export class SitemapSubmitter {
     } catch (error) {
       results.bing = {
         accessible: false,
+        status: 0,
         message: error instanceof Error ? error.message : 'Unknown error'
       }
     }

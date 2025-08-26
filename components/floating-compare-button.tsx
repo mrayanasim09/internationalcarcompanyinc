@@ -22,7 +22,7 @@ export function FloatingCompareButton() {
         const { data } = await supabasePublic
           .from('cars')
           .select('*')
-          .eq('approved', true)
+          // .eq('approved', true)
           .order('listed_at', { ascending: false })
           .limit(12)
         const cars = (data || []) as unknown as Car[]

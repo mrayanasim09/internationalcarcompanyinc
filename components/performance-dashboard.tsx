@@ -41,6 +41,7 @@ export function PerformanceDashboard() {
     resourceCount: null,
     cacheHitRate: null
   })
+  const [history, setHistory] = useState<PerformanceHistory[]>([])
   const [isVisible, setIsVisible] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(false)
   const [alerts, setAlerts] = useState<string[]>([])
@@ -463,6 +464,35 @@ export function PerformanceDashboard() {
                 </li>
               ))}
             </ul>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Performance History */}
+      {history.length > 0 && (
+        <Card className="mb-4">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Recent History</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2 max-h-32 overflow-y-auto">
+              {history.slice(0, 5).map((entry, index) => (
+                <div key={index} className="text-xs border-l-2 border-primary pl-2">
+                  <div className="flex justify-between">
+                    <span className="font-medium">
+                      {new Date(entry.timestamp).toLocaleTimeString()}
+                    </span>
+                    <span className="text-muted-foreground">
+                      Score: {entry.metrics.fcp ? (entry.metrics.fcp <= 1800 ? 'Good' : entry.metrics.fcp <= 3000 ? 'Fair' : 'Poor') : 'N/A'}
+                    </span>
+                  </div>
+                  <div className="text-muted-foreground">
+                    FCP: {entry.metrics.fcp ? `${entry.metrics.fcp}ms` : 'N/A'} | 
+                    LCP: {entry.metrics.lcp ? `${entry.metrics.lcp}ms` : 'N/A'}
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       )}

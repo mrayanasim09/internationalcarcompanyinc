@@ -80,8 +80,9 @@ export function PerformanceMonitor() {
       // Calculate resource metrics
       const resourceCount = performance.getEntriesByType('resource').length
       const totalSize = performance.getEntriesByType('resource').reduce((total, resource) => {
-        if (resource.transferSize && resource.transferSize > 0) {
-          total += resource.transferSize
+        const resourceEntry = resource as PerformanceResourceTiming
+        if (resourceEntry.transferSize && resourceEntry.transferSize > 0) {
+          total += resourceEntry.transferSize
         }
         return total
       }, 0)

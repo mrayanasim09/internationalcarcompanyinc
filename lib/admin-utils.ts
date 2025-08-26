@@ -51,13 +51,13 @@ export async function createAdmin(
   const passwordHash = await bcrypt.hash(password, 12)
   const permissions = getRolePermissions(role)
   
-  const { data, error } = await supabaseAdmin
-    .from('admin_users')
+  const { data, error } = await (supabaseAdmin
+    .from('admin_users') as any) // eslint-disable-line @typescript-eslint/no-explicit-any
     .insert({
       email,
       password_hash: passwordHash,
       role,
-      permissions,
+      permissions: Object.entries(permissions).map(([key, value]) => `${key}:${value}`),
       created_by: createdBy,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -86,11 +86,11 @@ export async function updateAdminRole(
 ): Promise<Admin> {
   const permissions = getRolePermissions(newRole)
   
-  const { data, error } = await supabaseAdmin
-    .from('admin_users')
+  const { data, error } = await (supabaseAdmin
+    .from('admin_users') as any) // eslint-disable-line @typescript-eslint/no-explicit-any
     .update({
       role: newRole,
-      permissions,
+      permissions: Object.entries(permissions).map(([key, value]) => `${key}:${value}`),
       updated_at: new Date().toISOString()
     })
     .eq('id', adminId)
@@ -191,8 +191,8 @@ export async function verifyAdminCredentials(email: string, password: string): P
 }
 
 export async function updateAdminLoginTime(adminId: string): Promise<void> {
-  await supabaseAdmin
-    .from('admin_users')
+  await (supabaseAdmin
+    .from('admin_users') as any) // eslint-disable-line @typescript-eslint/no-explicit-any
     .update({
       last_login_at: new Date().toISOString(),
       updated_at: new Date().toISOString()

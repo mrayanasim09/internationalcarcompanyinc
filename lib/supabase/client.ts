@@ -10,7 +10,6 @@ export const supabasePublic = createClient<Database>(supabaseUrl, supabaseAnonKe
     persistSession: true,
     detectSessionInUrl: true
   },
-  realtime: false,
   db: {
     schema: 'public'
   },

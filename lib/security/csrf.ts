@@ -12,6 +12,7 @@ export interface CSRFConfig {
 
 export class CSRFProtection {
   private config: CSRFConfig
+  private tokens: Map<string, number>
 
   constructor(config?: Partial<CSRFConfig>) {
     this.config = {
@@ -23,6 +24,7 @@ export class CSRFProtection {
       methods: ['POST', 'PUT', 'DELETE', 'PATCH'],
       ...config
     }
+    this.tokens = new Map()
   }
 
   /**
@@ -180,19 +182,20 @@ export const csrf = {
       return false
     }
 
-    const tokenAge = this.tokens.get(csrfToken)
+    // Use the csrfProtection instance to access tokens
+    const tokenAge = (csrfProtection as any).tokens.get(csrfToken) // eslint-disable-line @typescript-eslint/no-explicit-any
     if (!tokenAge) {
       return false
     }
 
     // Check if token is expired (24 hours)
-    if (Date.now() - tokenAge > this.tokenExpiry) {
-      this.tokens.delete(csrfToken)
+    if (Date.now() - tokenAge > 24 * 60 * 60 * 1000) {
+      (csrfProtection as any).tokens.delete(csrfToken) // eslint-disable-line @typescript-eslint/no-explicit-any
       return false
     }
 
     // Remove used token
-    this.tokens.delete(csrfToken)
+    (csrfProtection as any).tokens.delete(csrfToken) // eslint-disable-line @typescript-eslint/no-explicit-any
     return true
   }
 }

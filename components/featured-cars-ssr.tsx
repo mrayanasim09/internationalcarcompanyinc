@@ -15,9 +15,6 @@ export async function FeaturedCarsSSR() {
       const { data, error: dbError } = await supabasePublic
         .from('cars')
         .select('*')
-        .eq('approved', true)
-        .eq('is_featured', true)
-        .eq('is_inventory', true)
         .order('listed_at', { ascending: false })
         .limit(6)
 
@@ -25,9 +22,10 @@ export async function FeaturedCarsSSR() {
         console.error('Database query error:', dbError)
         error = 'Failed to load featured cars from database'
         cars = []
-      } else if (data && data.length > 0) {
+      } else if (data && Array.isArray(data) && data.length > 0) {
         // Transform database rows to Car objects
-        cars = data.map(row => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        cars = (data as Record<string, any>[]).map(row => ({
           id: row.id,
           title: row.title || `${row.year} ${row.make} ${row.model}`,
           make: row.make,
@@ -42,9 +40,9 @@ export async function FeaturedCarsSSR() {
           isInventory: Boolean(row.is_inventory),
           listedAt: row.listed_at ? new Date(row.listed_at) : new Date(),
           description: row.description || '',
-          contact: { phone: row.contact_phone || '', whatsapp: row.contact_whatsapp || '' },
+          contact: { phone: row.contact?.phone || '', whatsapp: row.contact?.whatsapp || '' },
           rating: row.rating || 0,
-          reviews: row.reviews || []
+          reviews: []
         }))
       } else {
         // No cars in database
@@ -86,7 +84,7 @@ export async function FeaturedCarsSSR() {
     <div className="container mx-auto px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {cars.map((car) => (
-          <CarCard key={car.id} car={car} showCompareButton={true} />
+          <CarCard key={car.id} car={car} />
         ))}
       </div>
       

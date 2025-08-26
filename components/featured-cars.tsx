@@ -15,22 +15,11 @@ export function FeaturedCars() {
         const { data, error } = await supabasePublic
           .from('cars')
           .select('*')
-          .eq('approved', true)
-          .eq('is_featured', true)
+                  // .eq('approved', 'true')
+        // .eq('is_featured', 'true')
           .order('listed_at', { ascending: false })
           .limit(6)
-        type CarRow = {
-          id: string
-          title: string
-          make: string
-          model: string
-          year: number
-          mileage: number
-          price: number
-          location: string
-          images: string[]
-        }
-        setCars((error || !data) ? [] : (data as CarRow[] as unknown as Car[]))
+        setCars((error || !data) ? [] : (data as unknown as Car[]))
       } catch (error) {
         console.error("Error loading featured cars:", error)
         setCars([])

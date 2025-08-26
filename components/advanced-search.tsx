@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Car } from '@/lib/types'
 import { Search, Filter, X, ChevronDown, ChevronUp, Save } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 export interface AdvancedSearchFilters {
   search: string
@@ -53,9 +54,9 @@ export function AdvancedSearch({
 
   // Extract unique values from cars for suggestions
   const uniqueValues = useMemo(() => {
-    const makes = [...new Set(cars.map(car => car.make).filter(Boolean))]
-    const models = [...new Set(cars.map(car => car.model).filter(Boolean))]
-    const locations = [...new Set(cars.map(car => car.location).filter(Boolean))]
+    const makes = Array.from(new Set(cars.map(car => car.make).filter(Boolean)))
+    const models = Array.from(new Set(cars.map(car => car.model).filter(Boolean)))
+    const locations = Array.from(new Set(cars.map(car => car.location).filter(Boolean)))
     
     return { makes, models, locations }
   }, [cars])

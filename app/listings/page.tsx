@@ -23,7 +23,15 @@ export default function ListingsPage() {
   const [cars, setCars] = useState<Car[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<{
+    search: string;
+    make: string;
+    minPrice: number | null;
+    maxPrice: number | null;
+    minYear: number | null;
+    maxYear: number | null;
+    maxMileage: number | null;
+  }>({
     search: '',
     make: '',
     minPrice: null,
@@ -244,11 +252,56 @@ export default function ListingsPage() {
               )}
               {/* Actual FilterPanel wired to lifted filters */}
               <div className="mt-4">
-                <DynamicFilterPanel initialFilters={filters} onFilter={setFilters} />
+                <DynamicFilterPanel 
+                  initialFilters={{
+                    search: filters.search,
+                    make: filters.make,
+                    minPrice: filters.minPrice,
+                    maxPrice: filters.maxPrice,
+                    minYear: filters.minYear,
+                    maxYear: filters.maxYear,
+                    maxMileage: filters.maxMileage
+                  }}
+                  onFilter={(newFilters) => {
+                    setFilters(prev => ({
+                      ...prev,
+                      search: newFilters.search,
+                      make: newFilters.make,
+                      minPrice: newFilters.minPrice,
+                      maxPrice: newFilters.maxPrice,
+                      minYear: newFilters.minYear,
+                      maxYear: newFilters.maxYear,
+                      maxMileage: newFilters.maxMileage
+                    }));
+                  }}
+                />
               </div>
             </aside>
             <div className="lg:w-3/4">
-              <ListingsContent initialCars={cars} filters={filters} onFiltersChange={setFilters} />
+              <ListingsContent 
+                initialCars={cars} 
+                filters={{
+                  search: filters.search,
+                  make: filters.make,
+                  minPrice: filters.minPrice,
+                  maxPrice: filters.maxPrice,
+                  minYear: filters.minYear,
+                  maxYear: filters.maxYear,
+                  maxMileage: filters.maxMileage
+                }}
+                onFiltersChange={(newFilters) => {
+                  setFilters(prev => ({
+                    ...prev,
+                    search: newFilters.search,
+                    make: newFilters.make,
+                    minPrice: newFilters.minPrice,
+                    maxPrice: newFilters.maxPrice,
+                    minYear: newFilters.minYear,
+                    maxYear: newFilters.maxYear,
+                    maxMileage: newFilters.maxMileage
+                  }));
+                }}
+              />
             </div>
           </div>
         )}

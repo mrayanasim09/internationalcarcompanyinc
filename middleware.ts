@@ -230,7 +230,7 @@ export async function middleware(request: NextRequest) {
       
       // Check if token is blacklisted
       const jti = (tokenValidation.payload as any).jti
-      if (jti && await jwtManagerEdge.isTokenBlacklisted(jti)) {
+      if (jti && await jwtManagerEdge.isJtiBlacklisted(jti)) {
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
       

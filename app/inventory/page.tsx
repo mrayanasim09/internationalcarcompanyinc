@@ -41,7 +41,22 @@ export default function InventoryPage() {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<{
+    search: string;
+    make: string;
+    model: string;
+    minPrice: number | null;
+    maxPrice: number | null;
+    minYear: number | null;
+    maxYear: number | null;
+    minMileage: number | null;
+    maxMileage: number | null;
+    location: string;
+    features: string[];
+    transmission: string;
+    fuelType: string;
+    bodyStyle: string;
+  }>({
     search: '',
     make: '',
     model: '',
@@ -75,11 +90,9 @@ export default function InventoryPage() {
       // Only trigger refresh if user pulls down from the very top
       if (window.scrollY === 0 && diff < -50 && !isRefreshing) {
         isRefreshing = true;
-        setRefreshing(true);
         
         // Simulate refresh
         setTimeout(() => {
-          setRefreshing(false);
           isRefreshing = false;
         }, 1000);
       }
@@ -213,7 +226,7 @@ export default function InventoryPage() {
         />
 
         {error ? (
-          <ErrorDisplay />
+          <ErrorDisplay title="Error Loading Inventory" />
         ) : cars.length === 0 ? (
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-foreground mb-4">No Vehicles Available</h2>
@@ -264,8 +277,27 @@ export default function InventoryPage() {
               
               <Suspense fallback={<div className="animate-pulse h-64 bg-gray-200 rounded"></div>}>
                 <DynamicFilterPanel
-                  initialFilters={filters}
-                  onFilter={setFilters}
+                  initialFilters={{
+                    search: filters.search,
+                    make: filters.make,
+                    minPrice: filters.minPrice,
+                    maxPrice: filters.maxPrice,
+                    minYear: filters.minYear,
+                    maxYear: filters.maxYear,
+                    maxMileage: filters.maxMileage
+                  }}
+                  onFilter={(newFilters) => {
+                    setFilters(prev => ({
+                      ...prev,
+                      search: newFilters.search,
+                      make: newFilters.make,
+                      minPrice: newFilters.minPrice,
+                      maxPrice: newFilters.maxPrice,
+                      minYear: newFilters.minYear,
+                      maxYear: newFilters.maxYear,
+                      maxMileage: newFilters.maxMileage
+                    }));
+                  }}
                 />
               </Suspense>
             </aside>
@@ -274,8 +306,27 @@ export default function InventoryPage() {
               <Suspense fallback={<CarGridSkeleton count={6} />}>
                 <ListingsContent
                   initialCars={cars}
-                  filters={filters}
-                  onFiltersChange={setFilters}
+                  filters={{
+                    search: filters.search,
+                    make: filters.make,
+                    minPrice: filters.minPrice,
+                    maxPrice: filters.maxPrice,
+                    minYear: filters.minYear,
+                    maxYear: filters.maxYear,
+                    maxMileage: filters.maxMileage
+                  }}
+                  onFiltersChange={(newFilters) => {
+                    setFilters(prev => ({
+                      ...prev,
+                      search: newFilters.search,
+                      make: newFilters.make,
+                      minPrice: newFilters.minPrice,
+                      maxPrice: newFilters.maxPrice,
+                      minYear: newFilters.minYear,
+                      maxYear: newFilters.maxYear,
+                      maxMileage: newFilters.maxMileage
+                    }));
+                  }}
                 />
               </Suspense>
             </div>

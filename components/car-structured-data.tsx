@@ -57,15 +57,15 @@ export function CarStructuredData({ car }: CarStructuredDataProps) {
       '@type': 'Review',
       reviewRating: {
         '@type': 'Rating',
-        ratingValue: review.rating || 5,
+        ratingValue: review.stars || 5,
         bestRating: 5
       },
       author: {
         '@type': 'Person',
-        name: review.authorName || 'Anonymous'
+        name: review.name || 'Anonymous'
       },
       reviewBody: review.comment || 'Great car!',
-      datePublished: review.date || new Date().toISOString()
+      datePublished: review.createdAt ? new Date(review.createdAt).toISOString() : new Date().toISOString()
     })) : undefined
   }
 

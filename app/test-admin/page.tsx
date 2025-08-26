@@ -9,6 +9,7 @@ import { Loader2, Shield } from 'lucide-react'
 
 export default function TestAdminPage() {
   const [testResults, setTestResults] = useState<Array<{
+    id: number
     test: string
     status: 'success' | 'error' | 'warning'
     message: string

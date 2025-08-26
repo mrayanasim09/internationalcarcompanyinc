@@ -93,8 +93,8 @@ export function CarPageClient({ carId }: CarPageClientProps) {
     return (
       <ErrorDisplay 
         title="Error Loading Car"
-        message="Failed to load vehicle information. Please try again later."
-        error={error}
+        description="Failed to load vehicle information. Please try again later."
+        variant="error"
       />
     )
   }
@@ -103,8 +103,8 @@ export function CarPageClient({ carId }: CarPageClientProps) {
     return (
       <ErrorDisplay 
         title="Car Not Found"
-        message="The requested vehicle could not be found."
-        error="Car not found"
+        description="The requested vehicle could not be found."
+        variant="error"
       />
     )
   }
@@ -115,7 +115,7 @@ export function CarPageClient({ carId }: CarPageClientProps) {
       <div className="relative w-full h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] md:h-[calc(100vh-96px)] lg:h-[calc(100vh-112px)] bg-gradient-to-b from-gray-900 to-gray-800 mt-0">
         <CarImageCarousel 
           images={car.images || []} 
-          title={car.title} 
+          carTitle={car.title} 
           onFullscreenChange={handleFullscreenChange}
         />
         

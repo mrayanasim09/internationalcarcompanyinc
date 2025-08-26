@@ -84,7 +84,7 @@ export default function DebugConnectionsPage() {
 
     // Monitor WebSocket connections
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    window.WebSocket = function(url: string | URL, protocols?: string | string[]) {
+    const WebSocketWrapper = function(this: any, url: string | URL, protocols?: string | string[]) {
       setConnections(prev => [...prev, {
         timestamp: new Date(),
         type: 'websocket',
@@ -92,7 +92,23 @@ export default function DebugConnectionsPage() {
         stack: new Error().stack
       }])
       return new originalWebSocket(url, protocols)
-    } as typeof WebSocket
+    }
+    
+    // Copy static properties from original WebSocket
+    Object.setPrototypeOf(WebSocketWrapper, originalWebSocket)
+    Object.defineProperty(WebSocketWrapper, 'prototype', {
+      value: originalWebSocket.prototype,
+      writable: false
+    })
+    
+    // Copy static constants
+    WebSocketWrapper.CONNECTING = originalWebSocket.CONNECTING
+    WebSocketWrapper.OPEN = originalWebSocket.OPEN
+    WebSocketWrapper.CLOSING = originalWebSocket.CLOSING
+    WebSocketWrapper.CLOSED = originalWebSocket.CLOSED
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    window.WebSocket = WebSocketWrapper as any
 
     return () => {
       console.error = originalError
