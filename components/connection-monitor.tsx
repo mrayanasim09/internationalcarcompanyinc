@@ -14,43 +14,62 @@ export function ConnectionMonitor() {
     const originalWarn = console.warn
 
     console.error = (...args) => {
-      const errorMsg = args.join(' ')
-      if (errorMsg.includes('Connection closed') || 
-          errorMsg.includes('Minified React error') ||
-          errorMsg.includes('WebSocket') ||
-          errorMsg.includes('fetch')) {
-        setErrors(prev => [...prev, `Error: ${errorMsg}`])
-        setConnectionStatus('error')
+      try {
+        const errorMsg = args.join(' ')
+        if (errorMsg.includes('Connection closed') || 
+            errorMsg.includes('Minified React error') ||
+            errorMsg.includes('WebSocket') ||
+            errorMsg.includes('fetch')) {
+          setErrors(prev => [...prev.slice(-4), `Error: ${errorMsg}`]) // Keep only last 5 errors
+          setConnectionStatus('error')
+        }
+        originalError.apply(console, args)
+      } catch (monitoringError) {
+        console.warn('Error monitoring failed:', monitoringError)
+        // Fallback to original console.error
+        originalError.apply(console, args)
       }
-      originalError.apply(console, args)
     }
 
     console.warn = (...args) => {
-      const warnMsg = args.join(' ')
-      if (warnMsg.includes('Connection') || 
-          warnMsg.includes('WebSocket') ||
-          warnMsg.includes('CSP')) {
-        setErrors(prev => [...prev, `Warning: ${warnMsg}`])
+      try {
+        const warnMsg = args.join(' ')
+        if (warnMsg.includes('Connection') || 
+            warnMsg.includes('WebSocket') ||
+            warnMsg.includes('CSP')) {
+          setErrors(prev => [...prev.slice(-4), `Warning: ${warnMsg}`]) // Keep only last 5 errors
+        }
+        originalWarn.apply(console, args)
+      } catch (monitoringError) {
+        console.warn('Warning monitoring failed:', monitoringError)
+        // Fallback to original console.warn
+        originalWarn.apply(console, args)
       }
-      originalWarn.apply(console, args)
     }
 
     // Test basic connectivity
     const testConnection = async () => {
       try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+        
         const response = await fetch('/api/health/redis', { 
           method: 'GET',
-          cache: 'no-cache'
+          cache: 'no-cache',
+          signal: controller.signal
         })
+        
+        clearTimeout(timeoutId)
+        
         if (response.ok) {
           setConnectionStatus('connected')
         } else {
           setConnectionStatus('error')
-          setErrors(prev => [...prev, `API returned ${response.status}`])
+          setErrors(prev => [...prev.slice(-4), `API returned ${response.status}`]) // Keep only last 5 errors
         }
       } catch (error) {
         setConnectionStatus('error')
-        setErrors(prev => [...prev, `Fetch error: ${error}`])
+        setErrors(prev => [...prev.slice(-4), `Fetch error: ${error}`]) // Keep only last 5 errors
       }
       setLastCheck(new Date())
     }
@@ -61,8 +80,12 @@ export function ConnectionMonitor() {
     const interval = setInterval(testConnection, 30000)
 
     return () => {
-      console.error = originalError
-      console.warn = originalWarn
+      try {
+        console.error = originalError
+        console.warn = originalWarn
+      } catch (error) {
+        console.warn('Failed to restore console methods:', error)
+      }
       clearInterval(interval)
     }
   }, [])

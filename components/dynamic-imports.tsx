@@ -27,6 +27,7 @@ export const DynamicServiceWorkerRegister = dynamic(
   }
 )
 
+// Simplified breadcrumb nav - import directly to avoid webpack issues
 export const DynamicBreadcrumbNav = dynamic(
   () => import('./breadcrumb-nav').then(mod => ({ default: mod.BreadcrumbNav })),
   {
@@ -35,6 +36,7 @@ export const DynamicBreadcrumbNav = dynamic(
   }
 )
 
+// Simplified structured data imports
 export const DynamicCarStructuredData = dynamic(
   () => import('./car-structured-data').then(mod => ({ default: mod.CarStructuredData })),
   {
@@ -101,7 +103,7 @@ export const DynamicFilterPanel = dynamic(
   }
 )
 
-// Generic dynamic import wrapper
+// Generic dynamic import wrapper with error handling
 export function withDynamicImport<T extends React.ComponentType<Record<string, unknown>>>(
   importFn: () => Promise<{ default: T }>,
   options: {
@@ -130,17 +132,25 @@ export function withDynamicImport<T extends React.ComponentType<Record<string, u
   return DynamicComponent
 }
 
-// Preload critical components
+// Preload critical components with error handling
 export function preloadCriticalComponents() {
-  // Preload components that are likely to be needed soon
-  import('./advanced-search')
-  import('./breadcrumb-nav')
-  import('./car-structured-data')
+  try {
+    // Preload components that are likely to be needed soon
+    import('./advanced-search').catch(console.warn)
+    import('./breadcrumb-nav').catch(console.warn)
+    import('./car-structured-data').catch(console.warn)
+  } catch (error) {
+    console.warn('Failed to preload critical components:', error)
+  }
 }
 
-// Preload admin components when needed
+// Preload admin components when needed with error handling
 export function preloadAdminComponents() {
-  import('./admin/admin-dashboard')
-  import('./admin/car-management')
-  import('./admin/review-management')
+  try {
+    import('./admin/admin-dashboard').catch(console.warn)
+    import('./admin/car-management').catch(console.warn)
+    import('./admin/review-management').catch(console.warn)
+  } catch (error) {
+    console.warn('Failed to preload admin components:', error)
+  }
 }

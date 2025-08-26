@@ -37,7 +37,8 @@ export function UnifiedMonitor() {
     try {
       const response = await fetch('/api/health/redis', { 
         method: 'GET',
-        cache: 'no-cache'
+        cache: 'no-cache',
+        signal: AbortSignal.timeout(5000) // 5 second timeout
       })
       if (response.ok) {
         setConnectionStatus(prev => ({ ...prev, status: 'connected' }))
@@ -45,10 +46,11 @@ export function UnifiedMonitor() {
         setConnectionStatus(prev => ({ ...prev, status: 'error' }))
       }
     } catch (error) {
+      console.warn('Connection test failed:', error)
       setConnectionStatus(prev => ({ 
         ...prev, 
         status: 'error',
-        errors: [...prev.errors, `Fetch error: ${error}`]
+        errors: [...prev.errors.slice(-4), `Fetch error: ${error}`] // Keep only last 5 errors
       }))
     }
     setConnectionStatus(prev => ({ ...prev, lastCheck: new Date() }))
@@ -63,60 +65,76 @@ export function UnifiedMonitor() {
 
     // Catch React errors
     console.error = (...args) => {
-      const message = args.join(' ')
-      
-      // Check for React minified errors
-      const reactErrorMatch = message.match(/Minified React error #(\d+)/)
-      if (reactErrorMatch) {
-        const errorCode = reactErrorMatch[1]
-        const error: ReactError = {
-          id: Date.now().toString(),
-          timestamp: new Date(),
-          error: message,
-          errorCode,
-          stack: new Error().stack
-        }
+      try {
+        const message = args.join(' ')
         
-        setReactErrors(prev => [...prev, error])
-      }
+        // Check for React minified errors
+        const reactErrorMatch = message.match(/Minified React error #(\d+)/)
+        if (reactErrorMatch) {
+          const errorCode = reactErrorMatch[1]
+          const error: ReactError = {
+            id: Date.now().toString(),
+            timestamp: new Date(),
+            error: message,
+            errorCode,
+            stack: new Error().stack
+          }
+          
+          setReactErrors(prev => [...prev.slice(-9), error]) // Keep only last 10 errors
+        }
 
-      // Check for connection errors
-      if (message.includes('Connection closed') || message.includes('WebSocket')) {
-        setConnectionStatus(prev => ({
-          ...prev,
-          status: 'error',
-          errors: [...prev.errors, `Console error: ${message}`]
-        }))
-      }
+        // Check for connection errors
+        if (message.includes('Connection closed') || message.includes('WebSocket')) {
+          setConnectionStatus(prev => ({
+            ...prev,
+            status: 'error',
+            errors: [...prev.errors.slice(-4), `Console error: ${message}`] // Keep only last 5 errors
+          }))
+        }
 
-      // Call original console.error
-      originalError.apply(console, args)
+        // Call original console.error
+        originalError.apply(console, args)
+      } catch (monitoringError) {
+        console.warn('Error monitoring failed:', monitoringError)
+        // Fallback to original console.error
+        originalError.apply(console, args)
+      }
     }
 
     // Catch React warnings
     console.warn = (...args) => {
-      const message = args.join(' ')
-      
-      // Check for React warnings
-      if (message.includes('React') || message.includes('Warning')) {
-        const error: ReactError = {
-          id: Date.now().toString(),
-          timestamp: new Date(),
-          error: message,
-          errorCode: 'WARNING',
-          stack: new Error().stack
-        }
+      try {
+        const message = args.join(' ')
         
-        setReactErrors(prev => [...prev, error])
-      }
+        // Check for React warnings
+        if (message.includes('React') || message.includes('Warning')) {
+          const error: ReactError = {
+            id: Date.now().toString(),
+            timestamp: new Date(),
+            error: message,
+            errorCode: 'WARNING',
+            stack: new Error().stack
+          }
+          
+          setReactErrors(prev => [...prev.slice(-9), error]) // Keep only last 10 errors
+        }
 
-      // Call original console.warn
-      originalWarn.apply(console, args)
+        // Call original console.warn
+        originalWarn.apply(console, args)
+      } catch (monitoringError) {
+        console.warn('Warning monitoring failed:', monitoringError)
+        // Fallback to original console.warn
+        originalWarn.apply(console, args)
+      }
     }
 
     return () => {
-      console.error = originalError
-      console.warn = originalWarn
+      try {
+        console.error = originalError
+        console.warn = originalWarn
+      } catch (error) {
+        console.warn('Failed to restore console methods:', error)
+      }
     }
   }, [])
 

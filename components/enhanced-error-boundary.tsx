@@ -65,36 +65,60 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('EnhancedErrorBoundary caught an error:', error, errorInfo)
-    
-    this.setState({
-      error,
-      errorInfo
-    })
+    try {
+      console.error('EnhancedErrorBoundary caught an error:', error, errorInfo)
+      
+      this.setState({
+        error,
+        errorInfo
+      })
 
-    // Call the onError callback if provided
-    if (this.props.onError) {
-      this.props.onError(error, errorInfo)
-    }
+      // Call the onError callback if provided
+      if (this.props.onError) {
+        try {
+          this.props.onError(error, errorInfo)
+        } catch (callbackError) {
+          console.warn('Error callback failed:', callbackError)
+        }
+      }
 
-    // Production error reporting
-    if (process.env.NODE_ENV === 'production') {
-      this.reportErrorToAnalytics(error, errorInfo)
-    }
+      // Production error reporting
+      if (process.env.NODE_ENV === 'production') {
+        try {
+          this.reportErrorToAnalytics(error, errorInfo)
+        } catch (reportingError) {
+          console.warn('Failed to report error to analytics:', reportingError)
+        }
+      }
 
-    // Log to console for debugging
-    if (process.env.NODE_ENV !== 'production') {
-      console.group('Enhanced Error Boundary Details')
-      console.error('Error:', error)
-      console.error('Error Info:', errorInfo)
-      console.error('Stack Trace:', error.stack)
-      console.error('Component Stack:', errorInfo.componentStack)
-      console.groupEnd()
-    }
+      // Log to console for debugging
+      if (process.env.NODE_ENV !== 'production') {
+        try {
+          console.group('Enhanced Error Boundary Details')
+          console.error('Error:', error)
+          console.error('Error Info:', errorInfo)
+          console.error('Stack Trace:', error.stack)
+          console.error('Component Stack:', errorInfo.componentStack)
+          console.groupEnd()
+        } catch (loggingError) {
+          console.warn('Failed to log error details:', loggingError)
+        }
+      }
 
-    // Auto-retry for certain error types
-    if (this.state.errorType === 'connection' && this.state.retryCount < this.maxRetries) {
-      this.scheduleRetry()
+      // Auto-retry for certain error types
+      if (this.state.errorType === 'connection' && this.state.retryCount < this.maxRetries) {
+        this.scheduleRetry()
+      }
+    } catch (boundaryError) {
+      console.error('Error boundary itself failed:', boundaryError)
+      // Fallback to basic error handling
+      this.setState({
+        hasError: true,
+        error: error,
+        errorInfo: errorInfo,
+        errorType: 'general',
+        errorCode: null
+      })
     }
   }
 

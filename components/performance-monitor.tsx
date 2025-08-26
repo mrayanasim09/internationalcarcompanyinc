@@ -120,71 +120,97 @@ export function PerformanceMonitor() {
       setIsVisible(true)
     }
 
-    // Set up performance observers
+    // Set up performance observers with error handling
     try {
       // First Contentful Paint
-      const fcpObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'paint' && entry.name === 'first-contentful-paint') {
-            updateMetric('fcp', Math.round(entry.startTime))
-          }
-        }
-      })
-      fcpObserver.observe({ entryTypes: ['paint'] })
-      observersRef.current.push(fcpObserver)
-
-      // Largest Contentful Paint
-      const lcpObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'largest-contentful-paint') {
-            updateMetric('lcp', Math.round(entry.startTime))
-          }
-        }
-      })
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] })
-      observersRef.current.push(lcpObserver)
-
-      // Cumulative Layout Shift
-      const clsObserver = new PerformanceObserver((list) => {
-        let clsValue = 0
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'layout-shift') {
-            const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }
-            if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
-              clsValue += layoutShiftEntry.value
+      if ('PerformanceObserver' in window) {
+        const fcpObserver = new PerformanceObserver((list) => {
+          try {
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === 'paint' && entry.name === 'first-contentful-paint') {
+                updateMetric('fcp', Math.round(entry.startTime))
+              }
             }
+          } catch (error) {
+            console.warn('FCP observer error:', error)
           }
-        }
-        updateMetric('cls', Math.round(clsValue * 1000) / 1000)
-      })
-      clsObserver.observe({ entryTypes: ['layout-shift'] })
-      observersRef.current.push(clsObserver)
+        })
+        fcpObserver.observe({ entryTypes: ['paint'] })
+        observersRef.current.push(fcpObserver)
 
-      // First Input Delay
-      const fidObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'first-input') {
-            const fidEntry = entry as PerformanceEventTiming
-            updateMetric('fid', Math.round(fidEntry.processingStart - fidEntry.startTime))
+        // Largest Contentful Paint
+        const lcpObserver = new PerformanceObserver((list) => {
+          try {
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === 'largest-contentful-paint') {
+                updateMetric('lcp', Math.round(entry.startTime))
+              }
+            }
+          } catch (error) {
+            console.warn('LCP observer error:', error)
           }
-        }
-      })
-      fidObserver.observe({ entryTypes: ['first-input'] })
-      observersRef.current.push(fidObserver)
+        })
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] })
+        observersRef.current.push(lcpObserver)
+
+        // Cumulative Layout Shift
+        const clsObserver = new PerformanceObserver((list) => {
+          try {
+            let clsValue = 0
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === 'layout-shift') {
+                const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }
+                if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
+                  clsValue += layoutShiftEntry.value
+                }
+              }
+            }
+            updateMetric('cls', Math.round(clsValue * 1000) / 1000)
+          } catch (error) {
+            console.warn('CLS observer error:', error)
+          }
+        })
+        clsObserver.observe({ entryTypes: ['layout-shift'] })
+        observersRef.current.push(clsObserver)
+
+        // First Input Delay
+        const fidObserver = new PerformanceObserver((list) => {
+          try {
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === 'first-input') {
+                const fidEntry = entry as PerformanceEventTiming
+                updateMetric('fid', Math.round(fidEntry.processingStart - fidEntry.startTime))
+              }
+            }
+          } catch (error) {
+            console.warn('FID observer error:', error)
+          }
+        })
+        fidObserver.observe({ entryTypes: ['first-input'] })
+        observersRef.current.push(fidObserver)
+      }
     } catch (error) {
       console.warn('Failed to set up performance observers:', error)
     }
 
-    // Calculate initial metrics
-    calculateBundleSize()
-    calculateDOMSize()
-    measureTTFB()
-
-    // Set up periodic monitoring
-    const interval = setInterval(() => {
+    // Calculate initial metrics with error handling
+    try {
       calculateBundleSize()
       calculateDOMSize()
       measureTTFB()
+    } catch (error) {
+      console.warn('Failed to calculate initial metrics:', error)
+    }
+
+    // Set up periodic monitoring with error handling
+    const interval = setInterval(() => {
+      try {
+        calculateBundleSize()
+        calculateDOMSize()
+        measureTTFB()
+      } catch (error) {
+        console.warn('Failed to calculate periodic metrics:', error)
+      }
     }, 10000) // Every 10 seconds
 
     // Store current observers for cleanup
@@ -192,7 +218,13 @@ export function PerformanceMonitor() {
 
     return () => {
       clearInterval(interval)
-      currentObservers.forEach(observer => observer.disconnect())
+      currentObservers.forEach(observer => {
+        try {
+          observer.disconnect()
+        } catch (error) {
+          console.warn('Failed to disconnect observer:', error)
+        }
+      })
     }
   }, [calculateBundleSize, calculateDOMSize, measureTTFB, updateMetric])
 
