@@ -62,6 +62,8 @@ export interface Database {
           permissions: string[]
           is_active: boolean
           email_verified: boolean
+          verification_code?: string | null
+          verification_code_expires_at?: string | null
           created_at: string
           updated_at: string
           created_by?: string
@@ -75,6 +77,8 @@ export interface Database {
           permissions?: string[]
           is_active?: boolean
           email_verified?: boolean
+          verification_code?: string | null
+          verification_code_expires_at?: string | null
           created_at?: string
           updated_at?: string
           created_by?: string
@@ -88,6 +92,8 @@ export interface Database {
           permissions?: string[]
           is_active?: boolean
           email_verified?: boolean
+          verification_code?: string | null
+          verification_code_expires_at?: string | null
           created_at?: string
           updated_at?: string
           created_by?: string

@@ -23,26 +23,46 @@ export async function GET(request: NextRequest) {
     const adminToken = request.cookies.get('icc_admin_token')?.value
 
     if (!adminToken) {
-      return NextResponse.json({ error: 'No admin token provided' }, { status: 401 })
+      return NextResponse.json({ 
+        authenticated: false,
+        email: undefined,
+        role: undefined,
+        permissions: []
+      })
     }
 
     // Verify JWT token
     const tokenValidation = jwtManager.verifyAccessToken(adminToken)
 
     if (!tokenValidation.isValid || !tokenValidation.payload) {
-      return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 })
+      return NextResponse.json({ 
+        authenticated: false,
+        email: undefined,
+        role: undefined,
+        permissions: []
+      })
     }
 
     const payload = tokenValidation.payload as unknown as TokenPayload
 
     // Check if token is blacklisted
     if (payload.jti && await jwtManager.isJtiBlacklisted(payload.jti)) {
-      return NextResponse.json({ error: 'Token has been revoked' }, { status: 401 })
+      return NextResponse.json({ 
+        authenticated: false,
+        email: undefined,
+        role: undefined,
+        permissions: []
+      })
     }
 
     // Check if token is expired
     if (payload.exp && Date.now() >= payload.exp * 1000) {
-      return NextResponse.json({ error: 'Token has expired' }, { status: 401 })
+      return NextResponse.json({ 
+        authenticated: false,
+        email: undefined,
+        role: undefined,
+        permissions: []
+      })
     }
 
     // Get admin user from database
@@ -54,7 +74,12 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (dbError || !adminUser) {
-      return NextResponse.json({ error: 'Admin user not found' }, { status: 404 })
+      return NextResponse.json({ 
+        authenticated: false,
+        email: undefined,
+        role: undefined,
+        permissions: []
+      })
     }
 
     // Update last login time
@@ -64,22 +89,23 @@ export async function GET(request: NextRequest) {
       .update({ last_login_at: new Date().toISOString() })
       .eq('email', payload.email)
 
-    // Return admin user data (excluding sensitive fields)
-    const safeAdminUser: Omit<AdminUser, 'password_hash'> = {
-      id: (adminUser as any).id,
-      email: (adminUser as any).email,
-      role: (adminUser as any).role,
-      permissions: (adminUser as any).permissions || [],
-      is_active: (adminUser as any).is_active || true,
-      email_verified: (adminUser as any).email_verified || false,
-      created_at: (adminUser as any).created_at,
-      updated_at: (adminUser as any).updated_at,
-      last_login_at: (adminUser as any).last_login_at,
-    }
-
+    // Return admin user data in the format expected by AuthProvider
     return NextResponse.json({
-      success: true,
-      admin: safeAdminUser,
+      authenticated: true,
+      email: (adminUser as any).email,
+      role: (adminUser as any).role || 'viewer',
+      permissions: (adminUser as any).permissions || [],
+      admin: {
+        id: (adminUser as any).id,
+        email: (adminUser as any).email,
+        role: (adminUser as any).role,
+        permissions: (adminUser as any).permissions || [],
+        is_active: (adminUser as any).is_active || true,
+        email_verified: (adminUser as any).email_verified || false,
+        created_at: (adminUser as any).created_at,
+        updated_at: (adminUser as any).updated_at,
+        last_login_at: (adminUser as any).last_login_at,
+      },
       token: {
         expiresAt: payload.exp ? new Date(payload.exp * 1000).toISOString() : null,
         sessionId: payload.sessionId
@@ -88,7 +114,12 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Admin me endpoint error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ 
+      authenticated: false,
+      email: undefined,
+      role: undefined,
+      permissions: []
+    })
   }
 }
 

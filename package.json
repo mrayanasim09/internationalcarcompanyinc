@@ -30,7 +30,9 @@
     "security:audit": "npm audit --audit-level=moderate",
     "security:fix": "npm audit fix",
     "performance:test": "pnpm build && pnpm lighthouse:ci",
-    "performance:monitor": "pnpm dev & sleep 10 && pnpm lighthouse:ci && pkill -f 'next dev'"
+    "performance:monitor": "pnpm dev & sleep 10 && pnpm lighthouse:ci && pkill -f 'next dev'",
+    "test:login-resend": "node scripts/test-login-resend.js",
+    "setup:verification-columns": "node scripts/setup-verification-columns.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
