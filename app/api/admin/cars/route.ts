@@ -44,7 +44,7 @@ const guard = createRateLimitMiddleware(rateLimiters.api)
 // GET - List cars (admin only)
 export async function GET(request: NextRequest) {
   try {
-    const user = await authManager.getAdminAuthFromRequest(request)
+    const user = await authManager.getAdminAuthFromRequest()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -95,11 +95,11 @@ export async function POST(request: NextRequest) {
     if (!csrf.verify(request)) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
-    const user = await authManager.getAdminAuthFromRequest(request)
+    const user = await authManager.getAdminAuthFromRequest()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    if (!user.permissions?.canCreateCars && user.role !== 'super_admin') {
+    if (!user.permissions?.includes('canCreateCars') && user.role !== 'super_admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
     
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       ...carData,
       description: carData.description || '',
       images: carData.images || [],
-      createdBy: user.userId,
+      createdBy: user.email,
       createdAt: new Date(),
       approved: true, // FIXED: New cars are approved by default
       isInventory: true, // FIXED: New cars are in inventory by default
@@ -140,7 +140,8 @@ export async function POST(request: NextRequest) {
       likes: 0
     }
 
-    const { data: inserted, error: insErr } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: inserted, error: insErr } = await (supabaseAdmin as any)
       .from('cars')
       .insert({
         title: carWithAudit.title,
@@ -170,7 +171,7 @@ export async function POST(request: NextRequest) {
         listed_at: new Date().toISOString(),
         views: 0,
         likes: 0,
-        created_by: user.userId,
+        created_by: user.email,
       })
       .select('id')
       .limit(1)
@@ -207,11 +208,11 @@ export async function PUT(request: NextRequest) {
     if (!csrf.verify(request)) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
-    const user = await authManager.getAdminAuthFromRequest(request)
+    const user = await authManager.getAdminAuthFromRequest()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    if (!user.permissions?.canEditCars && user.role !== 'super_admin') {
+    if (!user.permissions?.includes('canEditCars') && user.role !== 'super_admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
     
@@ -283,7 +284,8 @@ export async function PUT(request: NextRequest) {
 
       console.log('Updating car with data:', updateObject)
 
-      const { data: updated, error: upErr } = await supabaseAdmin
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: updated, error: upErr } = await (supabaseAdmin as any)
         .from('cars')
         .update(updateObject)
         .eq('id', id)
@@ -335,11 +337,11 @@ export async function DELETE(request: NextRequest) {
     if (!csrf.verify(request)) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
-    const user = await authManager.getAdminAuthFromRequest(request)
+    const user = await authManager.getAdminAuthFromRequest()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    if (!user.permissions?.canDeleteCars && user.role !== 'super_admin') {
+    if (!user.permissions?.includes('canDeleteCars') && user.role !== 'super_admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
     

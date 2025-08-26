@@ -52,7 +52,8 @@ export async function POST(request: NextRequest) {
     const code = generateCode()
     const expiry = new Date(Date.now() + 10 * 60 * 1000)
 
-    const { error: upErr } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: upErr } = await (supabaseAdmin as any)
       .from('admin_users')
       .update({
         verification_code: code,

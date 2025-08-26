@@ -1,19 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtManager } from '@/lib/jwt-utils'
-import { supabaseAdmin } from '@/lib/supabase/admin'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import type { Database } from '@/lib/types'
 
-interface AdminUser {
-  id: string
-  email: string
-  role: string
-  permissions: string[]
-  is_active: boolean
-  email_verified: boolean
-  created_at: string
-  updated_at: string
-  created_by?: string
-  last_login_at?: string
-}
+type AdminUser = Database['public']['Tables']['admin_users']['Row']
 
 interface TokenPayload {
   sub: string
@@ -42,10 +33,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 })
     }
 
-    const payload = tokenValidation.payload as TokenPayload
+    const payload = tokenValidation.payload as unknown as TokenPayload
 
     // Check if token is blacklisted
-    if (payload.jti && await jwtManager.isTokenBlacklisted(payload.jti)) {
+    if (payload.jti && await jwtManager.isJtiBlacklisted(payload.jti)) {
       return NextResponse.json({ error: 'Token has been revoked' }, { status: 401 })
     }
 
@@ -55,7 +46,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get admin user from database
-    const { data: adminUser, error: dbError } = await supabaseAdmin
+    const { data: adminUser, error: dbError } = await getSupabaseAdmin()
       .from('admin_users')
       .select('*')
       .eq('id', payload.sub)
@@ -66,24 +57,24 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Admin user not found' }, { status: 404 })
     }
 
-    // Update last login
-    await supabaseAdmin
+    // Update last login time
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (getSupabaseAdmin() as any)
       .from('admin_users')
       .update({ last_login_at: new Date().toISOString() })
-      .eq('id', payload.sub)
+      .eq('email', payload.email)
 
     // Return admin user data (excluding sensitive fields)
     const safeAdminUser: Omit<AdminUser, 'password_hash'> = {
-      id: adminUser.id,
-      email: adminUser.email,
-      role: adminUser.role,
-      permissions: adminUser.permissions || [],
-      is_active: adminUser.is_active,
-      email_verified: adminUser.email_verified,
-      created_at: adminUser.created_at,
-      updated_at: adminUser.updated_at,
-      created_by: adminUser.created_by,
-      last_login_at: adminUser.last_login_at
+      id: (adminUser as any).id,
+      email: (adminUser as any).email,
+      role: (adminUser as any).role,
+      permissions: (adminUser as any).permissions || [],
+      is_active: (adminUser as any).is_active || true,
+      email_verified: (adminUser as any).email_verified || false,
+      created_at: (adminUser as any).created_at,
+      updated_at: (adminUser as any).updated_at,
+      last_login_at: (adminUser as any).last_login_at,
     }
 
     return NextResponse.json({

@@ -104,7 +104,8 @@ export async function POST(request: NextRequest) {
     const ok = await bcrypt.compare(password, userData.password_hash)
     if (!ok) {
       const newAttempts = (userData.login_attempts || 0) + 1
-      const { error: upErr } = await supabaseAdmin
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error: upErr } = await (supabaseAdmin as any)
         .from('admin_users')
         .update({
           login_attempts: newAttempts,
@@ -124,7 +125,8 @@ export async function POST(request: NextRequest) {
     // Unknown device: Generate and store verification code
     const code = generateCode()
     const expiry = new Date(Date.now() + 10 * 60 * 1000)
-    const { data: updatedRows, error: upCodeErr } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: updatedRows, error: upCodeErr } = await (supabaseAdmin as any)
       .from('admin_users')
       .update({
         verification_code: code,

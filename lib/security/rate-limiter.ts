@@ -198,6 +198,53 @@ export class RateLimiter {
       blocked: isBlocked || false
     }
   }
+
+  // Reset rate limit for a specific client
+  async resetLimit(clientId: string): Promise<void> {
+    const key = `rate_limit:${clientId}`
+    const useRedis = process.env.USE_REDIS === '1' && !!process.env.REDIS_URL
+    const store = useRedis ? await getStore() : null
+    
+    if (useRedis && store) {
+      await store.delete(key)
+    } else {
+      cache.del(key)
+    }
+  }
+
+  // Helper function to create rate limit middleware
+  export function createRateLimitMiddleware(limiter: RateLimiter) {
+    return async (request: NextRequest) => {
+      const result = await limiter.isAllowed(request)
+      
+      if (!result.allowed) {
+        const response = NextResponse.json(
+          { 
+            error: 'Too many requests',
+            message: result.blocked 
+              ? 'You have been temporarily blocked due to too many failed attempts. Please wait before trying again.'
+              : 'Rate limit exceeded. Please try again later.',
+            retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000),
+            blocked: result.blocked,
+            remainingTime: Math.ceil((result.resetTime - Date.now()) / 1000)
+          },
+          { status: result.blocked ? 429 : 429 }
+        )
+
+      // Add rate limit headers
+      response.headers.set('X-RateLimit-Limit', limiter['config'].maxAttempts.toString())
+      response.headers.set('X-RateLimit-Remaining', result.remaining.toString())
+      response.headers.set('X-RateLimit-Reset', result.resetTime.toString())
+      
+      if (result.blocked) {
+        response.headers.set('X-RateLimit-Blocked', 'true')
+      }
+
+      return response
+    }
+
+    return null // Allow request to proceed
+  }
 }
 
 // Predefined rate limiters for different endpoints
@@ -240,37 +287,4 @@ export const rateLimiters = {
   })
 }
 
-  // Helper function to create rate limit middleware
-  export function createRateLimitMiddleware(limiter: RateLimiter) {
-    return async (request: NextRequest) => {
-      const result = await limiter.isAllowed(request)
-      
-      if (!result.allowed) {
-        const response = NextResponse.json(
-          { 
-            error: 'Too many requests',
-            message: result.blocked 
-              ? 'You have been temporarily blocked due to too many failed attempts. Please wait before trying again.'
-              : 'Rate limit exceeded. Please try again later.',
-            retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000),
-            blocked: result.blocked,
-            remainingTime: Math.ceil((result.resetTime - Date.now()) / 1000)
-          },
-          { status: result.blocked ? 429 : 429 }
-        )
-
-      // Add rate limit headers
-      response.headers.set('X-RateLimit-Limit', limiter['config'].maxAttempts.toString())
-      response.headers.set('X-RateLimit-Remaining', result.remaining.toString())
-      response.headers.set('X-RateLimit-Reset', result.resetTime.toString())
-      
-      if (result.blocked) {
-        response.headers.set('X-RateLimit-Blocked', 'true')
-      }
-
-      return response
-    }
-
-    return null // Allow request to proceed
-  }
-}
+// Helper function to create rate limit middleware

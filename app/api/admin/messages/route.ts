@@ -25,7 +25,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
     const user = await authManager.requireAdmin()
-    if (!user.permissions?.canModerateReviews && user.role !== 'super_admin') {
+    if (!user.permissions?.includes('canModerateReviews') && user.role !== 'super_admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
     const body = await request.json()
@@ -33,7 +33,8 @@ export async function PUT(request: NextRequest) {
     if (!id || !status) {
       return NextResponse.json({ error: 'id and status are required' }, { status: 400 })
     }
-    const { error } = await supabaseAdmin.from('contact_messages').update({ status }).eq('id', id)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabaseAdmin as any).from('contact_messages').update({ status }).eq('id', id)
     if (error) throw error
     return NextResponse.json({ success: true })
   } catch (err) {
@@ -49,7 +50,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
     const user = await authManager.requireAdmin()
-    if (!user.permissions?.canDeleteReviews && user.role !== 'super_admin') {
+    if (!user.permissions?.includes('canDeleteReviews') && user.role !== 'super_admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
     const { searchParams } = new URL(request.url)

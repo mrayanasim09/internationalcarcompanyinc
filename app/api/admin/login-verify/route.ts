@@ -173,7 +173,8 @@ export async function POST(request: NextRequest) {
       updated_at: new Date().toISOString(),
     })
 
-    const { error: upErr } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: upErr } = await (supabaseAdmin as any)
       .from('admin_users')
       .update({
         email_verified: true,
