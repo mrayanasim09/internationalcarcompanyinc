@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { logger } from '@/lib/config/debug'
 import { getAdminAuthFromRequest } from '@/lib/auth-utils'
+import { LogEntry } from '@/lib/config/debug'
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,24 +22,23 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '100')
     const clear = searchParams.get('clear') === 'true'
 
-    let logs: any[] = []
-
+    let logs: LogEntry[] = []
+    
     if (clear) {
-      logger.clearLogs()
-      logs = []
-    } else if (level) {
-      logs = logger.getLogsByLevel(level as any)
-    } else if (category) {
-      logs = logger.getLogsByCategory(category)
-    } else {
-      logs = logger.getRecentLogs(limit)
+      // Clear logs
+      logger.clear()
+      return NextResponse.json({ success: true, message: 'Logs cleared' })
     }
-
+    
+    // Get logs from logger
+    logs = logger.getLogs(level, category, limit)
+    
     return NextResponse.json({
       success: true,
       logs,
-      count: logs.length,
-      timestamp: new Date().toISOString()
+      total: logs.length,
+      level,
+      category
     })
 
   } catch (error) {

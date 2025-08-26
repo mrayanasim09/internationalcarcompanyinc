@@ -2,74 +2,119 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { jwtManager } from '@/lib/jwt-utils'
-import { supabaseAdmin } from '@/lib/supabase/admin'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { csrf } from '@/lib/security/csrf'
 
 const createSchema = z.object({
-  email: z.string().email().max(100),
-  password: z.string().min(8).max(100),
-  role: z.enum(['super_admin', 'admin', 'editor', 'viewer']).default('admin'),
+  email: z.string().email(),
+  password: z.string().min(8),
+  role: z.enum(['super_admin', 'admin', 'editor', 'viewer']),
   permissions: z.array(z.string()).optional(),
 })
 
 export async function POST(request: NextRequest) {
   try {
+    // CSRF protection
     if (!csrf.verify(request)) {
-      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
-    }
-    // Require super_admin
-    const token = request.cookies.get('icc_admin_token')?.value
-    const result = token ? jwtManager.verifyAccessToken(token) : { isValid: false }
-    if (!result.isValid || !result.payload || result.payload.role !== 'super_admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'CSRF token validation failed' },
+        { status: 403 }
+      )
     }
 
+    // JWT validation
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Invalid authorization header' },
+        { status: 401 }
+      )
+    }
+
+    const token = authHeader.substring(7)
+    const tokenValidation = jwtManager.verifyAccessToken(token)
+    
+    if (!tokenValidation.isValid) {
+      return NextResponse.json(
+        { error: 'Invalid or expired token' },
+        { status: 401 }
+      )
+    }
+
+    // Check if user has permission to create admin users
+    const userRole = (tokenValidation.payload as { role?: string })?.role
+    if (userRole !== 'super_admin' && userRole !== 'admin') {
+      return NextResponse.json(
+        { error: 'Insufficient permissions' },
+        { status: 403 }
+      )
+    }
+
+    // Parse and validate request body
     const body = await request.json()
-    const parsed = createSchema.safeParse(body)
-    if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid input', details: parsed.error.errors }, { status: 400 })
-    }
+    const validatedData = createSchema.parse(body)
 
-    const email = parsed.data.email.toLowerCase().trim()
-
-    // Ensure unique
-    const { data: existing, error: existErr } = await supabaseAdmin
+    // Check if user already exists
+    const supabase = getSupabaseAdmin()
+    const { data: existingUser } = await (supabase as any)
       .from('admin_users')
       .select('id')
-      .eq('email', email)
-      .limit(1)
-    if (existErr) {
-      console.error('Supabase existing check error:', existErr)
-      return NextResponse.json({ error: 'Failed to create admin' }, { status: 500 })
-    }
-    if (existing && existing.length > 0) {
-      return NextResponse.json({ error: 'Admin user already exists' }, { status: 409 })
+      .eq('email', validatedData.email)
+      .single()
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'User with this email already exists' },
+        { status: 409 }
+      )
     }
 
-    const passwordHash = await bcrypt.hash(parsed.data.password, 12)
-    const { data: inserted, error: insErr } = await supabaseAdmin
+    // Hash password
+    const hashedPassword = await bcrypt.hash(validatedData.password, 12)
+
+    // Create new admin user
+    const { data: newUser, error: insertError } = await (supabase as any)
       .from('admin_users')
       .insert({
-        email,
-        password_hash: passwordHash,
-        role: parsed.data.role,
-        permissions: parsed.data.permissions || [],
-        is_active: true,
-        email_verified: false,
+        email: validatedData.email,
+        password_hash: hashedPassword,
+        role: validatedData.role,
+        permissions: validatedData.permissions || [],
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .select('id')
-      .limit(1)
+      .select('id, email, role')
+      .single()
 
-    if (insErr || !inserted || inserted.length === 0) {
-      console.error('Supabase insert admin error:', insErr)
-      return NextResponse.json({ error: 'Failed to create admin' }, { status: 500 })
+    if (insertError) {
+      console.error('Error creating admin user:', insertError)
+      return NextResponse.json(
+        { error: 'Failed to create admin user' },
+        { status: 500 }
+      )
     }
 
-    return NextResponse.json({ success: true, id: inserted[0].id })
+    return NextResponse.json({
+      message: 'Admin user created successfully',
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        role: newUser.role,
+      },
+    })
+
   } catch (error) {
-    console.error('add-admin error:', error)
-    return NextResponse.json({ error: 'Failed to create admin' }, { status: 500 })
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Validation error', details: error.errors },
+        { status: 400 }
+      )
+    }
+
+    console.error('Error in add-admin route:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

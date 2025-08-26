@@ -1,17 +1,18 @@
 import { createClient } from '@supabase/supabase-js'
+import type { Database } from '@/lib/types'
 
 // Server-only Supabase client using the service role key
 // WARNING: Never import this module in client components
 
-let cachedClient: ReturnType<typeof createClient> | null = null
+let cachedClient: ReturnType<typeof createClient<Database>> | null = null
 
-function instantiate(): ReturnType<typeof createClient> {
+function instantiate(): ReturnType<typeof createClient<Database>> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error('[supabase/admin] Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY')
   }
-  return createClient(supabaseUrl, serviceRoleKey, {
+  return createClient<Database>(supabaseUrl, serviceRoleKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
@@ -25,7 +26,7 @@ function instantiate(): ReturnType<typeof createClient> {
   })
 }
 
-export function getSupabaseAdmin(): ReturnType<typeof createClient> {
+export function getSupabaseAdmin(): ReturnType<typeof createClient<Database>> {
   if (!cachedClient) {
     cachedClient = instantiate()
   }
@@ -33,7 +34,7 @@ export function getSupabaseAdmin(): ReturnType<typeof createClient> {
 }
 
 // Backwards compatibility: a lazy proxy that only instantiates when used
-export const supabaseAdmin = new Proxy({} as unknown as ReturnType<typeof createClient>, {
+export const supabaseAdmin = new Proxy({} as unknown as ReturnType<typeof createClient<Database>>, {
   get(_target, prop, receiver) {
     if (!cachedClient) {
       try {

@@ -1,15 +1,9 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ContactToBuy } from "@/components/contact-to-buy"
-import { SimilarCars } from "@/components/similar-cars"
-import { 
-  Calendar, 
-  MapPin, 
-  Car as CarIcon, 
-  Gauge
-} from "lucide-react"
-import type { Car } from "@/lib/types"
+import { Car } from '@/lib/types'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { SimilarCars } from '@/components/similar-cars'
+import { MapPin, Calendar, Gauge, Car as CarIcon } from 'lucide-react'
 
 interface CarDetailsProps {
   car: Car

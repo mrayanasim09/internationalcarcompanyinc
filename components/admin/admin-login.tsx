@@ -1,15 +1,14 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useRouter } from "next/navigation"
-import { useToast } from "@/hooks/use-toast"
-import Image from "next/image"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { CardContent } from '@/components/ui/card'
+import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/use-toast'
+import Image from 'next/image'
+import { useEffect } from 'react'
 
 export function AdminLogin() {
   const [email, setEmail] = useState("")

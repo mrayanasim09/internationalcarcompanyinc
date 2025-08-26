@@ -107,7 +107,7 @@ export function CarTable({ cars, setCars }: CarTableProps) {
         body: JSON.stringify({ id: carId, approved })
       })
       if (!res.ok) throw new Error('Update failed')
-      setCars(cars.map(c => (c.id === carId ? { ...c, approved } : car)))
+      setCars(cars.map(c => (c.id === carId ? { ...c, approved } : c)))
       toast({ title: approved ? "Approved" : "Unapproved" })
     } catch {
       toast({ title: "Failed to update", variant: "destructive" })

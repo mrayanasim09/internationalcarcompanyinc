@@ -1,4 +1,4 @@
-import { securityConfig, getHSTSHeader } from './config';
+import { getHSTSHeader } from './config';
 
 export interface SecurityHeaders {
   [key: string]: string;

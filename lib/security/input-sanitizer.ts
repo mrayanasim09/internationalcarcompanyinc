@@ -30,7 +30,7 @@ export class InputSanitizer {
     try {
       // Server-side sanitization
       if (typeof window === 'undefined') {
-        return this.sanitizeHTMLServer(html, sanitizeOptions)
+        return this.sanitizeHTMLServer(html)
       }
 
       // Map to DOMPurify expected config shape
@@ -128,7 +128,7 @@ export class InputSanitizer {
   /**
    * Server-side HTML sanitization fallback
    */
-  private static sanitizeHTMLServer(html: string, options: SanitizationOptions): string {
+  private static sanitizeHTMLServer(html: string): string {
     return html
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
       .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '') // Remove iframe tags

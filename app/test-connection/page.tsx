@@ -78,7 +78,7 @@ export default function TestConnectionPage() {
           1. Open browser console (F12) to monitor for errors
         </p>
         <p className="text-blue-700 mb-2">
-          2. Check if "Connection closed" errors still appear
+          2. Check if &quot;Connection closed&quot; errors still appear
         </p>
         <p className="text-blue-700 mb-2">
           3. Check if React error #423 still appears

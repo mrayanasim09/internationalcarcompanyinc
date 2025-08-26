@@ -15,11 +15,12 @@ export const LOG_LEVELS: LogLevel = {
 }
 
 export interface LogEntry {
+  id: string
   timestamp: string
   level: keyof LogLevel
   category: string
   message: string
-  data?: any
+  data?: Record<string, unknown>
   error?: Error
   userId?: string
   sessionId?: string
@@ -115,10 +116,11 @@ export class Logger {
     }
   }
 
-  log(level: keyof LogLevel, category: string, message: string, data?: any, error?: Error, context?: Partial<LogEntry>): void {
+  log(level: keyof LogLevel, category: string, message: string, data?: Record<string, unknown>, error?: Error, context?: Partial<LogEntry>): void {
     if (!this.shouldLog(level)) return
 
     const entry: LogEntry = {
+      id: Math.random().toString(36).substring(7), // Simple unique ID
       timestamp: new Date().toISOString(),
       level,
       category,
@@ -158,23 +160,23 @@ export class Logger {
     }
   }
 
-  debug(category: string, message: string, data?: any, context?: Partial<LogEntry>): void {
+  debug(category: string, message: string, data?: Record<string, unknown>, context?: Partial<LogEntry>): void {
     this.log('DEBUG', category, message, data, undefined, context)
   }
 
-  info(category: string, message: string, data?: any, context?: Partial<LogEntry>): void {
+  info(category: string, message: string, data?: Record<string, unknown>, context?: Partial<LogEntry>): void {
     this.log('INFO', category, message, data, undefined, context)
   }
 
-  warn(category: string, message: string, data?: any, error?: Error, context?: Partial<LogEntry>): void {
+  warn(category: string, message: string, data?: Record<string, unknown>, error?: Error, context?: Partial<LogEntry>): void {
     this.log('WARN', category, message, data, error, context)
   }
 
-  error(category: string, message: string, data?: any, error?: Error, context?: Partial<LogEntry>): void {
+  error(category: string, message: string, data?: Record<string, unknown>, error?: Error, context?: Partial<LogEntry>): void {
     this.log('ERROR', category, message, data, error, context)
   }
 
-  critical(category: string, message: string, data?: any, error?: Error, context?: Partial<LogEntry>): void {
+  critical(category: string, message: string, data?: Record<string, unknown>, error?: Error, context?: Partial<LogEntry>): void {
     this.log('CRITICAL', category, message, data, error, context)
   }
 
@@ -208,19 +210,19 @@ export class Logger {
 export const logger = new Logger()
 
 // Convenience functions
-export const logDebug = (category: string, message: string, data?: any, context?: Partial<LogEntry>) => 
+export const logDebug = (category: string, message: string, data?: Record<string, unknown>, context?: Partial<LogEntry>) => 
   logger.debug(category, message, data, context)
 
-export const logInfo = (category: string, message: string, data?: any, context?: Partial<LogEntry>) => 
+export const logInfo = (category: string, message: string, data?: Record<string, unknown>, context?: Partial<LogEntry>) => 
   logger.info(category, message, data, context)
 
-export const logWarn = (category: string, message: string, data?: any, error?: Error, context?: Partial<LogEntry>) => 
+export const logWarn = (category: string, message: string, data?: Record<string, unknown>, error?: Error, context?: Partial<LogEntry>) => 
   logger.warn(category, message, data, error, context)
 
-export const logError = (category: string, message: string, data?: any, error?: Error, context?: Partial<LogEntry>) => 
+export const logError = (category: string, message: string, data?: Record<string, unknown>, error?: Error, context?: Partial<LogEntry>) => 
   logger.error(category, message, data, error, context)
 
-export const logCritical = (category: string, message: string, data?: any, error?: Error, context?: Partial<LogEntry>) => 
+export const logCritical = (category: string, message: string, data?: Record<string, unknown>, error?: Error, context?: Partial<LogEntry>) => 
   logger.critical(category, message, data, error, context)
 
 // Legacy debug function for backward compatibility
@@ -229,7 +231,7 @@ export const DEBUG_CONFIG = {
   categories: process.env.DEBUG_CATEGORIES?.split(',') || ['*'],
 }
 
-export function debug(category: string, message: string, data?: any): void {
+export function debug(category: string, message: string, data?: Record<string, unknown>): void {
   if (!DEBUG_CONFIG.enabled) return
   
   const shouldLog = DEBUG_CONFIG.categories.includes('*') || DEBUG_CONFIG.categories.includes(category)
@@ -238,7 +240,7 @@ export function debug(category: string, message: string, data?: any): void {
   }
 }
 
-export function debugError(category: string, message: string, error?: any): void {
+export function debugError(category: string, message: string, error?: unknown): void {
   if (!DEBUG_CONFIG.enabled) return
   
   const shouldLog = DEBUG_CONFIG.categories.includes('*') || DEBUG_CONFIG.categories.includes(category)

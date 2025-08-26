@@ -137,7 +137,7 @@ export default function CSPTestPage() {
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-600" />
-              <code>default-src 'none'</code> - Deny by default
+              <code>default-src &apos;none&apos;</code> - Deny by default
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-600" />
@@ -149,11 +149,11 @@ export default function CSPTestPage() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-600" />
-              <code>object-src &#39;none&#39;</code> - Block dangerous objects
+              <code>object-src &apos;none&apos;</code> - Block dangerous objects
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-600" />
-              <code>frame-ancestors &#39;none&#39;</code> - Prevent clickjacking
+              <code>frame-ancestors &apos;none&apos;</code> - Prevent clickjacking
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-600" />
@@ -197,7 +197,7 @@ export default function CSPTestPage() {
               <li>✓ Removed unsafe-eval from script-src</li>
               <li>✓ Implemented nonce-based inline scripts</li>
               <li>✓ Implemented nonce-based inline styles</li>
-              <li>✓ Set default-src to 'none' for deny-by-default</li>
+              <li>✓ Set default-src to &apos;none&apos; for deny-by-default</li>
               <li>✓ Restricted all sources to trusted domains only</li>
             </ul>
           </div>

@@ -24,7 +24,7 @@ export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
 
     // Initialize gtag
     window.dataLayer = window.dataLayer || []
-    function gtag(...args: any[]) {
+    function gtag(...args: unknown[]) {
       window.dataLayer.push(args)
     }
     gtag('js', new Date())
@@ -35,14 +35,14 @@ export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
     })
 
     // Make gtag available globally
-    ;(window as any).gtag = gtag
+    ;(window as { gtag: typeof gtag }).gtag = gtag
   }, [gaId])
 
   // Track page views
   const trackPageView = useCallback((url: string) => {
-    if (typeof window === 'undefined' || !(window as any).gtag) return
+    if (typeof window === 'undefined' || !(window as { gtag: unknown }).gtag) return
 
-    const gtag = (window as any).gtag
+    const gtag = (window as { gtag: unknown }).gtag as typeof gtag
     gtag('config', gaId, {
       page_title: document.title,
       page_location: url,
@@ -59,9 +59,9 @@ export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
 
   // Track custom events
   const trackEvent = useCallback((action: string, category: string, label?: string, value?: number) => {
-    if (typeof window === 'undefined' || !(window as any).gtag) return
+    if (typeof window === 'undefined' || !(window as { gtag: unknown }).gtag) return
 
-    const gtag = (window as any).gtag
+    const gtag = (window as { gtag: unknown }).gtag as typeof gtag
     gtag('event', action, {
       event_category: category,
       event_label: label,
@@ -70,10 +70,10 @@ export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
   }, [])
 
   // Track errors
-  const trackError = useCallback((error: Error, errorInfo?: any) => {
-    if (typeof window === 'undefined' || !(window as any).gtag) return
+  const trackError = useCallback((error: Error, errorInfo?: Record<string, unknown>) => {
+    if (typeof window === 'undefined' || !(window as { gtag: unknown }).gtag) return
 
-    const gtag = (window as any).gtag
+    const gtag = (window as { gtag: unknown }).gtag as typeof gtag
     gtag('event', 'exception', {
       description: error.message,
       fatal: false,
@@ -87,9 +87,9 @@ export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
 
   // Track performance metrics
   const trackPerformance = useCallback(() => {
-    if (typeof window === 'undefined' || !(window as any).gtag) return
+    if (typeof window === 'undefined' || !(window as { gtag: unknown }).gtag) return
 
-    const gtag = (window as any).gtag
+    const gtag = (window as { gtag: unknown }).gtag as typeof gtag
     
     // Track Core Web Vitals
     if ('PerformanceObserver' in window) {
@@ -154,8 +154,8 @@ export function AnalyticsProvider({ children, gaId }: AnalyticsProviderProps) {
   // Make tracking functions available globally for error boundaries
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      ;(window as any).trackEvent = trackEvent
-      ;(window as any).trackError = trackError
+      ;(window as { trackEvent: typeof trackEvent; trackError: typeof trackError }).trackEvent = trackEvent
+      ;(window as { trackEvent: typeof trackEvent; trackError: typeof trackError }).trackError = trackError
     }
   }, [trackEvent, trackError])
 

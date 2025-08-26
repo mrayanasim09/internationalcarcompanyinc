@@ -72,12 +72,10 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     ([, config]) => config.theme || config.color
   )
 
-  if (!colorConfig.length) {
-    return null
-  }
-
   // Use CSS custom properties through data attributes instead of inline styles
   React.useEffect(() => {
+    if (!colorConfig.length) return
+    
     const chartElement = document.querySelector(`[data-chart="${id}"]`)
     if (!chartElement) return
 
@@ -98,6 +96,10 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
       })
     })
   }, [id, colorConfig])
+
+  if (!colorConfig.length) {
+    return null
+  }
 
   return null
 }

@@ -1,67 +1,37 @@
 
 import { cookies } from 'next/headers'
-import { NextRequest } from 'next/server'
 import { jwtManager } from './jwt-utils'
 
-export interface AdminAuth {
-  userId: string
+interface AdminAuth {
   email: string
   role: string
-  permissions: any
-  sessionId?: string
+  permissions: string[]
 }
 
-// For API routes - read cookies from request
-export async function getAdminAuthFromRequest(request: NextRequest): Promise<AdminAuth | null> {
-  console.log('getAdminAuthFromRequest: Starting authentication check...')
-  
-  // Log all cookies for debugging
-  const allCookies = request.cookies.getAll()
-  console.log('getAdminAuthFromRequest: All cookies:', allCookies.map(c => ({ name: c.name, value: c.value?.substring(0, 20) + '...' })))
-  
-  const token = request.cookies.get('icc_admin_token')?.value
-  console.log('getAdminAuthFromRequest: Token found:', !!token, 'Token length:', token?.length || 0)
-  
-  if (!token) {
-    console.log('getAdminAuthFromRequest: No token found, returning null')
-    return null
-  }
-
+export async function getAdminAuthFromRequest(): Promise<AdminAuth | null> {
   try {
-    const result = jwtManager.verifyAccessToken(token)
+    const cookieStore = await cookies()
     
-    if (result.isValid && result.payload) {
-      return {
-        userId: result.payload.userId,
-        email: result.payload.email,
-        role: result.payload.role,
-        permissions: result.payload.permissions,
-        sessionId: result.payload.sessionId
-      }
+    const token = cookieStore.get('icc_admin_token')?.value
+    
+    if (!token) {
+      return null
     }
+
+    const validation = jwtManager.verify(token)
     
-    // If access token is invalid, try refresh token
-    const refresh = request.cookies.get('icc_admin_refresh')?.value
-    if (refresh) {
-      const refreshed = jwtManager.refreshAccessToken(refresh)
-      if (refreshed && refreshed.accessToken) {
-        // Decode the new access token to get user info
-        const decodedToken = jwtManager.decodeToken(refreshed.accessToken)
-        if (decodedToken) {
-          return {
-            userId: decodedToken.userId,
-            email: decodedToken.email,
-            role: decodedToken.role,
-            permissions: decodedToken.permissions,
-            sessionId: decodedToken.sessionId
-          }
-        }
-      }
+    if (!validation.valid || !validation.payload) {
+      return null
     }
+
+    const payload = validation.payload as { email?: string; role?: string; permissions?: string[] }
     
-    return null
-  } catch (error) {
-    console.error('Auth error:', error)
+    return {
+      email: payload.email || '',
+      role: payload.role || 'viewer',
+      permissions: payload.permissions || [],
+    }
+  } catch {
     return null
   }
 }

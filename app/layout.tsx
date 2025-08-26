@@ -12,7 +12,6 @@ import { UnifiedMonitor } from '@/components/unified-monitor'
 import { CookieConsent } from '@/components/cookie-consent'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
-import { Preloader } from '@/components/preloader'
 import { NonceProvider } from '@/components/nonce-context'
 import { 
   DynamicServiceWorkerRegister, 

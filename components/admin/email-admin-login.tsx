@@ -4,13 +4,13 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 // type import kept for reference of shape; not used directly
 // import type { LoginResult } from "@/lib/simple-admin-auth"
-import { Mail, Lock, Shield, ArrowLeft, RefreshCw } from "lucide-react"
+import { Mail, Lock, RefreshCw, ArrowLeft } from 'lucide-react'
 import Image from "next/image"
 
 export function EmailAdminLogin() {

@@ -29,8 +29,9 @@ export class CSRFProtection {
    * Generate a new CSRF token
    */
   generateToken(): string {
-    const bytes = crypto.randomBytes(this.config.tokenLength)
-    return bytes.toString('hex')
+    const token = crypto.randomBytes(32).toString('hex')
+    this.tokens.set(token, Date.now())
+    return token
   }
 
   /**
@@ -72,7 +73,7 @@ export class CSRFProtection {
       }
 
       return { valid: true, token }
-    } catch (error) {
+    } catch {
       return { valid: false, error: 'Token verification failed' }
     }
   }
@@ -166,44 +167,33 @@ export const csrf = {
   issue(): string {
     // Generate a simple token for backward compatibility
     const token = csrfProtection.generateToken()
-    console.log('DEBUG: Generated CSRF token:', token.substring(0, 20) + '...')
     return token
   },
   verify(request: Request | NextRequest): boolean {
-    try {
-      // Check for CSRF token in headers (case-insensitive)
-      const headers = request.headers
-      let csrfToken = ''
-      
-      // Try different case variations
-      for (const [key, value] of headers.entries()) {
-        if (key.toLowerCase() === 'x-csrf-token' && value) {
-          csrfToken = value
-          break
-        }
-      }
-      
-      if (!csrfToken) {
-        console.log('DEBUG: No CSRF token found in headers')
-        return false
-      }
-      
-      console.log('DEBUG: CSRF token found:', csrfToken.substring(0, 20) + '...')
-      console.log('DEBUG: CSRF token length:', csrfToken.length)
-      console.log('DEBUG: CSRF token format check:', /^[a-f0-9]+$/i.test(csrfToken))
-      
-      // For backward compatibility, accept simple tokens (64 hex chars for 32 bytes)
-      if (csrfToken.length === 64 && /^[a-f0-9]+$/i.test(csrfToken)) {
-        console.log('DEBUG: CSRF token format is valid (simple token)')
-        return true
-      }
-      
-      console.log('DEBUG: CSRF token format is invalid')
-      return false
-    } catch (error) {
-      console.error('DEBUG: CSRF verification error:', error)
+    const csrfToken = request.headers.get('x-csrf-token')
+    
+    if (!csrfToken) {
       return false
     }
+
+    if (!/^[a-f0-9]+$/i.test(csrfToken)) {
+      return false
+    }
+
+    const tokenAge = this.tokens.get(csrfToken)
+    if (!tokenAge) {
+      return false
+    }
+
+    // Check if token is expired (24 hours)
+    if (Date.now() - tokenAge > this.tokenExpiry) {
+      this.tokens.delete(csrfToken)
+      return false
+    }
+
+    // Remove used token
+    this.tokens.delete(csrfToken)
+    return true
   }
 }
 

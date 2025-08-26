@@ -61,7 +61,6 @@ const SidebarProvider = React.forwardRef<
       open: openProp,
       onOpenChange: setOpenProp,
       className,
-      style,
       children,
       ...props
     },

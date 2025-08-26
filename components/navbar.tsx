@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, X } from "lucide-react"
 import Image from "next/image"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -28,10 +27,6 @@ export function Navbar() {
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false)
-  }, [])
-
-  const handleOpenChange = useCallback((open: boolean) => {
-    setIsMenuOpen(open)
   }, [])
 
   return (

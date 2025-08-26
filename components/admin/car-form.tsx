@@ -57,7 +57,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
   const [manualUrls, setManualUrls] = useState<string[]>([])
   const [newManualUrl, setNewManualUrl] = useState("")
   const [showPreview, setShowPreview] = useState(false)
-  const [previewCar, setPreviewCar] = useState<any>(null)
+  const [previewCar, setPreviewCar] = useState<Car | null>(null)
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -303,7 +303,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
             } else if (err?.error) {
               message = err.error
             }
-          } catch (_) {
+          } catch {
             // ignore parse errors
           }
           throw new Error(message)

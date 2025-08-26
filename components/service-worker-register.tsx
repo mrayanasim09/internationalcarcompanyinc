@@ -72,29 +72,6 @@ export function ServiceWorkerRegister() {
     }
   }, [registration])
 
-  const preloadCriticalAssets = useCallback(async () => {
-    if (registration && registration.active) {
-      const criticalUrls = [
-        '/inventory',
-        '/about',
-        '/contact',
-        '/prestige-auto-sales-logo.png'
-      ]
-
-      try {
-        for (const url of criticalUrls) {
-          await registration.active.postMessage({
-            type: 'PRELOAD_ASSET',
-            url
-          })
-        }
-        console.log('Critical assets preloaded successfully')
-      } catch (error) {
-        console.warn('Failed to preload critical assets:', error)
-      }
-    }
-  }, [registration])
-
   useEffect(() => {
     // Check if service worker is supported and register
     registerServiceWorker()

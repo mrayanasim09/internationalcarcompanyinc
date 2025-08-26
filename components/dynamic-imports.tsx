@@ -102,7 +102,7 @@ export const DynamicFilterPanel = dynamic(
 )
 
 // Generic dynamic import wrapper
-export function withDynamicImport<T extends React.ComponentType<any>>(
+export function withDynamicImport<T extends React.ComponentType<Record<string, unknown>>>(
   importFn: () => Promise<{ default: T }>,
   options: {
     loading?: React.ComponentType
@@ -118,11 +118,13 @@ export function withDynamicImport<T extends React.ComponentType<any>>(
   })
   
   if (fallback) {
-    return (props: React.ComponentProps<T>) => (
+    const WrappedComponent = (props: React.ComponentProps<T>) => (
       <Suspense fallback={fallback}>
         <DynamicComponent {...props} />
       </Suspense>
     )
+    WrappedComponent.displayName = `withDynamicImport(${DynamicComponent.displayName || 'Component'})`
+    return WrappedComponent
   }
   
   return DynamicComponent

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState, useCallback, useRef } from 'react'
-import { AlertTriangle, CheckCircle, XCircle, Bug, Info, RefreshCw, Wifi, WifiOff } from 'lucide-react'
+import { CheckCircle, XCircle, Bug, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -29,8 +29,6 @@ export function UnifiedMonitor() {
     errors: []
   })
   const [reactErrors, setReactErrors] = useState<ReactError[]>([])
-  const [isMonitoring, setIsMonitoring] = useState(false)
-  const [errorCounts, setErrorCounts] = useState<Record<string, number>>({})
   const originalErrorRef = useRef<typeof console.error>()
   const originalWarnRef = useRef<typeof console.warn>()
 
@@ -58,7 +56,7 @@ export function UnifiedMonitor() {
 
   // React error monitoring
   const setupErrorMonitoring = useCallback(() => {
-    if (!isMonitoring || !originalErrorRef.current || !originalWarnRef.current) return
+    if (!originalErrorRef.current || !originalWarnRef.current) return
 
     const originalError = originalErrorRef.current
     const originalWarn = originalWarnRef.current
@@ -80,10 +78,6 @@ export function UnifiedMonitor() {
         }
         
         setReactErrors(prev => [...prev, error])
-        setErrorCounts(prev => ({
-          ...prev,
-          [errorCode]: (prev[errorCode] || 0) + 1
-        }))
       }
 
       // Check for connection errors
@@ -124,7 +118,7 @@ export function UnifiedMonitor() {
       console.error = originalError
       console.warn = originalWarn
     }
-  }, [isMonitoring])
+  }, [])
 
   useEffect(() => {
     // Store original console methods
@@ -138,14 +132,14 @@ export function UnifiedMonitor() {
     const interval = setInterval(testConnection, 30000)
     
     return () => clearInterval(interval)
-  }, [])
+  }, [testConnection])
 
   useEffect(() => {
     // Set up error monitoring when monitoring is enabled
     const cleanup = setupErrorMonitoring()
     
     return cleanup
-  }, [isMonitoring])
+  }, [setupErrorMonitoring, testConnection])
 
   // Don't render anything if not in development
   if (process.env.NODE_ENV !== 'development') {
@@ -210,7 +204,6 @@ export function UnifiedMonitor() {
                     variant="outline"
                     onClick={() => {
                       setReactErrors([])
-                      setErrorCounts({})
                     }}
                     className="text-xs h-6 px-2"
                   >

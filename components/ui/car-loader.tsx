@@ -7,7 +7,7 @@ interface CarLoaderProps {
   className?: string
 }
 
-export function CarLoader({ size = 200, className }: CarLoaderProps) {
+export function CarLoader({ size = 200 }: CarLoaderProps) {
   const sizeClass = size <= 100 ? 'w-24 h-24' : size <= 200 ? 'w-48 h-48' : 'w-96 h-96'
   
   return (

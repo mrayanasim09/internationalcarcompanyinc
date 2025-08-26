@@ -167,7 +167,7 @@ export async function middleware(request: NextRequest) {
   
   // Debug logging (disabled in production)
   if (process.env.NODE_ENV !== 'production') {
-    logger.debug('Middleware CSP Header:', {
+    logger.debug('Middleware', 'CSP Header generated', {
       pathname: request.nextUrl.pathname,
       nonce: nonce,
       cspHeader: cspHeader,
@@ -194,11 +194,12 @@ export async function middleware(request: NextRequest) {
   
   // Debug: Log headers (disabled in production)
   if (process.env.NODE_ENV !== 'production') {
-    logger.debug('Middleware Headers Set:', {
+    // Debug logging for admin routes
+    logger.debug('Middleware', 'Headers Set', {
       pathname: request.nextUrl.pathname,
       nonce: nonce,
       csp: response.headers.get('Content-Security-Policy'),
-      referrer: response.headers.get('Referrer-Policy'),
+      referrer: request.headers.get('referer'),
       timestamp: new Date().toISOString()
     })
   }
@@ -216,62 +217,33 @@ export async function middleware(request: NextRequest) {
       // Get admin token from cookies
       const adminToken = request.cookies.get('icc_admin_token')?.value
       
-      logger.debug('Middleware checking admin route:', request.nextUrl.pathname)
-      logger.debug('Admin token present:', !!adminToken)
-      logger.debug('Admin token length:', adminToken?.length || 0)
-      
       if (!adminToken) {
-        logger.debug('Admin route access denied - no token, redirecting to login')
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
       
       // Validate JWT token
       const tokenValidation = jwtManagerEdge.verifyAccessToken(adminToken)
       
-      logger.debug('Token validation result:', {
-        isValid: tokenValidation.isValid,
-        hasPayload: !!tokenValidation.payload,
-        error: tokenValidation.error
-      })
-      
       if (!tokenValidation.isValid || !tokenValidation.payload) {
-        logger.debug('Admin route access denied - invalid token, redirecting to login')
-        // Clear invalid cookies
-        const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
-        redirectResponse.cookies.delete('icc_admin_token')
-        redirectResponse.cookies.delete('icc_admin_session')
-        return redirectResponse
+        return NextResponse.redirect(new URL('/admin/login', request.url))
       }
       
       // Check if token is blacklisted
-      const jti = (tokenValidation.payload as { jti?: string }).jti
-      if (jti && await jwtManagerEdge.isJtiBlacklisted(jti)) {
-        logger.debug('Admin route access denied - blacklisted token, redirecting to login')
-        const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
-        redirectResponse.cookies.delete('icc_admin_token')
-        redirectResponse.cookies.delete('icc_admin_session')
-        return redirectResponse
+      const jti = (tokenValidation.payload as any).jti
+      if (jti && await jwtManagerEdge.isTokenBlacklisted(jti)) {
+        return NextResponse.redirect(new URL('/admin/login', request.url))
       }
       
-      // Check token expiration
-      const exp = (tokenValidation.payload as { exp?: number }).exp
+      // Check if token is expired
+      const exp = (tokenValidation.payload as any).exp
       if (exp && Date.now() >= exp * 1000) {
-        logger.debug('Admin route access denied - expired token, redirecting to login')
-        const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
-        redirectResponse.cookies.delete('icc_admin_token')
-        redirectResponse.cookies.delete('icc_admin_session')
-        return redirectResponse
+        return NextResponse.redirect(new URL('/admin/login', request.url))
       }
       
-      logger.debug('Admin route access granted for user:', (tokenValidation.payload as { email?: string }).email)
-      
+      // Continue with the request
+      return response
     } catch (error) {
-      logger.error('Admin route protection error:', error)
-      // On any error, redirect to login for security
-      const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
-      redirectResponse.cookies.delete('icc_admin_token')
-      redirectResponse.cookies.delete('icc_admin_session')
-      return redirectResponse
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }
   

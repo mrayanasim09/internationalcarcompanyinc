@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { StarRating } from '@/components/star-rating'
 import { Star, MapPin, User } from 'lucide-react'
-import Image from 'next/image'
 
 interface GoogleReview {
   author_name: string

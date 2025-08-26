@@ -56,7 +56,7 @@ export function CarPageClient({ carId }: CarPageClientProps) {
               if (errorData.details) {
                 errorMessage += ` - ${errorData.details}`
               }
-            } catch (parseError) {
+            } catch {
               console.log('DEBUG: CarPageClient could not parse error response')
             }
             

@@ -3,15 +3,13 @@
 export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
-
-
-import { ListingsContent, type ListingsFilters } from '@/components/listings-content'
-import { FilterPanel } from '@/components/filter-panel'
-import { CarLoader, CarGridSkeleton } from '@/components/ui/car-loader'
-import { ErrorDisplay } from '@/components/ui/error-display'
-import type { Car } from '@/lib/types'
-import Script from 'next/script'
-import { useCSPNonce } from '@/hooks/use-csp-nonce'
+import { Car } from '@/lib/types'
+import Script from 'next/script';
+import { useCSPNonce } from '@/hooks/use-csp-nonce';
+import { DynamicFilterPanel } from '@/components/dynamic-imports';
+import { ListingsContent } from '@/components/listings-content';
+import { ErrorDisplay } from '@/components/ui/error-display';
+import { CarGridSkeleton } from '@/components/ui/car-loader';
 // CSS animation utilities are used to avoid client boundary issues
 
 // Lazy load Supabase to prevent build-time issues
@@ -25,8 +23,7 @@ export default function ListingsPage() {
   const [cars, setCars] = useState<Car[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [refreshing, setRefreshing] = useState(false)
-  const [filters, setFilters] = useState<ListingsFilters>({
+  const [filters, setFilters] = useState({
     search: '',
     make: '',
     minPrice: null,
@@ -50,7 +47,6 @@ export default function ListingsPage() {
       const diff = currentY - startY
       
       if (diff > 100 && window.scrollY === 0) {
-        setRefreshing(true)
         window.location.reload()
       }
     }
@@ -223,7 +219,7 @@ export default function ListingsPage() {
                 filters.minYear !== null ? { key: 'minYear', label: `From: ${filters.minYear}` } : null,
                 filters.maxYear !== null ? { key: 'maxYear', label: `To: ${filters.maxYear}` } : null,
                 filters.maxMileage !== null ? { key: 'maxMileage', label: `Max mi: ${filters.maxMileage}` } : null,
-              ].filter(Boolean) as { key: keyof ListingsFilters; label: string }[]).length > 0 && (
+              ].filter(Boolean) as { key: keyof typeof filters; label: string }[]).length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {([
                     filters.make ? { key: 'make', label: `Make: ${filters.make}` } : null,
@@ -232,7 +228,7 @@ export default function ListingsPage() {
                     filters.minYear !== null ? { key: 'minYear', label: `From: ${filters.minYear}` } : null,
                     filters.maxYear !== null ? { key: 'maxYear', label: `To: ${filters.maxYear}` } : null,
                     filters.maxMileage !== null ? { key: 'maxMileage', label: `Max mi: ${filters.maxMileage}` } : null,
-                  ].filter(Boolean) as { key: keyof ListingsFilters; label: string }[]).map((f) => (
+                  ].filter(Boolean) as { key: keyof typeof filters; label: string }[]).map((f) => (
                     <button
                       key={f.key}
                       className="px-2.5 py-1.5 rounded-full bg-accent text-foreground border border-border text-xs hover:bg-accent/80"
@@ -247,7 +243,7 @@ export default function ListingsPage() {
               )}
               {/* Actual FilterPanel wired to lifted filters */}
               <div className="mt-4">
-                <FilterPanel initialFilters={filters} onFilter={setFilters} />
+                <DynamicFilterPanel initialFilters={filters} onFilter={setFilters} />
               </div>
             </aside>
             <div className="lg:w-3/4">

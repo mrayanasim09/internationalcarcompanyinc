@@ -77,15 +77,14 @@ export function PerformanceMonitor() {
     try {
       if (!('performance' in window)) return
       
-      const resources = performance.getEntriesByType('resource')
-      let totalSize = 0
-      let resourceCount = resources.length
-      
-      for (const resource of resources) {
-        if ('transferSize' in resource && resource.transferSize) {
-          totalSize += resource.transferSize
+      // Calculate resource metrics
+      const resourceCount = performance.getEntriesByType('resource').length
+      const totalSize = performance.getEntriesByType('resource').reduce((total, resource) => {
+        if (resource.transferSize && resource.transferSize > 0) {
+          total += resource.transferSize
         }
-      }
+        return total
+      }, 0)
       
       updateMetric('bundleSize', Math.round(totalSize / 1024)) // Convert to KB
       updateMetric('resourceCount', resourceCount)
@@ -120,61 +119,59 @@ export function PerformanceMonitor() {
       setIsVisible(true)
     }
 
-    // Monitor Core Web Vitals
-    if ('PerformanceObserver' in window) {
-      try {
-        // First Contentful Paint
-        const fcpObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === 'paint' && entry.name === 'first-contentful-paint') {
-              updateMetric('fcp', Math.round(entry.startTime))
-            }
+    // Set up performance observers
+    try {
+      // First Contentful Paint
+      const fcpObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'paint' && entry.name === 'first-contentful-paint') {
+            updateMetric('fcp', Math.round(entry.startTime))
           }
-        })
-        fcpObserver.observe({ entryTypes: ['paint'] })
-        observersRef.current.push(fcpObserver)
+        }
+      })
+      fcpObserver.observe({ entryTypes: ['paint'] })
+      observersRef.current.push(fcpObserver)
 
-        // Largest Contentful Paint
-        const lcpObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === 'largest-contentful-paint') {
-              updateMetric('lcp', Math.round(entry.startTime))
-            }
+      // Largest Contentful Paint
+      const lcpObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'largest-contentful-paint') {
+            updateMetric('lcp', Math.round(entry.startTime))
           }
-        })
-        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] })
-        observersRef.current.push(lcpObserver)
+        }
+      })
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] })
+      observersRef.current.push(lcpObserver)
 
-        // Cumulative Layout Shift
-        const clsObserver = new PerformanceObserver((list) => {
-          let clsValue = 0
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === 'layout-shift') {
-              const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }
-              if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
-                clsValue += layoutShiftEntry.value
-              }
+      // Cumulative Layout Shift
+      const clsObserver = new PerformanceObserver((list) => {
+        let clsValue = 0
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'layout-shift') {
+            const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number }
+            if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
+              clsValue += layoutShiftEntry.value
             }
           }
-          updateMetric('cls', Math.round(clsValue * 1000) / 1000)
-        })
-        clsObserver.observe({ entryTypes: ['layout-shift'] })
-        observersRef.current.push(clsObserver)
+        }
+        updateMetric('cls', Math.round(clsValue * 1000) / 1000)
+      })
+      clsObserver.observe({ entryTypes: ['layout-shift'] })
+      observersRef.current.push(clsObserver)
 
-        // First Input Delay
-        const fidObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === 'first-input') {
-              const fidEntry = entry as PerformanceEventTiming
-              updateMetric('fid', Math.round(fidEntry.processingStart - fidEntry.startTime))
-            }
+      // First Input Delay
+      const fidObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'first-input') {
+            const fidEntry = entry as PerformanceEventTiming
+            updateMetric('fid', Math.round(fidEntry.processingStart - fidEntry.startTime))
           }
-        })
-        fidObserver.observe({ entryTypes: ['first-input'] })
-        observersRef.current.push(fidObserver)
-      } catch (error) {
-        console.warn('Failed to set up performance observers:', error)
-      }
+        }
+      })
+      fidObserver.observe({ entryTypes: ['first-input'] })
+      observersRef.current.push(fidObserver)
+    } catch (error) {
+      console.warn('Failed to set up performance observers:', error)
     }
 
     // Calculate initial metrics
@@ -189,9 +186,12 @@ export function PerformanceMonitor() {
       measureTTFB()
     }, 10000) // Every 10 seconds
 
+    // Store current observers for cleanup
+    const currentObservers = observersRef.current
+
     return () => {
       clearInterval(interval)
-      observersRef.current.forEach(observer => observer.disconnect())
+      currentObservers.forEach(observer => observer.disconnect())
     }
   }, [calculateBundleSize, calculateDOMSize, measureTTFB, updateMetric])
 

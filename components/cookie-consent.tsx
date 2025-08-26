@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
-import { X, Cookie, Info } from 'lucide-react'
+import { Cookie, Info } from 'lucide-react'
 import { useAnalyticsConsent } from '@/hooks/use-analytics-consent'
 import Link from 'next/link'
 

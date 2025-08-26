@@ -1,21 +1,25 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { CheckCircle, XCircle, AlertTriangle, RefreshCw } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Loader2, Shield } from 'lucide-react'
 
 export default function TestAdminPage() {
-  const [testResults, setTestResults] = useState<any[]>([])
+  const [testResults, setTestResults] = useState<Array<{
+    test: string
+    status: 'success' | 'error' | 'warning'
+    message: string
+    timestamp: Date
+    details?: Record<string, unknown>
+  }>>([])
   const [isTesting, setIsTesting] = useState(false)
   const [email, setEmail] = useState('admin@internationalcarcompanyinc.com')
   const [password, setPassword] = useState('Admin123!')
 
-  const addTestResult = (test: string, status: 'success' | 'error' | 'warning', message: string, details?: any) => {
+  const addTestResult = (test: string, status: 'success' | 'error' | 'warning', message: string, details?: Record<string, unknown>) => {
     setTestResults(prev => [...prev, {
       id: Date.now(),
       test,
@@ -118,10 +122,10 @@ export default function TestAdminPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success': return <CheckCircle className="w-4 h-4 text-green-500" />
-      case 'error': return <XCircle className="w-4 h-4 text-red-500" />
-      case 'warning': return <AlertTriangle className="w-4 h-4 text-yellow-500" />
-      default: return <AlertTriangle className="w-4 h-4 text-gray-500" />
+      case 'success': return <Shield className="w-4 h-4 text-green-500" />
+      case 'error': return <Shield className="w-4 h-4 text-red-500" />
+      case 'warning': return <Shield className="w-4 h-4 text-yellow-500" />
+      default: return <Shield className="w-4 h-4 text-gray-500" />
     }
   }
 
@@ -170,7 +174,7 @@ export default function TestAdminPage() {
             >
               {isTesting ? (
                 <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   Running Tests...
                 </>
               ) : (
@@ -226,9 +230,6 @@ export default function TestAdminPage() {
                   <div className="flex items-center gap-3 mb-2">
                     {getStatusIcon(result.status)}
                     <span className="font-medium">{result.test}</span>
-                    <Badge variant={result.status === 'success' ? 'default' : result.status === 'error' ? 'destructive' : 'secondary'}>
-                      {result.status.toUpperCase()}
-                    </Badge>
                     <span className="text-sm text-gray-600 ml-auto">
                       {result.timestamp.toLocaleTimeString()}
                     </span>
@@ -264,7 +265,7 @@ export default function TestAdminPage() {
         <h3 className="font-medium text-yellow-800 mb-2">⚠️ Common Issues</h3>
         <ul className="text-sm text-yellow-700 space-y-1 list-disc list-inside">
           <li>Missing environment variables in .env.local</li>
-          <li>admin_users table doesn't exist in Supabase</li>
+          <li>admin_users table doesn&apos;t exist in Supabase</li>
           <li>CSRF token generation failing</li>
           <li>Supabase service role key permissions</li>
           <li>Network/CORS restrictions</li>

@@ -1,10 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-
-const supabase = createClient(supabaseUrl, supabaseKey)
+import { NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export async function GET() {
   try {
@@ -24,7 +19,7 @@ export async function GET() {
     console.log('DEBUG: Fetching cars from Supabase...')
     
     // Fetch all cars from Supabase
-    const { data: cars, error } = await supabase
+    const { data: cars, error } = await supabaseAdmin
       .from('cars')
       .select('id, title, make, model, year, approved, created_at')
       .order('created_at', { ascending: false })

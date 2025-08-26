@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react"
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react'
 import Image from "next/image"
 import { useSwipeGestures } from '@/hooks/use-mobile-gestures'
-import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 interface CarImageCarouselProps {
   images: string[]
@@ -46,48 +46,48 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
     preloadImages()
   }, [currentIndex, images, loadedImages])
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
     setImageError(false)
     setScale(1)
     setPosition({ x: 0, y: 0 })
-  }
+  }, [images.length])
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
     setImageError(false)
     setScale(1)
     setPosition({ x: 0, y: 0 })
-  }
+  }, [images.length])
 
-  const goToImage = (index: number) => {
+  const goToImage = useCallback((index: number) => {
     setCurrentIndex(index)
     setImageError(false)
     setScale(1)
     setPosition({ x: 0, y: 0 })
-  }
+  }, [])
 
-  const handleImageError = () => {
+  const handleImageError = useCallback(() => {
     setImageError(true)
-  }
+  }, [])
 
-  const handleZoomIn = () => {
+  const handleZoomIn = useCallback(() => {
     setScale(prev => Math.min(3, prev + 0.5))
-  }
+  }, [])
 
-  const handleZoomOut = () => {
+  const handleZoomOut = useCallback(() => {
     setScale(prev => Math.max(0.5, prev - 0.5))
-  }
+  }, [])
 
-  const resetZoom = () => {
+  const resetZoom = useCallback(() => {
     setScale(1)
     setPosition({ x: 0, y: 0 })
-  }
+  }, [])
 
-  const handleFullscreenChange = (open: boolean) => {
+  const handleFullscreenChange = useCallback((open: boolean) => {
     setIsFullscreen(open)
     onFullscreenChange?.(open)
-  }
+  }, [onFullscreenChange])
 
   // Enhanced touch handling for fullscreen mode
   useEffect(() => {
@@ -191,7 +191,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
         element.removeEventListener('touchend', handleTouchEnd)
       }
     }
-  }, [isFullscreen, scale])
+  }, [isFullscreen, scale, resetZoom])
 
   // Handle keyboard navigation in fullscreen
   useEffect(() => {
@@ -223,7 +223,7 @@ export function CarImageCarousel({ images, carTitle, onFullscreenChange }: CarIm
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isFullscreen])
+  }, [isFullscreen, handleFullscreenChange, nextImage, prevImage, handleZoomIn, handleZoomOut, resetZoom])
 
   // Enable swipe gestures on mobile - only for navigation, not zoom
   const [swipeEnabled, setSwipeEnabled] = useState(true)

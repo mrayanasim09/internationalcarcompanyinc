@@ -23,7 +23,7 @@ export default function AdminPage() {
     if (!loading) {
       setIsAuthenticated(Boolean(user))
     }
-  }, [user, loading])
+  }, [user, loading, isAuthenticated])
 
   // Only log in development
   if (process.env.NODE_ENV === 'development') {

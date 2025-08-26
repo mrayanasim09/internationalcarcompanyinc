@@ -6,15 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { 
-  TrendingUp, 
-  TrendingDown, 
   Activity, 
-  Zap, 
-  Clock, 
-  Eye, 
-  MousePointer,
-  Smartphone,
-  Monitor,
   RefreshCw,
   Download,
   AlertTriangle
@@ -49,7 +41,6 @@ export function PerformanceDashboard() {
     resourceCount: null,
     cacheHitRate: null
   })
-  const [history, setHistory] = useState<PerformanceHistory[]>([])
   const [isVisible, setIsVisible] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(false)
   const [alerts, setAlerts] = useState<string[]>([])
@@ -202,23 +193,16 @@ export function PerformanceDashboard() {
             try {
               const resources = performance.getEntriesByType('resource')
               let totalSize = 0
-              let jsCount = 0
-              let cssCount = 0
-              let imageCount = 0
               
               resources.forEach(resource => {
                 if (resource.name.includes('.js')) {
-                  jsCount++
                   if ('transferSize' in resource && typeof resource.transferSize === 'number' && resource.transferSize > 0) {
                     totalSize += resource.transferSize
                   }
                 } else if (resource.name.includes('.css')) {
-                  cssCount++
                   if ('transferSize' in resource && typeof resource.transferSize === 'number' && resource.transferSize > 0) {
                     totalSize += resource.transferSize
                   }
-                } else if (resource.name.match(/\.(jpg|jpeg|png|gif|webp|avif|svg)$/i)) {
-                  imageCount++
                 }
               })
               
@@ -315,12 +299,12 @@ export function PerformanceDashboard() {
   useEffect(() => {
     const cleanup = monitorPerformance()
     return cleanup
-  }, [])
+  }, [monitorPerformance])
 
   // Check for issues when metrics change
   useEffect(() => {
     checkPerformanceIssues()
-  }, [metrics])
+  }, [metrics, checkPerformanceIssues])
 
   // Auto-refresh functionality
   useEffect(() => {
@@ -332,7 +316,7 @@ export function PerformanceDashboard() {
     }, 30000) // Refresh every 30 seconds
     
     return () => clearInterval(interval)
-  }, [autoRefresh])
+  }, [autoRefresh, monitorPerformance, saveToHistory])
 
   // Show dashboard only in development or when explicitly enabled
   useEffect(() => {

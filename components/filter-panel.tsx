@@ -40,7 +40,6 @@ const DEFAULT_MIN_PRICE = 0;
 const DEFAULT_MAX_PRICE = 100000;
 
 // Year range defaults - moved outside component to prevent re-creation
-const getDefaultMaxYear = () => new Date().getFullYear() + 1;
 const DEFAULT_MIN_YEAR = 1990;
 
 // Mileage default - moved outside component to prevent re-creation
@@ -111,7 +110,7 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
       initialFilters.maxYear ?? DEFAULT_MAX_YEAR,
     ])
     setMileageValue([initialFilters.maxMileage ?? DEFAULT_MAX_MILEAGE])
-  }, [initialFilters, DEFAULT_MIN_PRICE, DEFAULT_MAX_PRICE, DEFAULT_MIN_YEAR, DEFAULT_MAX_YEAR, DEFAULT_MAX_MILEAGE])
+  }, [initialFilters, DEFAULT_MAX_YEAR])
 
   // Apply filters automatically when values change
   useEffect(() => {
@@ -128,7 +127,7 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
       lastEmittedRef.current = serialized
       onFilter(updatedFilters)
     }
-  }, [priceRange, yearRange, mileageValue, filters, onFilter, DEFAULT_MIN_PRICE, DEFAULT_MAX_PRICE, DEFAULT_MIN_YEAR, DEFAULT_MAX_YEAR, DEFAULT_MAX_MILEAGE])
+  }, [priceRange, yearRange, mileageValue, filters, onFilter, DEFAULT_MAX_YEAR])
 
   const clearFilters = () => {
     setFilters({
@@ -150,7 +149,7 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
     setSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // Count active filters
+  // Count active filters for badge display
   const activeFiltersCount = useMemo(() => {
     let count = 0;
     if (filters.search) count++;
@@ -159,7 +158,7 @@ export function FilterPanel({ onFilter, initialFilters }: FilterPanelProps) {
     if (yearRange[0] !== DEFAULT_MIN_YEAR || yearRange[1] !== DEFAULT_MAX_YEAR) count++;
     if (mileageValue[0] !== DEFAULT_MAX_MILEAGE) count++;
     return count;
-  }, [filters, priceRange, yearRange, mileageValue, DEFAULT_MIN_PRICE, DEFAULT_MAX_PRICE, DEFAULT_MIN_YEAR, DEFAULT_MAX_YEAR, DEFAULT_MAX_MILEAGE]);
+  }, [filters, priceRange, yearRange, mileageValue, DEFAULT_MAX_YEAR]);
 
   return (
     <div className="w-full">

@@ -10,15 +10,11 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 import { useToast } from "@/components/ui/use-toast"
-import { ErrorDisplay } from "@/components/ui/error-display"
 import { MapPin, Mail, Clock, Send, Car, CreditCard, Wrench, Phone, MessageSquare } from "lucide-react"
-import Script from 'next/script'
-import { useCSPNonce } from '@/hooks/use-csp-nonce'
-import { sanitizeText, sanitizeEmail, sanitizePhone, sanitizeFormData } from '@/lib/security/input-sanitizer'
+import { sanitizeEmail, sanitizePhone, sanitizeFormData } from '@/lib/security/input-sanitizer'
 import { getCSRFTokenForForm } from '@/lib/security/csrf'
 
 export function ContactContent() {
-  const nonce = useCSPNonce()
   const [formData, setFormData] = useState({
     name: "",
     email: "",

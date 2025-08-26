@@ -173,7 +173,7 @@ export class SitemapSubmitter {
   /**
    * Method 3: Google Search Console API (placeholder for future implementation)
    */
-  private async submitViaGoogleSearchConsole(_sitemapUrl: string): Promise<SitemapSubmissionResult> {
+  private async submitViaGoogleSearchConsole(): Promise<SitemapSubmissionResult> {
     // This would require Google Search Console API credentials
     // For now, return a placeholder that indicates this method is not available
     return {

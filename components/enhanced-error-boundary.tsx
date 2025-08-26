@@ -3,7 +3,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, RefreshCw, Home, Bug, Info } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 interface Props {
@@ -101,8 +101,8 @@ export class EnhancedErrorBoundary extends Component<Props, State> {
   private reportErrorToAnalytics = (error: Error, errorInfo: ErrorInfo) => {
     try {
       // Report to Google Analytics if available
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'exception', {
+      if (typeof window !== 'undefined' && (window as { gtag?: (command: string, action: string, params: Record<string, unknown>) => void }).gtag) {
+        (window as { gtag: (command: string, action: string, params: Record<string, unknown>) => void }).gtag('event', 'exception', {
           description: error.message,
           fatal: false,
           custom_map: {

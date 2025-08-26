@@ -1,16 +1,14 @@
 "use client"
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Search, Filter, Save, X, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Slider } from '@/components/ui/slider'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { useToast } from '@/components/ui/use-toast'
-import type { Car } from '@/lib/types'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Car } from '@/lib/types'
+import { Search, Filter, X, ChevronDown, ChevronUp, Save } from 'lucide-react'
 
 export interface AdvancedSearchFilters {
   search: string

@@ -60,7 +60,7 @@ export default function DebugConnectionsPage() {
 
     // Monitor fetch calls
     window.fetch = (...args) => {
-      const [url, options] = args
+      const [url] = args
       setConnections(prev => [...prev, {
         timestamp: new Date(),
         type: 'fetch',
@@ -231,7 +231,7 @@ export default function DebugConnectionsPage() {
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <h3 className="font-medium text-blue-800 mb-2">Instructions</h3>
         <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
-          <li>Click "Start Monitoring" to begin tracking connections</li>
+          <li>Click &quot;Start Monitoring&quot; to begin tracking connections</li>
           <li>Navigate to pages that have connection errors (like /about)</li>
           <li>Check the browser console for additional errors</li>
           <li>Look for patterns in the connection attempts</li>

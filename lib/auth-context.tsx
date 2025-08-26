@@ -25,50 +25,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const pathname = usePathname()
 
-  // Only log in development
-  if (process.env.NODE_ENV === 'development') {
-    console.log('DEBUG: AuthProvider mounted, pathname:', pathname)
-  }
-
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        console.log('DEBUG: AuthProvider checking authentication...')
         const response = await fetch('/api/admin/me', {
           credentials: 'include',
-          cache: 'no-store'
         })
-        
-        console.log('DEBUG: AuthProvider response status:', response.status)
-        console.log('DEBUG: AuthProvider response ok:', response.ok)
-        
+
         if (response.ok) {
           const data = await response.json()
-          console.log('DEBUG: AuthProvider received data:', data)
-          console.log('DEBUG: AuthProvider data.authenticated:', data.authenticated)
-          console.log('DEBUG: AuthProvider data.email:', data.email)
-          console.log('DEBUG: AuthProvider data.role:', data.role)
-          console.log('DEBUG: AuthProvider response headers:', Object.fromEntries(response.headers.entries()))
-          
           if (data.authenticated && data.email) {
             setUser({
               email: data.email,
               role: data.role || 'viewer',
-              permissions: data.permissions
+              permissions: data.permissions || [],
             })
-            console.log('DEBUG: AuthProvider set user:', data.email)
           } else {
             setUser(null)
-            console.log('DEBUG: AuthProvider: not authenticated - data:', data)
           }
         } else {
-          console.log('DEBUG: AuthProvider: /me endpoint returned', response.status)
-          const errorText = await response.text()
-          console.log('DEBUG: AuthProvider error response:', errorText)
           setUser(null)
         }
-      } catch (error) {
-        console.error('DEBUG: AuthProvider error:', error)
+      } catch {
         setUser(null)
       } finally {
         setLoading(false)
@@ -85,5 +63,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context
+}
 

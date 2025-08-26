@@ -10,10 +10,7 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File
     
     if (!file) {
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
     // Validate file type
@@ -43,8 +40,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: unknown) {
     console.error('Upload image error:', error)
-    
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     
     return NextResponse.json(
       { error: 'Failed to upload image' },

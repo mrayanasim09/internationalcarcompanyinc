@@ -29,7 +29,7 @@ describe('Security Headers', () => {
 
   it('should have proper cookie configuration', () => {
     expect(securityConfig.cookies.sameSite).toBe('strict')
-    expect(securityConfig.cookies.maxAge).toBe(3600) // 1 hour
+    expect(securityConfig.cookies.maxAge).toBe(60 * 60 * 24 * 7) // 7 days
     expect(securityConfig.cookies.secure).toBeDefined()
     expect(securityConfig.cookies.httpOnly).toBeDefined()
   })

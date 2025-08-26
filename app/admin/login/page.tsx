@@ -12,7 +12,6 @@ export default function AdminLoginPage() {
       try {
         const response = await fetch('/api/csrf-debug', { method: 'GET' })
         if (response.ok) {
-          const data = await response.json()
           // CSRF token will be set as a cookie automatically
           console.log('CSRF token generated successfully')
         }

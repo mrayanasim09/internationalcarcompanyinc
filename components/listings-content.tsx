@@ -6,7 +6,6 @@ import { FilterPanel } from "@/components/filter-panel"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
-import { useEffect as useEffectReact } from 'react'
 // CSS animation utilities are used to avoid client boundary issues
 
 import { CarLoader } from "@/components/ui/car-loader"

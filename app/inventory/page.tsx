@@ -2,14 +2,14 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useEffect, Suspense } from 'react';
-import { ListingsContent, type ListingsFilters } from '@/components/listings-content';
-import { CarLoader, CarGridSkeleton } from '@/components/ui/car-loader';
-import { ErrorDisplay } from '@/components/ui/error-display';
-import type { Car } from '@/lib/types';
+import { useState, useEffect, Suspense } from 'react'
+import { Car } from '@/lib/types'
 import Script from 'next/script';
 import { useCSPNonce } from '@/hooks/use-csp-nonce';
 import { DynamicFilterPanel } from '@/components/dynamic-imports';
+import { ListingsContent } from '@/components/listings-content';
+import { ErrorDisplay } from '@/components/ui/error-display';
+import { CarGridSkeleton } from '@/components/ui/car-loader';
 
 const getSupabaseClient = () => {
   // Lazy load supabase client to reduce initial bundle size
@@ -41,8 +41,7 @@ export default function InventoryPage() {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const [filters, setFilters] = useState<ListingsFilters>({
+  const [filters, setFilters] = useState({
     search: '',
     make: '',
     model: '',
@@ -130,24 +129,24 @@ export default function InventoryPage() {
         }
 
         if (isMounted) {
-          const fetchedCars: Car[] = (data || []).map((row: any) => ({
-            id: row.id,
-            title: row.title || `${row.year} ${row.make} ${row.model}`,
-            make: row.make,
-            model: row.model,
-            year: row.year,
-            mileage: row.mileage,
-            price: row.price,
-            location: row.location,
-            images: row.images || [],
-            approved: row.approved,
+          const fetchedCars: Car[] = (data || []).map((row: Record<string, unknown>) => ({
+            id: row.id as string,
+            title: (row.title as string) || `${row.year as number} ${row.make as string} ${row.model as string}`,
+            make: row.make as string,
+            model: row.model as string,
+            year: row.year as number,
+            mileage: row.mileage as number,
+            price: row.price as number,
+            location: row.location as string,
+            images: (row.images as string[]) || [],
+            approved: row.approved as boolean,
             isFeatured: Boolean(row.is_featured),
             isInventory: Boolean(row.is_inventory),
-            listedAt: row.listed_at ? new Date(row.listed_at) : new Date(),
-            description: row.description || '',
-            contact: { phone: row.contact_phone || '', whatsapp: row.contact_whatsapp || '' },
-            rating: row.rating || 0,
-            reviews: row.reviews || []
+            listedAt: row.listed_at ? new Date(row.listed_at as string) : new Date(),
+            description: (row.description as string) || '',
+            contact: { phone: (row.contact_phone as string) || '', whatsapp: (row.contact_whatsapp as string) || '' },
+            rating: (row.rating as number) || 0,
+            reviews: (row.reviews as Record<string, unknown>[]) || []
           }));
 
           setCars(fetchedCars);
@@ -218,7 +217,7 @@ export default function InventoryPage() {
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-foreground mb-4">No Vehicles Available</h2>
             <p className="text-muted-foreground mb-6">
-              We're currently updating our inventory. Please check back soon or contact us for current availability.
+              We&apos;re currently updating our inventory. Please check back soon or contact us for current availability.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a

@@ -308,7 +308,8 @@ export class SessionManager {
     const now = new Date()
     let cleanedCount = 0
     
-    for (const key of allKeys) {
+    // Process each key (placeholder implementation)
+    allKeys.forEach(() => {
       const session = null as unknown as SessionData | null
       if (session) {
         // Remove sessions older than 7 days
@@ -318,7 +319,7 @@ export class SessionManager {
           cleanedCount++
         }
       }
-    }
+    })
     
     if (cleanedCount > 0) {
       console.log(`Cleaned up ${cleanedCount} expired sessions`)
@@ -341,7 +342,8 @@ export class SessionManager {
       adminCounts: {} as Record<string, number>
     }
     
-    for (const key of allKeys) {
+    // Process each key (placeholder implementation)
+    allKeys.forEach(() => {
       const session = null as unknown as SessionData | null
       if (session) {
         // Consider active if accessed within last hour
@@ -356,7 +358,7 @@ export class SessionManager {
         
         stats.adminCounts[session.adminId] = (stats.adminCounts[session.adminId] || 0) + 1
       }
-    }
+    })
     
     return stats
   }

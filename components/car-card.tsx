@@ -3,9 +3,7 @@
 import { useState, useEffect, memo, useCallback, useMemo } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import Image from "next/image"
 import { LazyImage } from '@/components/lazy-image'
 import { 
   Car as CarIcon, 
@@ -115,7 +113,7 @@ export const CarCard = memo(function CarCard({ car, priority = false }: CarCardP
         </div>
       </Link>
 
-      <CardContent className="p-4">
+      <div className="p-4">
         <div className="space-y-3">
           {/* Title and Basic Info */}
           <div>
@@ -155,7 +153,7 @@ export const CarCard = memo(function CarCard({ car, priority = false }: CarCardP
             </Button>
           </Link>
         </div>
-      </CardContent>
+      </div>
     </div>
   )
 })
