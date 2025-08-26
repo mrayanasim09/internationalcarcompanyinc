@@ -67,7 +67,8 @@ export async function POST(request: NextRequest) {
 
     // Hash password and create user
     const passwordHash = await bcrypt.hash(password, 12)
-    const { data, error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabaseAdmin as any)
       .from('admin_users')
       .insert({
         email: email.toLowerCase().trim(),

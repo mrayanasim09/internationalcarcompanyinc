@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authManager } from '@/lib/auth-utils'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { csrf } from '@/lib/security/csrf'
 
 export async function GET() {
   try {
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { carId, rating, comment, reviewerName, reviewerEmail } = body
+    const { carId, rating, comment, reviewerName } = body
 
     if (!carId || !rating || !comment) {
       return NextResponse.json(
@@ -51,14 +52,14 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = getSupabaseAdmin()
-    const { data: review, error } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: review, error } = await (supabase as any)
       .from('reviews')
       .insert({
         car_id: carId,
-        rating,
+        name: reviewerName || 'Anonymous',
         comment,
-        reviewer_name: reviewerName,
-        reviewer_email: reviewerEmail,
+        stars: rating,
         created_at: new Date().toISOString(),
         approved: false
       })
@@ -101,7 +102,8 @@ export async function PUT(request: NextRequest) {
     }
 
     const supabase = getSupabaseAdmin()
-    const { data: review, error } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: review, error } = await (supabase as any)
       .from('reviews')
       .update({
         approved,
@@ -134,17 +136,19 @@ export async function DELETE(request: NextRequest) {
     if (!csrf.verify(request)) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 })
     }
-    const user = await authManager.getAdminAuthFromRequest(request)
+    const user = await authManager.getAdminAuthFromRequest()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    if (!user.permissions?.canDeleteReviews && user.role !== 'super_admin') {
+    if (!user.role || (user.role !== 'super_admin')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
-    const { error } = await supabaseAdmin.from('reviews').delete().eq('id', id)
+    
+    const supabase = getSupabaseAdmin()
+    const { error } = await supabase.from('reviews').delete().eq('id', id)
     if (error) throw error
     return NextResponse.json({ success: true })
   } catch (err) {

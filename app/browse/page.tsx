@@ -39,7 +39,8 @@ export default function BrowsePage() {
           return
         }
 
-        const { data, error } = await supabasePublic
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data, error } = await (supabasePublic as any)
           .from('cars')
           .select('*')
           .eq('approved', true)

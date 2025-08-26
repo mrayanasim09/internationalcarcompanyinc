@@ -30,7 +30,8 @@ export async function PUT(request: NextRequest) {
       )
     }
     const { id, ...updateData } = parsed.data
-    const { data, error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabaseAdmin as any)
       .from('admin_users')
       .update({
         ...updateData,

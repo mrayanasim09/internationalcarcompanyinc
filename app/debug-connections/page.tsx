@@ -71,18 +71,20 @@ export default function DebugConnectionsPage() {
     }
 
     // Monitor XHR calls
-    XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    XMLHttpRequest.prototype.open = function(method: string, url: string | URL, async: boolean = true, username?: string | null, password?: string | null) {
       setConnections(prev => [...prev, {
         timestamp: new Date(),
         type: 'xhr',
         details: `XHR ${method} to: ${url}`,
         stack: new Error().stack
       }])
-      return originalXHROpen.apply(this, [method, url, ...rest])
+      return originalXHROpen.apply(this, [method, url, async, username, password])
     }
 
     // Monitor WebSocket connections
-    window.WebSocket = function(url, protocols) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    window.WebSocket = function(url: string | URL, protocols?: string | string[]) {
       setConnections(prev => [...prev, {
         timestamp: new Date(),
         type: 'websocket',
@@ -90,7 +92,7 @@ export default function DebugConnectionsPage() {
         stack: new Error().stack
       }])
       return new originalWebSocket(url, protocols)
-    }
+    } as typeof WebSocket
 
     return () => {
       console.error = originalError

@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
 
     const { carId, name, comment, stars } = parsed.data
 
-    const { data, error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabaseAdmin as any)
       .from('reviews')
       .insert({
         car_id: carId,
@@ -61,7 +62,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const carId = searchParams.get('carId')
 
-    let query = supabaseAdmin.from('reviews').select('*').order('created_at', { ascending: false })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query = (supabaseAdmin as any).from('reviews').select('*').order('created_at', { ascending: false })
     if (carId) {
       query = query.eq('car_id', carId)
     }

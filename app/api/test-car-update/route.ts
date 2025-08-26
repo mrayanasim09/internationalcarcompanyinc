@@ -25,7 +25,8 @@ export async function GET() {
     console.log('DEBUG: Test update data:', JSON.stringify(testUpdateData, null, 2))
     
     // Test database connection first
-    const { data: testData, error: testError } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: testData, error: testError } = await (supabaseAdmin as any)
       .from('cars')
       .select('id, title')
       .limit(1)
@@ -52,7 +53,8 @@ export async function GET() {
     console.log('DEBUG: Testing update on car ID:', testCarId)
     
     // Test update with minimal data
-    const { data: updated, error: updateError } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: updated, error: updateError } = await (supabaseAdmin as any)
       .from('cars')
       .update({
         title: 'Test Car Update - ' + new Date().toISOString(),

@@ -111,7 +111,8 @@ export async function POST(request: NextRequest) {
 
     // Submit to Supabase (messages table)
     try {
-      const { error } = await supabaseAdmin
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabaseAdmin as any)
         .from('messages')
         .insert({
           name: contactWithMetadata.name,
