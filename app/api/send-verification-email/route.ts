@@ -76,8 +76,18 @@ export async function POST(request: NextRequest) {
 // Production email sending function
 async function sendEmail(email: string, code: string, type: string): Promise<boolean> {
   try {
+    // TEMPORARY DEBUG: Log all environment variables
+    console.log('🔍 DEBUG: Email service configuration:')
+    console.log('🔍 EMAIL_SERVICE:', process.env.EMAIL_SERVICE)
+    console.log('🔍 EMAIL_PROVIDER:', process.env.EMAIL_PROVIDER)
+    console.log('🔍 RESEND_API_KEY:', process.env.RESEND_API_KEY ? 'configured' : 'missing')
+    console.log('🔍 EMAIL_API_KEY:', process.env.EMAIL_API_KEY ? 'configured' : 'missing')
+    console.log('🔍 FROM_EMAIL:', process.env.FROM_EMAIL)
+    console.log('🔍 NODE_ENV:', process.env.NODE_ENV)
+    
     // Check if we have email service credentials
     const emailService = process.env.EMAIL_SERVICE || process.env.EMAIL_PROVIDER || 'resend'
+    console.log('🔍 Selected email service:', emailService)
     
     switch (emailService) {
       case 'resend':
@@ -88,6 +98,7 @@ async function sendEmail(email: string, code: string, type: string): Promise<boo
         return await sendWithNodemailer(email, code, type)
       default:
         // Fallback to console logging for development
+        console.log('🔍 Falling back to console logging')
         return await sendToConsole(email, code, type)
     }
   } catch (error) {
@@ -280,7 +291,21 @@ International Car Company Inc Team
 
 // Prevent other HTTP methods
 export async function GET() {
-  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
+  // Debug endpoint to check email configuration
+  const config = {
+    emailService: process.env.EMAIL_SERVICE || process.env.EMAIL_PROVIDER || 'not set',
+    resendApiKey: process.env.RESEND_API_KEY ? 'configured' : 'missing',
+    emailApiKey: process.env.EMAIL_API_KEY ? 'configured' : 'missing',
+    fromEmail: process.env.FROM_EMAIL || 'not set',
+    nodeEnv: process.env.NODE_ENV || 'not set',
+    timestamp: new Date().toISOString()
+  }
+  
+  return NextResponse.json({
+    success: true,
+    message: 'Email configuration debug info',
+    config
+  })
 }
 
 export async function PUT() {

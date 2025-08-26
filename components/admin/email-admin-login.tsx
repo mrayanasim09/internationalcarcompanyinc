@@ -185,7 +185,7 @@ export function EmailAdminLogin() {
     try {
       const res = await fetch('/api/admin/login-resend', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-csrf-token': (document.cookie.match(/(?:^|; )csrf_token=([^;]*)/)?.[1] ?? '') },
+        headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrfToken },
         credentials: 'include',
         body: JSON.stringify({ email: currentEmail })
       })
