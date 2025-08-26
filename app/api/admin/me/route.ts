@@ -2,9 +2,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtManager } from '@/lib/jwt-utils'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import type { Database } from '@/lib/types'
-
-type AdminUser = Database['public']['Tables']['admin_users']['Row']
 
 interface TokenPayload {
   sub: string

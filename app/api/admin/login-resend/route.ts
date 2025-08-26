@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server'
 import { csrf } from '@/lib/security/csrf'
 import { z } from 'zod'
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
     const expiry = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
 
     // Update user with new verification code
-    const { error: upErr } = await supabaseAdmin
+    const { error: upErr } = await (supabaseAdmin as any)
       .from('admin_users')
       .update({
         verification_code: code,
