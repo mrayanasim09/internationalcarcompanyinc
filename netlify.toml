@@ -20,7 +20,7 @@ publish = ".next"
   NODE_ENV = "production"
   NEXT_PUBLIC_GA_ID = "G-SV90G9ZG56"
   EMAIL_SERVICE = "resend"
-  RESEND_API_KEY = "${RESEND_API_KEY}"
+  RESEND_API_KEY = "re_eCfuB7FB_pz9x2ZQuo3iKDjAARnm7dNL1"
   FROM_EMAIL = "info@internationalcarcompanyinc.com"
 
 [[plugins]]
