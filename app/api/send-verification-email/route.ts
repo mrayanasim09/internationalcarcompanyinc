@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
 async function sendEmail(email: string, code: string, type: string): Promise<boolean> {
   try {
     // Check if we have email service credentials
-    const emailService = process.env.EMAIL_SERVICE || 'console'
+    const emailService = process.env.EMAIL_SERVICE || process.env.EMAIL_PROVIDER || 'resend'
     
     switch (emailService) {
       case 'resend':
@@ -99,11 +99,18 @@ async function sendEmail(email: string, code: string, type: string): Promise<boo
 // Send with Resend (recommended for production)
 async function sendWithResend(email: string, code: string, type: string): Promise<boolean> {
   try {
-    const apiKey = process.env.RESEND_API_KEY
+    // Try both possible environment variable names
+    const apiKey = process.env.RESEND_API_KEY || process.env.EMAIL_API_KEY
     if (!apiKey) {
-      console.warn('⚠️  RESEND_API_KEY not set, falling back to console')
+      console.warn('⚠️  RESEND_API_KEY or EMAIL_API_KEY not set, falling back to console')
       return await sendToConsole(email, code, type)
     }
+
+    const fromEmail = process.env.FROM_EMAIL || 'info@internationalcarcompanyinc.com'
+    
+    console.log(`📧 Attempting to send email via Resend to: ${email}`)
+    console.log(`📧 From: ${fromEmail}`)
+    console.log(`📧 Service: ${type}`)
 
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -112,7 +119,7 @@ async function sendWithResend(email: string, code: string, type: string): Promis
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: process.env.FROM_EMAIL || 'info@internationalcarcompanyinc.com',
+        from: fromEmail,
         to: email,
         subject: `International Car Company Inc - ${type === 'verification' ? 'Email Verification' : 'Password Reset'}`,
         html: generateEmailHTML(code, type),
@@ -121,14 +128,13 @@ async function sendWithResend(email: string, code: string, type: string): Promis
     })
 
     if (response.ok) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(`✅ Email sent via Resend to: ${email}`)
-      }
+      const result = await response.json()
+      console.log(`✅ Email sent via Resend to: ${email}`, result)
       return true
     }
 
     const error = await response.text()
-    console.error('❌ Resend API error:', error)
+    console.error('❌ Resend API error:', response.status, error)
     return false
   } catch (error) {
     console.error('❌ Resend error:', error)

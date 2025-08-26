@@ -43,11 +43,11 @@ export const env = {
   // External Services
   services: {
     email: {
-      provider: process.env.EMAIL_PROVIDER || 'resend',
-      apiKey: process.env.EMAIL_API_KEY!,
+      provider: process.env.EMAIL_SERVICE || process.env.EMAIL_PROVIDER || 'resend',
+      apiKey: process.env.RESEND_API_KEY || process.env.EMAIL_API_KEY!,
       fromEmail: process.env.FROM_EMAIL!,
+      resendApiKey: process.env.RESEND_API_KEY,
     },
-
   },
   // Security & Rate Limiting
   security: {
