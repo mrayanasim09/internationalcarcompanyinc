@@ -27,7 +27,7 @@ export function Footer() {
               </div>
               <div className="block">
                 <div className="text-lg font-bold text-foreground tracking-tight whitespace-nowrap">
-                  International Car Company Inc Professional Professional car sales with transparent pricing and a modern experience.
+                  International Car Company Inc
                 </div>
               </div>
             </Link>
