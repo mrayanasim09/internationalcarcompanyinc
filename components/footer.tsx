@@ -27,9 +27,8 @@ export function Footer() {
               </div>
               <div>
                 <div className="text-lg font-bold text-foreground">
-                  International Car Company Inc
+                  International Car Company Inc Professional vehicles. Modern experience.
                 </div>
-                 <div className="text-xs text-foreground/70 dark:text-foreground/90">Professional vehicles. Modern experience.</div>
               </div>
             </Link>
             <p className="text-sm text-foreground/70 dark:text-foreground/90">Professional car sales with transparent pricing and a modern experience.</p>
