@@ -163,8 +163,8 @@ export function CarTable({ cars, setCars }: CarTableProps) {
         </div>
       </CardHeader>
       <CardContent className="overflow-x-auto">
-        <div className="min-w-[1200px]">
-          <div className="grid grid-cols-10 px-4 py-3 text-xs uppercase text-muted-foreground font-medium">
+        <div className="min-w-[900px]">
+          <div className="grid grid-cols-11 px-4 py-3 text-xs uppercase text-muted-foreground font-medium">
             {([
               { key: 'title', label: 'Title', span: 2 },
               { key: 'make', label: 'Make', span: 1 },
@@ -183,11 +183,11 @@ export function CarTable({ cars, setCars }: CarTableProps) {
                 {label} <ArrowUpDown className="h-3 w-3" />
               </button>
             ))}
-            <div className="col-span-1 text-right font-medium">Actions</div>
+            <div className="col-span-2 text-right font-medium">Actions</div>
           </div>
           <div className="divide-y divide-border">
             {filtered.map(car => (
-              <div key={car.id} className="grid grid-cols-10 items-center px-4 py-4 text-sm hover:bg-muted/50 transition-colors">
+              <div key={car.id} className="grid grid-cols-11 items-center px-4 py-4 text-sm hover:bg-muted/50 transition-colors">
                 <div className="col-span-2 truncate pr-2" title={car.title}>{car.title}</div>
                 <div className="col-span-1 truncate pr-2">{car.make}</div>
                 <div className="col-span-1 truncate pr-2">{car.model}</div>
@@ -196,16 +196,16 @@ export function CarTable({ cars, setCars }: CarTableProps) {
                 <div className="col-span-1 pr-2 font-medium">{formatPrice(car.price)}</div>
                 <div className="col-span-1 truncate pr-2" title={car.location}>{car.location}</div>
                 <div className="col-span-1 pr-2">
-                  <Badge variant={car.status === 'sold' ? 'destructive' : 'secondary'} className="text-xs">
+                  <Badge variant={car.status === 'sold' ? 'destructive' : 'secondary'} className="text-xs px-1.5 py-0.5">
                     {car.status === 'sold' ? 'Sold' : (car.status || 'Available')}
                   </Badge>
                 </div>
-                <div className="col-span-1 flex items-center justify-end gap-1">
+                <div className="col-span-2 flex items-center justify-end gap-1 pr-2">
                   <Button 
                     size="sm" 
                     variant="outline" 
                     onClick={() => { setEditingCar(car); setShowForm(true) }}
-                    className="h-8 w-8 p-0"
+                    className="h-7 w-7 p-0"
                     title="Edit"
                   >
                     <Edit className="h-3 w-3" />
@@ -214,7 +214,7 @@ export function CarTable({ cars, setCars }: CarTableProps) {
                     size="sm" 
                     variant="outline" 
                     onClick={() => handleApprovalToggle(car.id, !car.approved)}
-                    className="h-8 w-8 p-0"
+                    className="h-7 w-7 p-0"
                     title={car.approved ? "Unapprove" : "Approve"}
                   >
                     {car.approved ? <X className="h-3 w-3 text-yellow-600" /> : <Check className="h-3 w-3 text-primary" />}
@@ -225,14 +225,14 @@ export function CarTable({ cars, setCars }: CarTableProps) {
                     onClick={() => handleStatusToggle(car.id, car.status === 'sold' ? 'available' : 'sold')}
                     title={car.status === 'sold' ? 'Mark as Available' : 'Mark as Sold'}
                     disabled={!car.status}
-                    className="h-8 px-2 text-xs"
+                    className={`h-7 ${car.status === 'sold' ? 'px-1.5 text-xs' : 'w-7 p-0'}`}
                   >
-                    {car.status === 'sold' ? 'Sold' : 'Mark Sold'}
+                    {car.status === 'sold' ? 'Sold' : <Check className="h-3 w-3" />}
                   </Button>
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    className="text-destructive h-8 w-8 p-0" 
+                    className="text-destructive h-7 w-7 p-0" 
                     onClick={() => handleDelete(car.id)}
                     title="Delete"
                   >
