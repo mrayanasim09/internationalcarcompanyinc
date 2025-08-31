@@ -678,72 +678,78 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
           <CardTitle className="text-white">Display Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="approved"
-              checked={form.watch("approved")}
-              onCheckedChange={(checked) => form.setValue("approved", checked as boolean)}
-            />
-            <Label htmlFor="approved" className="text-muted-foreground">
-              Approved
-            </Label>
-            <Badge variant="outline" className="text-muted-foreground border-border">
-              Mark car as approved for public display.
-            </Badge>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="isInventory"
-              checked={form.watch("isInventory")}
-              onCheckedChange={(checked) => form.setValue("isInventory", checked as boolean)}
-            />
-            <Label htmlFor="isInventory" className="text-muted-foreground">
-              Show in Inventory
-            </Label>
-            <Badge variant="outline" className="text-muted-foreground border-border">
-              Display this car in the main inventory list.
-            </Badge>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="isFeatured"
-              checked={form.watch("isFeatured")}
-              onCheckedChange={(checked) => form.setValue("isFeatured", checked as boolean)}
-            />
-            <Label htmlFor="isFeatured" className="text-muted-foreground">
-              Show in Featured Vehicles
-            </Label>
-            <Badge variant="outline" className="text-muted-foreground border-border">
-              Highlight this car on the homepage or featured sections.
-            </Badge>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <Checkbox
+                id="approved"
+                checked={form.watch("approved")}
+                onCheckedChange={(checked) => form.setValue("approved", checked as boolean)}
+              />
+              <Label htmlFor="approved" className="text-muted-foreground font-medium">
+                Approved
+              </Label>
+              <Badge variant="outline" className="text-muted-foreground border-border text-xs">
+                Mark car as approved for public display
+              </Badge>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <Checkbox
+                id="isInventory"
+                checked={form.watch("isInventory")}
+                onCheckedChange={(checked) => form.setValue("isInventory", checked as boolean)}
+              />
+              <Label htmlFor="isInventory" className="text-muted-foreground font-medium">
+                Show in Inventory
+              </Label>
+              <Badge variant="outline" className="text-muted-foreground border-border text-xs">
+                Display this car in the main inventory list
+              </Badge>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <Checkbox
+                id="isFeatured"
+                checked={form.watch("isFeatured")}
+                onCheckedChange={(checked) => form.setValue("isFeatured", checked as boolean)}
+              />
+              <Label htmlFor="isFeatured" className="text-muted-foreground font-medium">
+                Show in Featured Vehicles
+              </Label>
+              <Badge variant="outline" className="text-muted-foreground border-border text-xs">
+                Highlight this car on the homepage or featured sections
+              </Badge>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Label htmlFor="status" className="text-muted-foreground">
-              Vehicle Status
-            </Label>
-            <Select
-              value={form.watch("status") || "available"}
-              onValueChange={(value) => form.setValue("status", value as "available" | "sold" | "reserved" | "maintenance")}
-            >
-              <SelectTrigger className="w-48 bg-background border-border text-foreground">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="available">Available</SelectItem>
-                <SelectItem value="sold">Sold</SelectItem>
-                <SelectItem value="reserved">Reserved</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
-              </SelectContent>
-            </Select>
-            <Badge variant="outline" className="text-muted-foreground border-border">
-              Current status of the vehicle.
-            </Badge>
-            <Badge variant="outline" className="text-yellow-600 border-yellow-600">
-              Note: Status column may need to be added to database
-            </Badge>
+          <div className="space-y-3">
+            <div className="flex items-center space-x-3">
+              <Label htmlFor="status" className="text-muted-foreground min-w-[100px]">
+                Vehicle Status
+              </Label>
+              <Select
+                value={form.watch("status") || "available"}
+                onValueChange={(value) => form.setValue("status", value as "available" | "sold" | "reserved" | "maintenance")}
+              >
+                <SelectTrigger className="w-48 bg-background border-border text-foreground">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="available">Available</SelectItem>
+                  <SelectItem value="sold">Sold</SelectItem>
+                  <SelectItem value="reserved">Reserved</SelectItem>
+                  <SelectItem value="maintenance">Maintenance</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-wrap gap-2 ml-[calc(100px+12px)]">
+              <Badge variant="outline" className="text-muted-foreground border-border text-xs">
+                Current status of the vehicle
+              </Badge>
+              <Badge variant="outline" className="text-yellow-600 border-yellow-600 text-xs">
+                Note: Status column may need to be added to database
+              </Badge>
+            </div>
           </div>
         </CardContent>
       </Card>

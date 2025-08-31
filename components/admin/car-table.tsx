@@ -145,64 +145,79 @@ export function CarTable({ cars, setCars }: CarTableProps) {
 
   return (
     <Card>
-      <CardHeader className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <CardTitle>Cars Table</CardTitle>
-        <div className="flex gap-2 w-full md:w-auto">
+      <CardHeader className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between pb-6">
+        <CardTitle className="text-xl font-semibold">Cars Table</CardTitle>
+        <div className="flex gap-3 w-full md:w-auto">
           <Input
             placeholder="Search by title, make, model, year, location"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full md:w-80"
           />
-          <Button onClick={() => { setEditingCar(null); setShowForm(true) }} className="bg-primary hover:bg-primary/90">
-            <Plus className="h-4 w-4 mr-1" /> New
+          <Button 
+            onClick={() => { setEditingCar(null); setShowForm(true) }} 
+            className="bg-primary hover:bg-primary/90 whitespace-nowrap"
+          >
+            <Plus className="h-4 w-4 mr-2" /> Add New Car
           </Button>
         </div>
       </CardHeader>
       <CardContent className="overflow-x-auto">
-        <div className="min-w-[900px]">
-          <div className="grid grid-cols-12 px-3 py-2 text-xs uppercase text-muted-foreground">
+        <div className="min-w-[1200px]">
+          <div className="grid grid-cols-10 px-4 py-3 text-xs uppercase text-muted-foreground font-medium">
             {([
-              { key: 'title', label: 'Title' },
-              { key: 'make', label: 'Make' },
-              { key: 'model', label: 'Model' },
-              { key: 'year', label: 'Year' },
-              { key: 'mileage', label: 'Mileage' },
-              { key: 'price', label: 'Price' },
-              { key: 'location', label: 'Location' },
-              { key: 'status', label: 'Status' },
-            ] as Array<{ key: SortKey; label: string }>).map(({ key, label }) => (
+              { key: 'title', label: 'Title', span: 2 },
+              { key: 'make', label: 'Make', span: 1 },
+              { key: 'model', label: 'Model', span: 1 },
+              { key: 'year', label: 'Year', span: 1 },
+              { key: 'mileage', label: 'Mileage', span: 1 },
+              { key: 'price', label: 'Price', span: 1 },
+              { key: 'location', label: 'Location', span: 1 },
+              { key: 'status', label: 'Status', span: 1 },
+            ] as Array<{ key: SortKey; label: string; span: number }>).map(({ key, label, span }) => (
               <button
                 key={key}
-                className="col-span-2 flex items-center gap-1 text-left"
+                className={`col-span-${span} flex items-center gap-1 text-left hover:text-foreground transition-colors`}
                 onClick={() => toggleSort(key)}
               >
                 {label} <ArrowUpDown className="h-3 w-3" />
               </button>
             ))}
-            <div className="col-span-2 text-right">Actions</div>
+            <div className="col-span-1 text-right font-medium">Actions</div>
           </div>
           <div className="divide-y divide-border">
             {filtered.map(car => (
-              <div key={car.id} className="grid grid-cols-12 items-center px-3 py-3 text-sm">
-                <div className="col-span-2 truncate" title={car.title}>{car.title}</div>
-                <div className="col-span-2 truncate">{car.make}</div>
-                <div className="col-span-2 truncate">{car.model}</div>
-                <div className="col-span-2">{car.year}</div>
-                <div className="col-span-2">{car.mileage.toLocaleString()} mi</div>
-                <div className="col-span-2">{formatPrice(car.price)}</div>
-                <div className="col-span-2 truncate" title={car.location}>{car.location}</div>
-                <div className="col-span-2">
-                  <Badge variant={car.status === 'sold' ? 'destructive' : 'secondary'}>
+              <div key={car.id} className="grid grid-cols-10 items-center px-4 py-4 text-sm hover:bg-muted/50 transition-colors">
+                <div className="col-span-2 truncate pr-2" title={car.title}>{car.title}</div>
+                <div className="col-span-1 truncate pr-2">{car.make}</div>
+                <div className="col-span-1 truncate pr-2">{car.model}</div>
+                <div className="col-span-1 pr-2">{car.year}</div>
+                <div className="col-span-1 pr-2">{car.mileage.toLocaleString()} mi</div>
+                <div className="col-span-1 pr-2 font-medium">{formatPrice(car.price)}</div>
+                <div className="col-span-1 truncate pr-2" title={car.location}>{car.location}</div>
+                <div className="col-span-1 pr-2">
+                  <Badge variant={car.status === 'sold' ? 'destructive' : 'secondary'} className="text-xs">
                     {car.status === 'sold' ? 'Sold' : (car.status || 'Available')}
                   </Badge>
                 </div>
-                <div className="col-span-2 flex items-center justify-end gap-2">
-                  <Button size="sm" variant="outline" onClick={() => { setEditingCar(car); setShowForm(true) }}>
-                    <Edit className="h-4 w-4" />
+                <div className="col-span-1 flex items-center justify-end gap-1">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => { setEditingCar(car); setShowForm(true) }}
+                    className="h-8 w-8 p-0"
+                    title="Edit"
+                  >
+                    <Edit className="h-3 w-3" />
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => handleApprovalToggle(car.id, !car.approved)}>
-                    {car.approved ? <X className="h-4 w-4 text-yellow-600" /> : <Check className="h-4 w-4 text-primary" />}
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => handleApprovalToggle(car.id, !car.approved)}
+                    className="h-8 w-8 p-0"
+                    title={car.approved ? "Unapprove" : "Approve"}
+                  >
+                    {car.approved ? <X className="h-3 w-3 text-yellow-600" /> : <Check className="h-3 w-3 text-primary" />}
                   </Button>
                   <Button 
                     size="sm" 
@@ -210,11 +225,18 @@ export function CarTable({ cars, setCars }: CarTableProps) {
                     onClick={() => handleStatusToggle(car.id, car.status === 'sold' ? 'available' : 'sold')}
                     title={car.status === 'sold' ? 'Mark as Available' : 'Mark as Sold'}
                     disabled={!car.status}
+                    className="h-8 px-2 text-xs"
                   >
                     {car.status === 'sold' ? 'Sold' : 'Mark Sold'}
                   </Button>
-                  <Button size="sm" variant="outline" className="text-destructive" onClick={() => handleDelete(car.id)}>
-                    <Trash2 className="h-4 w-4" />
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="text-destructive h-8 w-8 p-0" 
+                    onClick={() => handleDelete(car.id)}
+                    title="Delete"
+                  >
+                    <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
