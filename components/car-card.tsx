@@ -112,6 +112,19 @@ export const CarCard = memo(function CarCard({ car, priority = false }: CarCardP
               Featured
             </Badge>
           )}
+
+          {/* Sold Badge */}
+          {car.status === 'sold' && (
+            <Badge
+              variant="destructive"
+              className={`absolute font-bold text-xs ${
+                car.isFeatured ? 'top-2 right-16' : 'top-2 right-2'
+              }`}
+              aria-label="Vehicle sold"
+            >
+              Sold
+            </Badge>
+          )}
         </div>
       </Link>
 

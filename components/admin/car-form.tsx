@@ -41,6 +41,7 @@ const formSchema = z.object({
   approved: z.boolean().default(true),
   isInventory: z.boolean().default(true),
   isFeatured: z.boolean().default(false),
+  status: z.enum(['available', 'sold', 'reserved', 'maintenance']).default('available'),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -85,6 +86,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
       approved: car?.approved ?? true,
       isInventory: car?.isInventory ?? true,
       isFeatured: car?.isFeatured ?? false,
+      status: car?.status ?? 'available',
     },
   })
 
@@ -226,6 +228,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
             isFeatured: carData.isFeatured,
             isInventory: carData.isInventory,
             approved: carData.approved,
+            status: carData.status,
           })
         })
         if (!res.ok) {
@@ -288,6 +291,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
             isFeatured: carData.isFeatured,
             isInventory: carData.isInventory,
             approved: carData.approved,
+            status: carData.status,
             description: carData.description,
           })
         })
@@ -713,6 +717,29 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
             </Label>
             <Badge variant="outline" className="text-muted-foreground border-border">
               Highlight this car on the homepage or featured sections.
+            </Badge>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="status" className="text-muted-foreground">
+              Vehicle Status
+            </Label>
+            <Select
+              value={form.watch("status") || "available"}
+              onValueChange={(value) => form.setValue("status", value as "available" | "sold" | "reserved" | "maintenance")}
+            >
+              <SelectTrigger className="w-48 bg-background border-border text-foreground">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="available">Available</SelectItem>
+                <SelectItem value="sold">Sold</SelectItem>
+                <SelectItem value="reserved">Reserved</SelectItem>
+                <SelectItem value="maintenance">Maintenance</SelectItem>
+              </SelectContent>
+            </Select>
+            <Badge variant="outline" className="text-muted-foreground border-border">
+              Current status of the vehicle.
             </Badge>
           </div>
         </CardContent>

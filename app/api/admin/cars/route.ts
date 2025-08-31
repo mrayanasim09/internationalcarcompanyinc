@@ -29,7 +29,8 @@ const carSchema = z.object({
   whatsapp: z.string().optional(),
   approved: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
-  isInventory: z.boolean().optional()
+  isInventory: z.boolean().optional(),
+  status: z.enum(['available', 'sold', 'reserved', 'maintenance']).optional()
 })
 
 const updateCarSchema = carSchema.partial().extend({
@@ -129,6 +130,7 @@ export async function POST(request: NextRequest) {
       approved: true, // FIXED: New cars are approved by default
       isInventory: true, // FIXED: New cars are in inventory by default
       isFeatured: carData.isFeatured || false,
+      status: 'available', // New cars are available by default
       contact: {
         phone: carData.phone || '',
         whatsapp: carData.whatsapp || ''
@@ -165,6 +167,7 @@ export async function POST(request: NextRequest) {
         approved: carWithAudit.approved,
         is_featured: carWithAudit.isFeatured,
         is_inventory: carWithAudit.isInventory,
+        status: carWithAudit.status,
         rating: carWithAudit.rating,
         reviews: carWithAudit.reviews,
         listed_at: new Date().toISOString(),
@@ -268,6 +271,7 @@ export async function PUT(request: NextRequest) {
       if (updateData.isFeatured !== undefined) updateObject.is_featured = updateData.isFeatured
       if (updateData.isInventory !== undefined) updateObject.is_inventory = updateData.isInventory
       if (updateData.approved !== undefined) updateObject.approved = updateData.approved
+      if (updateData.status !== undefined) updateObject.status = updateData.status
 
       // Handle contact object
       if (updateData.phone !== undefined || updateData.whatsapp !== undefined) {

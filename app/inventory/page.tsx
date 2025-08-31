@@ -147,7 +147,8 @@ export default function InventoryPage() {
             description: row.description || '',
             contact: { phone: row.contact_phone || '', whatsapp: row.contact_whatsapp || '' },
             rating: row.rating || 0,
-            reviews: row.reviews || []
+            reviews: row.reviews || [],
+            status: row.status || 'available'
           }));
 
           setCars(fetchedCars);

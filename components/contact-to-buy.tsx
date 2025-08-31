@@ -34,14 +34,14 @@ export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
 
   const handleWhatsApp = (phoneNumber: string) => {
     const message = encodeURIComponent(
-      `Hi! I'd like to schedule a viewing for the ${car.title} (${car.year}). When would be a good time?`
+      `Hi! I'd like to schedule a viewing for the ${car.title} (${car.year}) today. When would be a good time?`
     )
     window.open(`https://wa.me/${phoneNumber.replace(/\D/g, '')}?text=${message}`, '_blank')
   }
 
   const handleScheduleViewing = (phoneNumber: string) => {
     const message = encodeURIComponent(
-      `Hi! I'd like to schedule a viewing for the ${car.title} (${car.year}). When would be a good time?`
+      `Hi! I'd like to schedule a viewing for the ${car.title} (${car.year}) today. When would be a good time?`
     )
     // Use SMS with body prefilled (works on most devices)
     window.open(`sms:${phoneNumber}?&body=${message}`, '_self')
@@ -131,7 +131,7 @@ export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
       <CardContent className="p-4 space-y-4">
         <div className="text-center">
           <h3 className="text-lg font-bold text-foreground">Interested in this vehicle?</h3>
-          <p className="text-sm text-muted-foreground">Contact us to learn more or schedule a viewing.</p>
+          <p className="text-sm text-muted-foreground">Contact us to learn more or schedule a viewing today.</p>
           <div className="mt-2 space-y-1">
             <p className="text-xs text-foreground">Mobile: {phoneNumbers[0].label}</p>
             <p className="text-xs text-foreground">Landline: {phoneNumbers[1].label}</p>
@@ -174,7 +174,7 @@ export function ContactToBuy({ car, variant = "card" }: ContactToBuyProps) {
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground touch-button"
         >
           <Calendar className="h-4 w-4 mr-2" />
-          Schedule Viewing
+          Schedule Today
         </Button>
       </CardContent>
     </Card>
