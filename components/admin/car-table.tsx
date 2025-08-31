@@ -194,7 +194,7 @@ export function CarTable({ cars, setCars }: CarTableProps) {
                 <div className="col-span-2 truncate" title={car.location}>{car.location}</div>
                 <div className="col-span-2">
                   <Badge variant={car.status === 'sold' ? 'destructive' : 'secondary'}>
-                    {car.status === 'sold' ? 'Sold' : 'Available'}
+                    {car.status === 'sold' ? 'Sold' : (car.status || 'Available')}
                   </Badge>
                 </div>
                 <div className="col-span-2 flex items-center justify-end gap-2">
@@ -209,6 +209,7 @@ export function CarTable({ cars, setCars }: CarTableProps) {
                     variant={car.status === 'sold' ? "destructive" : "outline"}
                     onClick={() => handleStatusToggle(car.id, car.status === 'sold' ? 'available' : 'sold')}
                     title={car.status === 'sold' ? 'Mark as Available' : 'Mark as Sold'}
+                    disabled={!car.status}
                   >
                     {car.status === 'sold' ? 'Sold' : 'Mark Sold'}
                   </Button>

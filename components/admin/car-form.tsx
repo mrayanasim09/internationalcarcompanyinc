@@ -741,6 +741,9 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
             <Badge variant="outline" className="text-muted-foreground border-border">
               Current status of the vehicle.
             </Badge>
+            <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+              Note: Status column may need to be added to database
+            </Badge>
           </div>
         </CardContent>
       </Card>

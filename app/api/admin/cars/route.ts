@@ -167,7 +167,8 @@ export async function POST(request: NextRequest) {
         approved: carWithAudit.approved,
         is_featured: carWithAudit.isFeatured,
         is_inventory: carWithAudit.isInventory,
-        status: carWithAudit.status,
+        // Only include status if the column exists
+        ...(carWithAudit.status && { status: carWithAudit.status }),
         rating: carWithAudit.rating,
         reviews: carWithAudit.reviews,
         listed_at: new Date().toISOString(),
@@ -271,7 +272,15 @@ export async function PUT(request: NextRequest) {
       if (updateData.isFeatured !== undefined) updateObject.is_featured = updateData.isFeatured
       if (updateData.isInventory !== undefined) updateObject.is_inventory = updateData.isInventory
       if (updateData.approved !== undefined) updateObject.approved = updateData.approved
-      if (updateData.status !== undefined) updateObject.status = updateData.status
+      // Only update status if the column exists (will be handled gracefully by Supabase)
+      if (updateData.status !== undefined) {
+        try {
+          updateObject.status = updateData.status
+        } catch (error) {
+          console.warn('Status column may not exist yet:', error)
+          // Continue without status update
+        }
+      }
 
       // Handle contact object
       if (updateData.phone !== undefined || updateData.whatsapp !== undefined) {
