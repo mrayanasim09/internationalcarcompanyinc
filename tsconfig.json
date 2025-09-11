@@ -6,7 +6,8 @@
       "esnext"
     ],
     "allowJs": true,
-    "target": "es5",
+    "target": "es2017",
+    "downlevelIteration": true,
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,

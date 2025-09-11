@@ -15,7 +15,7 @@ interface CarTableProps {
   setCars: (cars: Car[]) => void
 }
 
-type SortKey = keyof Pick<Car, "title" | "make" | "model" | "year" | "mileage" | "price" | "location" | "status">;
+type SortKey = keyof Pick<Car, "title" | "make" | "model" | "year" | "mileage" | "price" | "location">;
 
 export function CarTable({ cars, setCars }: CarTableProps) {
   const { toast } = useToast()
@@ -108,7 +108,7 @@ export function CarTable({ cars, setCars }: CarTableProps) {
         body: JSON.stringify({ id: carId, approved })
       })
       if (!res.ok) throw new Error('Update failed')
-      setCars(cars.map(c => (c.id === carId ? { ...c, approved } : car)))
+      setCars(cars.map(c => (c.id === carId ? { ...c, approved } : c)))
       toast({ title: approved ? "Approved" : "Unapproved" })
     } catch {
       toast({ title: "Failed to update", variant: "destructive" })
@@ -136,7 +136,7 @@ export function CarTable({ cars, setCars }: CarTableProps) {
         body: JSON.stringify({ id: carId, status })
       })
       if (!res.ok) throw new Error('Update failed')
-      setCars(cars.map(c => (c.id === carId ? { ...c, status } : car)))
+      setCars(cars.map(c => (c.id === carId ? { ...c, status } : c)))
       toast({ title: status === 'sold' ? "Marked as Sold" : "Marked as Available" })
     } catch {
       toast({ title: "Failed to update status", variant: "destructive" })

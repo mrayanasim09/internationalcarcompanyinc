@@ -86,7 +86,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
       approved: car?.approved ?? true,
       isInventory: car?.isInventory ?? true,
       isFeatured: car?.isFeatured ?? false,
-      status: car?.status ?? 'available',
+      status: (car?.status as 'available' | 'sold' | 'reserved' | 'maintenance') ?? 'available',
     },
   })
 
