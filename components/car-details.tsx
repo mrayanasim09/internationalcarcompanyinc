@@ -163,7 +163,7 @@ export function CarDetails({ car, similarCars = [], loading = false }: CarDetail
               {car.features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-2 sm:gap-3">
                   <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-                  <span className="text-xs sm:text-sm truncate">{feature}</span>
+                  <span className="text-xs sm:text-sm">{feature}</span>
                 </div>
               ))}
             </div>

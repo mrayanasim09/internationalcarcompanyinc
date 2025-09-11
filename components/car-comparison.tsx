@@ -261,6 +261,31 @@ export function CarComparison({ availableCars, onClose }: CarComparisonProps) {
                       ))}
                     </tr>
                     <tr>
+                      <td className="p-4 font-medium bg-accent">Features</td>
+                      {selectedCars.map((car) => (
+                        <td key={car.id} className="p-4 text-center">
+                          <div className="space-y-1">
+                            {car.features && car.features.length > 0 ? (
+                              <div className="flex flex-wrap gap-1 justify-center">
+                                {car.features.slice(0, 3).map((feature, index) => (
+                                  <Badge key={index} variant="outline" className="text-xs">
+                                    {feature}
+                                  </Badge>
+                                ))}
+                                {car.features.length > 3 && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    +{car.features.length - 3} more
+                                  </Badge>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-muted-foreground text-sm">No features listed</span>
+                            )}
+                          </div>
+                        </td>
+                      ))}
+                    </tr>
+                    <tr>
                       <td className="p-4 font-medium bg-gray-50 dark:bg-gray-800">Actions</td>
                       {selectedCars.map((car) => (
                         <td key={car.id} className="p-4 text-center">
