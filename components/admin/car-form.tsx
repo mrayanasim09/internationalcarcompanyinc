@@ -462,9 +462,9 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
         <CardHeader>
           <CardTitle className="text-white">Contact Information</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 min-h-[120px]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="phone" className="text-muted-foreground">Phone</Label>
               <Input
                 id="phone"
@@ -476,7 +476,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 <p className="text-blue-400 text-sm mt-1">{form.formState.errors.phone.message}</p>
               )}
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="whatsapp" className="text-muted-foreground">WhatsApp (Optional)</Label>
               <Input
                 id="whatsapp"
@@ -494,9 +494,9 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
         <CardHeader>
           <CardTitle className="text-white">Technical Specifications</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 min-h-[200px]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="engine" className="text-muted-foreground">Engine (Optional)</Label>
               <Input
                 id="engine"
@@ -505,7 +505,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="2.0L I4 Turbo"
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="transmission" className="text-muted-foreground">Transmission (Optional)</Label>
               <Select onValueChange={(value) => form.setValue("transmission", value)} defaultValue={form.getValues("transmission")}>
                 <SelectTrigger className="bg-background border-border text-foreground">
@@ -521,7 +521,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="exteriorColor" className="text-muted-foreground">Exterior Color (Optional)</Label>
               <Input
                 id="exteriorColor"
@@ -530,7 +530,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 placeholder="Black"
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="interiorColor" className="text-muted-foreground">Interior Color (Optional)</Label>
               <Input
                 id="interiorColor"
@@ -542,7 +542,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="driveType" className="text-muted-foreground">Drive Type (Optional)</Label>
               <Select onValueChange={(value) => form.setValue("driveType", value)} defaultValue={form.getValues("driveType")}>
                 <SelectTrigger className="bg-background border-border text-foreground">
@@ -556,7 +556,7 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                 </SelectContent>
               </Select>
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="fuelType" className="text-muted-foreground">Fuel Type (Optional)</Label>
               <Select onValueChange={(value) => form.setValue("fuelType", value)} defaultValue={form.getValues("fuelType")}>
                 <SelectTrigger className="bg-background border-border text-foreground">
