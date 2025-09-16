@@ -95,6 +95,22 @@ export default function InventoryPage() {
     };
   }, []);
 
+  // Global runtime error safety net to avoid white screen
+  useEffect(() => {
+    const handleError = (e: ErrorEvent) => {
+      setError('Something went wrong while loading this page.');
+    };
+    const handleRejection = () => {
+      setError('A script failed to load. Please try again.');
+    };
+    window.addEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleRejection);
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleRejection);
+    };
+  }, []);
+
   useEffect(() => {
     let isMounted = true;
     
