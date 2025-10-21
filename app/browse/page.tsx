@@ -43,6 +43,7 @@ export default function BrowsePage() {
           .from('cars')
           .select('*')
           .eq('approved', true)
+          .order('display_order', { ascending: true })
           .order('listed_at', { ascending: false })
         if (error) throw error
         setAllCars((data || []) as unknown as Car[])

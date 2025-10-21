@@ -81,6 +81,7 @@ export default function ListingsPage() {
           .select('*')
           .eq('approved', true)
           .eq('is_inventory', true)
+          .order('display_order', { ascending: true })
           .order('listed_at', { ascending: false })
         type CarRow = {
           id: string

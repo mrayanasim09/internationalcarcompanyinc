@@ -133,6 +133,7 @@ export default function InventoryPage() {
           .select('*')
           .eq('approved', true)
           .eq('is_inventory', true)
+          .order('display_order', { ascending: true })
           .order('listed_at', { ascending: false })
           .limit(50); // Limit initial load for better mobile performance
 

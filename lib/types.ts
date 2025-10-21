@@ -29,6 +29,7 @@ export interface Car {
   createdAt?: Date
   isFeatured?: boolean
   isInventory?: boolean
+  displayOrder?: number
 }
 
 export interface CarImage {

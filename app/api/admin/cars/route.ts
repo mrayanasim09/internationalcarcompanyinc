@@ -55,6 +55,7 @@ export async function GET(request: NextRequest) {
     const { data: carsData, error } = await supabaseAdmin
       .from('cars')
       .select('*')
+      .order('display_order', { ascending: true })
       .order('listed_at', { ascending: false })
     const cars = (error || !carsData) ? [] : carsData
     
@@ -142,6 +143,15 @@ export async function POST(request: NextRequest) {
       likes: 0
     }
 
+    // Get the maximum display_order for new cars
+    const { data: maxOrderData } = await supabaseAdmin
+      .from('cars')
+      .select('display_order')
+      .order('display_order', { ascending: false })
+      .limit(1)
+    
+    const nextDisplayOrder = (maxOrderData?.[0]?.display_order || 0) + 1
+
     const { data: inserted, error: insErr } = await supabaseAdmin
       .from('cars')
       .insert({
@@ -174,6 +184,7 @@ export async function POST(request: NextRequest) {
         listed_at: new Date().toISOString(),
         views: 0,
         likes: 0,
+        display_order: nextDisplayOrder,
         created_by: user.userId,
       })
       .select('id')
